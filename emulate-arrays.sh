@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# emulate-array.sh
+# emulate-arrays.sh
 
-# emulates arrays in POSIX shell
+# emulates arrays in a POSIX shell
 
 
 # declare an emulated indexed array while populating first elements
