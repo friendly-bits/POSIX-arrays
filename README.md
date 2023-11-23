@@ -55,6 +55,6 @@ Output: `this is a test`
 - Arrays can hold strings that have whitespaces in them without an issue and probably any other delimiter, except `#`.
 - Functions check for correct number of arguments and return an error if it's incorrect.
 - The indexed array functions check the key to make sure it's a positive integer, and return an error otherwise.
-- As is default for shells, if you try request a value for an index or for a key that has not been set previously, the functions will output an empty string and not return an error.
+- As is default for shells, if you request a value for an index or for a key that has not been set previously, the functions will output an empty string and not return an error.
 - The indexed array effectively works as a sparse array, meaning that the indexes do not have to be continuous and sequential. For example, you can set a value for index 10 and for index 100 while all other indexes will not be set.
 - The declare function for the indexed array is not necessary to create an array. It's just a way to set N values sequentially in one command. Otherwise you can create an array by simply calling the `set_[x]_arr_el()` function.
