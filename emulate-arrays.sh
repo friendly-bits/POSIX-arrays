@@ -42,7 +42,7 @@ declare_i_arr() {
 # get a value from an emulated indexed array
 # array contents are stored in a variable with the same name as the 'array' but with 'emu_i_' prefix
 # 1 - array name
-# 2 - element number
+# 2 - index
 # no additional arguments are allowed
 get_i_arr_el() {
 	[ $# -lt 2 ] && { echo "get_i_arr_el: Error: not enough arguments." >&2; return 1; }
