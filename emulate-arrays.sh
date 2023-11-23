@@ -77,7 +77,7 @@ get_i_arr_el() {
 set_i_arr_el() {
 	[ $# -lt 3 ] && { echo "set_i_arr_el: Error: not enough arguments." >&2; return 1; }
 	arr="$1"; index="$2"; new_val="$3"; shift 3
-	[ -n "$*" ] && { echo "set_i_arr_el: Error: I only accept 2 arguments." >&2; return 1; }
+	[ -n "$*" ] && { echo "set_i_arr_el: Error: I only accept 3 arguments." >&2; return 1; }
 	case "$index" in ''|*[!0-9]*) echo "set_i_arr_el: Error: no index specified or '$index' is not a positive integer." >&2; return 1 ;; esac
 	[ "$index" -lt 1 ] && { echo "set_i_arr_el: Error: invalid index '$index'." >&2; return 1; }
 
