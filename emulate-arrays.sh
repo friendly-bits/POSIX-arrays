@@ -12,10 +12,9 @@
 declare_i_arr() {
 	[ $# -lt 1 ] && { echo "declare_i_arr: Error: not enough arguments." >&2; return 1; }
 	arr="$1"; shift
-	
 	if [ -n "$*" ]; then
 		for val in "$@"; do
-				values="${values}#$val"
+			values="${values}#$val"
 		done
 		values="${values#\#}"
 		eval "emu_i_$arr=\"$values\""
