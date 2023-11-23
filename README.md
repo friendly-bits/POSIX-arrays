@@ -1,5 +1,5 @@
 # POSIX-arrays
-POSIX-compatible shell functions emulating some aspects of arrays
+POSIX-compliant shell functions emulating some aspects of arrays
 
 ## Usage
 **Indexed arrays**:
