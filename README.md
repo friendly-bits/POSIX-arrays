@@ -48,7 +48,7 @@ get_a_arr_el test_arr some_key
 Output: `this is a test`
 
 ## More details
-- The emulated arrays are stored in dynamically created variables. The base for is the same as the emulated array's name, except when creating the variable, the function prefixes its name with `emu_[x]_`.
+- The emulated arrays are stored in dynamically created variables. The base for the name of such variable is the same as the emulated array's name, except when creating the variable, the function prefixes it with `emu_[x]_`.
 - For example, if calling a function to create an indexed array: `set_i_arr_el test_arr 5 "test_value"`, the function will create a variable called 'emu_i_test_arr' and store the value in it.
 - If calling a function to create an associative array: `set_a_ar_el test_arr test_key=test_val`, the function will create a variable called 'emu_a_test_arr' and store the key=value pair in it.
 - The delimiter used internally is '#'. Which means this specific symbol should not be a part of any strings passed to the function. If for some reason you need arrays that can hold this symbol, change the code to use another delimiter.
