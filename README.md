@@ -48,10 +48,11 @@ get_a_arr_el test_arr some_key
 Output: `this is a test`
 
 ## More details
-- The emulated arrays are stored in dynamically created variables. The base for the name of such variable is the same as the emulated array's name, except when creating the variable, the function prefixes it with `emu_[x]_`.
+- The emulated arrays are stored in dynamically created variables. The base for the name of such variable is the same as the emulated array's name, except when creating the variable, the function prefixes it with `emu_x_`, where x stands for the type of the array: a for associative array, i for indexed array.
 - For example, if calling a function to create an indexed array: `set_i_arr_el test_arr 5 "test_value"`, the function will create a variable called 'emu_i_test_arr' and store the value in it.
 - If calling a function to create an associative array: `set_a_ar_el test_arr test_key=test_val`, the function will create a variable called 'emu_a_test_arr' and store the key=value pair in it.
-- The delimiter used internally is '#'. Which means this specific symbol should not be a part of any strings passed to the function. If for some reason you need arrays that can hold this symbol, change the code to use another delimiter.
+- The delimiter used internally is '#'. So for example if you assign a 'key=value' pair to an associative array, and then also assign 'key2=value' pair to the same array, effectively the variable will hold this value: 'key=value#key2=value2'. Of course this specific symbol - '#' - should not be a part of any strings passed to the function. If for some reason you need arrays that can hold this symbol, change the code to use another delimiter.
+- Arrays can hold whitespace-separated values without an issue and probably any other delimiter, except '#'.
 - Functions check for correct number of arguments and return an error if it's incorrect.
 - The indexed array functions check the key to make sure it's a positive integer, and return an error otherwise.
 - As is default for shells, if you try request a value for an index or for a key that has not been set previously, the functions will output an empty string and not return an error.
