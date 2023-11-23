@@ -11,33 +11,18 @@
 # all other args - array values
 declare_i_arr() {
 	[ $# -lt 1 ] && { echo "declare_i_arr: Error: not enough arguments." >&2; return 1; }
-	arr="$1"; shift
+	___arr="$1"; shift
 	if [ -n "$*" ]; then
-		for val in "$@"; do
-			values="${values}#$val"
+		for ___val in "$@"; do
+			___values="${___values}#$___val"
 		done
-		values="${values#\#}"
-		eval "emu_i_$arr=\"$values\""
+		___values="${___values#\#}"
+		eval "emu_i_$___arr=\"$___values\""
 	fi
 
-	unset arr values val
+	unset ___arr ___values ___val
 	return 0
 }
-
-# Probably not needed
-# # declare an asociative array
-# # 1 - array name
-# # no additional arguments allowed
-# declare_A_arr() {
-# 	[ $# -lt 1 ] && { echo "declare_A: Error: not enough arguments." >&2; return 1; }
-# 	arr="$1"; shift
-# 	[ -n "$*" ] && { echo "declare_A: Error: I only accept one argument." >&2; return 1; }
-# 	eval "$arr="
-# 	assoc_arrays="${arr} ${assoc_arrays}"
-# 	assoc_arrays="${assoc_arrays#\ }"
-# 	unset arr
-# 	return 0
-# }
 
 # get a value from an emulated indexed array
 # array contents are stored in a variable with the same name as the 'array' but with 'emu_i_' prefix
@@ -46,24 +31,24 @@ declare_i_arr() {
 # no additional arguments are allowed
 get_i_arr_el() {
 	[ $# -lt 2 ] && { echo "get_i_arr_el: Error: not enough arguments." >&2; return 1; }
-	res=""; arr="$1"; index="$2"; shift 2
+	___res=""; ___arr="$1"; ___index="$2"; shift 2
 	[ -n "$*" ] && { echo "get_i_arr_el: Error: I only accept 2 arguments." >&2; return 1; }
-	case "$index" in ''|*[!0-9]*) echo "get_i_arr_el: Error: no index specified or '$index' is not a positive integer." >&2; return 1 ;; esac
-	[ "$index" -lt 1 ] && { echo "get_i_arr_el: Error: invalid index '$index'." >&2; return 1; }
+	case "$___index" in ''|*[!0-9]*) echo "get_i_arr_el: Error: no index specified or '$___index' is not a positive integer." >&2; return 1 ;; esac
+	[ "$___index" -lt 1 ] && { echo "get_i_arr_el: Error: invalid index '$___index'." >&2; return 1; }
 
-	eval "values=\"\$emu_i_$arr\""
+	eval "___values=\"\$emu_i_$___arr\""
 
-	i=0
+	___i=0
 	IFS_OLD="$IFS"
 	IFS='#'
-	for val in $values; do
-		i=$((i+1))
-		[ $i -eq "$index" ] && { res="$val"; break; }
+	for ___val in $___values; do
+		___i=$((___i+1))
+		[ $___i -eq "$___index" ] && { ___res="$___val"; break; }
 	done
 	IFS="$IFS_OLD"
 
-	printf '%s\n' "$res"
-	unset arr values val res index i
+	printf '%s\n' "$___res"
+	unset ___arr ___values ___val ___res ___index ___i
 
 	return 0
 }
@@ -76,34 +61,34 @@ get_i_arr_el() {
 # no additional arguments are allowed
 set_i_arr_el() {
 	[ $# -lt 3 ] && { echo "set_i_arr_el: Error: not enough arguments." >&2; return 1; }
-	arr="$1"; index="$2"; new_val="$3"; shift 3
+	___arr="$1"; ___index="$2"; __new_val="$3"; shift 3
 	[ -n "$*" ] && { echo "set_i_arr_el: Error: I only accept 3 arguments." >&2; return 1; }
-	case "$index" in ''|*[!0-9]*) echo "set_i_arr_el: Error: no index specified or '$index' is not a positive integer." >&2; return 1 ;; esac
-	[ "$index" -lt 1 ] && { echo "set_i_arr_el: Error: invalid index '$index'." >&2; return 1; }
+	case "$___index" in ''|*[!0-9]*) echo "set_i_arr_el: Error: no index specified or '$___index' is not a positive integer." >&2; return 1 ;; esac
+	[ "$___index" -lt 1 ] && { echo "set_i_arr_el: Error: invalid index '$___index'." >&2; return 1; }
 
-	eval "values=\"\$emu_i_$arr\""
-	i=0
+	eval "___values=\"\$emu_i_$___arr\""
+	__i=0
 	IFS_OLD="$IFS"
 	IFS='#'
-	for val in $values; do
-		i=$((i+1))
-		[ $i -eq "$index" ] && val="$new_val"
-		new_values="${new_values}#$val"
+	for ___val in $___values; do
+		__i=$((__i+1))
+		[ $__i -eq "$___index" ] && ___val="$__new_val"
+		__new_values="${__new_values}#$___val"
 	done
 	IFS="$IFS_OLD"
 
-	if [ $i -lt "$index" ]; then
+	if [ $__i -lt "$___index" ]; then
 		# shellcheck disable=SC2034
-		for j in $(seq $i $((index-2)) ); do
-			new_values="${new_values}#"
+		for __j in $(seq $__i $((___index-2)) ); do
+			__new_values="${__new_values}#"
 		done
-		new_values="${new_values}#${new_val}"
+		__new_values="${__new_values}#${__new_val}"
 	fi
-	new_values="${new_values#\#}"
+	__new_values="${__new_values#\#}"
 
-	eval "emu_i_$arr=\"$new_values\""
+	eval "emu_i_$___arr=\"$__new_values\""
 
-	unset arr values new_values val index i j
+	unset ___arr ___values __new_values ___val ___index __i __j
 
 	return 0
 }
@@ -115,29 +100,29 @@ set_i_arr_el() {
 # 2nd arg - 'key=value' pair
 set_a_arr_el() {
 	[ $# -lt 2 ] && { echo "set_a_arr_el: Error: not enough arguments." >&2; return 1; }
-	arr="$1"; new_pair="$2"; shift 2
+	___arr="$1"; __new_pair="$2"; shift 2
 	[ -n "$*" ] && { echo "set_a_arr_el: Error: I only accept 2 arguments." >&2; return 1; }
-	case "$new_pair" in *=*) ;; *) echo "set_a_arr_el: Error: '$new_pair' is not a 'key=value' pair." >&2; return 1 ;; esac
-	new_key="${new_pair%%=*}"
-	[ -z "$new_key" ] && { echo "set_a_arr_el: Error: empty value provided for key in input '$new_pair'." >&2; return 1; }
-	new_val="${new_pair##*=}"
-	eval "pairs=\"\$emu_a_$arr\""
+	case "$__new_pair" in *=*) ;; *) echo "set_a_arr_el: Error: '$__new_pair' is not a 'key=value' pair." >&2; return 1 ;; esac
+	__new_key="${__new_pair%%=*}"
+	[ -z "$__new_key" ] && { echo "set_a_arr_el: Error: empty value provided for key in input '$__new_pair'." >&2; return 1; }
+	__new_val="${__new_pair##*=}"
+	eval "___pairs=\"\$emu_a_$___arr\""
 
 	IFS_OLD="$IFS"
 	IFS='#'
 	# shellcheck disable=SC2154
-	for pair in $pairs; do
-		key="${pair%%=*}"
-		[ "$new_key" != "$key" ] && new_pairs="${new_pairs}#$pair"
+	for ___pair in $___pairs; do
+		___key="${___pair%%=*}"
+		[ "$__new_key" != "$___key" ] && __new_pairs="${__new_pairs}#$___pair"
 	done
 	IFS="$IFS_OLD"
 
-	[ -n "$new_val" ] && new_pairs="${new_pairs}#$new_pair"
-	new_pairs="${new_pairs#\#}"
+	[ -n "$__new_val" ] && __new_pairs="${__new_pairs}#$__new_pair"
+	__new_pairs="${__new_pairs#\#}"
 
-	eval "emu_a_$arr=\"$new_pairs\""
+	eval "emu_a_$___arr=\"$__new_pairs\""
 
-	unset arr new_pair new_key pairs pair key new_pairs
+	unset ___arr __new_pair __new_key ___pairs ___pair ___key __new_pairs
 	return 0
 }
 
@@ -148,37 +133,21 @@ set_a_arr_el() {
 # no additional arguments are allowed
 get_a_arr_el() {
 	[ $# -lt 2 ] && { echo "get_a_arr_el: Error: not enough arguments." >&2; return 1; }
-	res=""; arr="$1"; key="$2"; shift 2
+	___res=""; ___arr="$1"; ___key="$2"; shift 2
 	[ -n "$*" ] && { echo "get_a_arr_el: Error: I only accept 2 arguments." >&2; return 1; }
 
-	eval "pairs=\"\$emu_a_$arr\""
+	eval "___pairs=\"\$emu_a_$___arr\""
 
 	IFS_OLD="$IFS"
 	IFS='#'
-	for pair in $pairs; do
-		arr_key="${pair%%=*}"
-		[ "$arr_key" = "$key" ] && res="${pair##*=}"
+	for ___pair in $___pairs; do
+		___arr_key="${___pair%%=*}"
+		[ "$___arr_key" = "$___key" ] && ___res="${___pair##*=}"
 	done
 	IFS="$IFS_OLD"
 
-	printf '%s\n' "$res"
-	unset res arr key pairs pair arr_key
+	printf '%s\n' "$___res"
+	unset ___res ___arr ___key ___pairs ___pair ___arr_key
 
 	return 0
 }
-
-# set_a_arr_el test1 "a=b"
-# set_a_arr_el test1 "aa=bb"
-# set_a_arr_el test1 "aaa=c"
-# set_a_arr_el test1 "aa=e"
-# set_a_arr_el test1 "a="
-# 
-# get_a_arr_el test1 aa
-# 
-# set_i_arr_el testN 3 "aa"
-# get_i_arr_el testN 1
-# get_i_arr_el testN 2
-# get_i_arr_el testN 3
-# 
-# #shellcheck disable=SC2154
-# echo "testN: '$testN'"
