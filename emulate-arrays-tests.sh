@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2154,SC2034
 
-# emulate-array-tests.sh
+# emulate-arrays-tests.sh
 
 #### Initial setup
 export LC_ALL=C
