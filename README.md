@@ -6,7 +6,7 @@ POSIX-compliant shell functions emulating some aspects of arrays
 
 `declare_i_arr <array_name> [value] [value] ... [value]` - resets the array and assigns values to sequential indexes, starting from 1
 
-`set_i_arr_el <array_name> <index> [value]` - assigns [value] to <index>. Indexes should always be positive integer numbers. This acts as a sparse array, so indexes don't have to be sequential.
+`set_i_arr_el <array_name> <index> [value]` - assigns `[value]` to `<index>`. Indexes should always be positive integer numbers. This acts as a sparse array, so indexes don't have to be sequential.
 
 `get_i_arr_el <array_name> <index>`
 
