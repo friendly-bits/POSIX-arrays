@@ -22,13 +22,13 @@ declare_wrong_i_arr() {
 }
 
 test_i_arr() {
-# 1st line format: 'declare' function test
-# 1st col: 'declare' function input args, 2nd col: return code
 
-# 2nd and further line format is for 'get' function tests
-# 1st col: 'get function input args, 2nd col: expected values, 3rd col: expected return values
+# Test sets use '@' as a column delimiter
+# 1st 1 or more lines format: 'declare' function test
+# 1st col: 'declare' function with input args, 2nd col: return code
 
-# '@' used as a delimiter
+# further lines format is for 'get' function tests
+# 1st col: 'get function input args, 2nd col: expected value, 3rd col: expected return code
 
 tests_1="
 declare_i_arr arr@0
@@ -155,13 +155,13 @@ wrong_a_arr() {
 }
 
 test_a_arr() {
-# 1st line format: 'set' function test
-# 1st col: 'set' function input args, 2nd col: return code
 
-# 2nd and further line format is for 'get' function tests
-# 1st col: 'get function input args, 2nd col: expected values, 3rd col: expected return values
+# Test sets use '@' as a column delimiter
+# 1st 1 or more lines format: 'set' function test
+# 1st col: 'set' function call with input args, 2nd col: expected return code
 
-# '@' used as a delimiter
+# further lines format is for 'get' function tests
+# 1st col: 'get' function input args, 2nd col: expected value, 3rd col: expected return code
 
 tests_1="
 set_a_arr_el arr@1
