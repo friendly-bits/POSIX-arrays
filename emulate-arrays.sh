@@ -105,7 +105,7 @@ set_i_arr_el() {
 set_a_arr_el() {
 	[ $# -lt 2 ] && { echo "set_a_arr_el: Error: not enough arguments." >&2; return 1; }
 	[ $# -gt 2 ] && { echo "set_a_arr_el: Error: I only accept 2 arguments." >&2; return 1; }
-	___arr="$1"; __new_pair="$2"; shift 2; __new_pairs=""
+	___arr="$1"; __new_pair="$2"; __new_pairs=""
 
 	case "$__new_pair" in *=*) ;; *) echo "set_a_arr_el: Error: '$__new_pair' is not a 'key=value' pair." >&2; return 1 ;; esac
 	__new_key="${__new_pair%%=*}"
@@ -138,8 +138,8 @@ set_a_arr_el() {
 # no additional arguments are allowed
 get_a_arr_el() {
 	[ $# -lt 2 ] && { echo "get_a_arr_el: Error: not enough arguments." >&2; return 1; }
-	___val=""; ___arr="$1"; ___key="$2"; shift 2
-	[ -n "$*" ] && { echo "get_a_arr_el: Error: I only accept 2 arguments." >&2; return 1; }
+	[ $# -gt 2 ] && { echo "get_a_arr_el: Error: I only accept 2 arguments." >&2; return 1; }
+	___val=""; ___arr="$1"; ___key="$2"
 
 	eval "___pairs=\"\$emu_a_$___arr\""
 
