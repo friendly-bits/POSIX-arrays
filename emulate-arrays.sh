@@ -158,4 +158,3 @@ get_a_arr_el() {
 }
 
 __delim="$(printf '\37')"
-#__delim="#"
