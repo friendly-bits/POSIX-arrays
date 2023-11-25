@@ -2,6 +2,11 @@
 POSIX-compliant shell functions emulating some aspects of arrays
 
 ## Usage
+1) Source the script emulate-arrays.sh in your script like so: `. [path]/emulate-arrays.sh`
+2) Call any function from the sourced script in your script.
+
+Note that the last line in emulate-arrays.sh sets the delimiter variable. That variable needs to be set for the functions to work. If you want to use the functions without sourcing the script, you'll need to set that variable in your own script.
+
 **Indexed arrays**:
 
 `declare_i_arr <array_name> [value] [value] ... [value]` - resets the array and assigns values to sequential indexes, starting from 1
