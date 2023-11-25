@@ -1,0 +1,125 @@
+test_1="
+[header]
+declare_i_arr@1
+declare_i_arr arr@0
+[/header]
+
+get_i_arr_el @@1
+get_i_arr_el arr@@1
+get_i_arr_el arr 0@@1
+get_i_arr_el arr 1@@0
+get_i_arr_el arr 2@@0
+get_i_arr_el arr 1 2@@1
+get_i_arr_el arr a@@1
+get_i_arr_el arr 1 a@@1
+get_i_arr_el arr a 1@@1
+"
+test_2="
+[header]
+declare_i_arr arr abc@0
+[/header]
+
+get_i_arr_el@@1
+get_i_arr_el arr@@1
+get_i_arr_el arr 0@@1
+get_i_arr_el arr 1@abc@0
+get_i_arr_el arr 2@@0
+get_i_arr_el arr 3@@0
+get_i_arr_el arr 1 2@@1
+get_i_arr_el arr a@@1
+get_i_arr_el arr 1 a@@1
+get_i_arr_el arr a 1@@1
+"
+test_3="
+[header]
+declare_i_arr arr abc 123@0
+[/header]
+
+get_i_arr_el @@1
+get_i_arr_el arr@@1
+get_i_arr_el arr 0@@1
+get_i_arr_el arr 1@abc@0
+get_i_arr_el arr 2@123@0
+get_i_arr_el arr 3@@0
+get_i_arr_el arr 1 2@@1
+get_i_arr_el arr a@@1
+"
+test_4="
+[header]
+declare_i_arr arr abc 123 a@0
+[/header]
+
+get_i_arr_el @@1
+get_i_arr_el arr@@1
+get_i_arr_el arr 0@@1
+get_i_arr_el arr 1@abc@0
+get_i_arr_el arr 2@123@0
+get_i_arr_el arr 3@a@0
+get_i_arr_el arr 1 2@@1
+get_i_arr_el arr a@@1
+"
+test_5="
+[header]
+declare_i_arr arr abc 123 \"a bcd 123\"@0
+declare_i_arr arr2 abc 123 \"a bcd 123\"@0
+declare_i_arr arr2 def@0
+[/header]
+
+get_i_arr_el@@1
+get_i_arr_el arr@@1
+get_i_arr_el arr 0@@1
+get_i_arr_el arr 1@abc@0
+get_i_arr_el arr 2@123@0
+get_i_arr_el arr 3@a bcd 123@0
+get_i_arr_el arr 4@@0
+get_i_arr_el arr 1 2@@1
+get_i_arr_el arr a@@1
+
+get_i_arr_el arr2@@1
+get_i_arr_el arr2 0@@1
+get_i_arr_el arr2 1@def@0
+get_i_arr_el arr2 2@@0
+get_i_arr_el arr2 3@@0
+get_i_arr_el arr2 4@@0
+"
+test_6="
+[header]
+declare_i_arr arr abc 123 \"a bcd 123\" =@0
+[/header]
+
+get_i_arr_el @@1
+get_i_arr_el arr@@1
+get_i_arr_el arr 0@@1
+get_i_arr_el arr 1@abc@0
+get_i_arr_el arr 2@123@0
+get_i_arr_el arr 3@a bcd 123@0
+get_i_arr_el arr 4@=@0
+get_i_arr_el arr 5@@0
+get_i_arr_el arr 1 2@@1
+get_i_arr_el arr a@@1
+"
+test_7="
+[header]
+declare_i_arr arr abc= 123=1 =a@0
+[/header]
+
+get_i_arr_el @@1
+get_i_arr_el arr@@1
+get_i_arr_el arr 0@@1
+get_i_arr_el arr 1@abc=@0
+get_i_arr_el arr 2@123=1@0
+get_i_arr_el arr 3@=a@0
+get_i_arr_el arr 1 2@@1
+get_i_arr_el arr a@@1
+"
+test_8="
+[header]
+declare_i_arr arr abc#= \"#123=1\" \"=a#\" \"#\" \"###\"@0
+[/header]
+
+get_i_arr_el arr 1@abc#=@0
+get_i_arr_el arr 2@#123=1@0
+get_i_arr_el arr 3@=a#@0
+get_i_arr_el arr 4@#@0
+get_i_arr_el arr 5@###@0
+"
