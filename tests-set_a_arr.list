@@ -1,3 +1,12 @@
+# Test sets use '@' as a column delimiter
+# 1st 1 or more lines format: 'set' function tests
+# 1st col: function call with input args, 2nd col: expected return code
+
+# further lines format is for 'get' function tests
+# 1st col: 'get' function call with input args, 2nd col: expected value, 3rd col: expected return code
+
+# this one is fairly chaotic but i tried to cover things that might be fragile
+
 test_1="
 [header]
 set_a_arr_el@1
