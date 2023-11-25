@@ -1,0 +1,246 @@
+test_1="
+[header]
+set_a_arr_el@1
+set_a_arr_el arr@1
+[/header]
+
+get_a_arr_el@@1
+get_a_arr_el arr@@1
+get_a_arr_el arr 0@@0
+get_a_arr_el arr 1@@0
+get_a_arr_el arr 1 2@@1
+get_a_arr_el arr a@@0
+get_a_arr_el arr abc@@0
+get_a_arr_el arr 1 a@@1
+get_a_arr_el arr a 1@@1
+"
+test_2="
+[header]
+set_a_arr_el arr abc@1
+[/header]
+
+get_a_arr_el @@1
+get_a_arr_el arr@@1
+get_a_arr_el arr 0@@0
+get_a_arr_el arr 1@@0
+get_a_arr_el arr 1 2@@1
+get_a_arr_el arr a@@0
+get_a_arr_el arr abc@@0
+"
+test_3="
+[header]
+set_a_arr_el arr abc 123@1
+[/header]
+
+get_a_arr_el @@1
+get_a_arr_el arr@@1
+get_a_arr_el arr 0@@0
+get_a_arr_el arr 1@@0
+get_a_arr_el arr 1 2@@1
+get_a_arr_el arr a@@0
+get_a_arr_el arr abc@@0
+"
+test_4="
+[header]
+set_a_arr_el arr abc 123=a@1
+[/header]
+
+get_a_arr_el @@1
+get_a_arr_el arr@@1
+get_a_arr_el arr 0@@0
+get_a_arr_el arr 1@@0
+get_a_arr_el arr 1 2@@1
+get_a_arr_el arr a@@0
+get_a_arr_el arr abc@@0
+"
+test_5="
+[header]
+set_a_arr_el arr 123=a abc@1
+[/header]
+
+get_a_arr_el@@1
+get_a_arr_el arr@@1
+get_a_arr_el arr 0@@0
+get_a_arr_el arr 1@@0
+get_a_arr_el arr 1 2@@1
+get_a_arr_el arr a@@0
+get_a_arr_el arr abc@@0
+"
+test_6="
+[header]
+set_a_arr_el arr 123=a abc=d@1
+[/header]
+
+get_a_arr_el @@1
+get_a_arr_el arr@@1
+get_a_arr_el arr 0@@0
+get_a_arr_el arr 1@@0
+get_a_arr_el arr 1 2@@1
+get_a_arr_el arr a@@0
+get_a_arr_el arr abc@@0
+"
+test_7="
+[header]
+set_a_arr_el arr 123=abcd@0
+[/header]
+
+get_a_arr_el@@1
+get_a_arr_el arr@@1
+get_a_arr_el arr 0@@0
+get_a_arr_el arr 1@@0
+get_a_arr_el arr 1 2@@1
+get_a_arr_el arr a@@0
+get_a_arr_el arr abcd@@0
+get_a_arr_el arr 123@abcd@0
+"
+test_8="
+[header]
+set_a_arr_el arr 123=abcd@0
+set_a_arr_el arr abcd=123@0
+[/header]
+
+get_a_arr_el @@1
+get_a_arr_el arr@@1
+get_a_arr_el arr 0@@0
+get_a_arr_el arr 1@@0
+get_a_arr_el arr 1 2@@1
+get_a_arr_el arr a@@0
+get_a_arr_el arr abcd@123@0
+get_a_arr_el arr 123@abcd@0
+"
+test_9="
+[header]
+set_a_arr_el arr 123=abcd@0
+set_a_arr_el arr abcd=123@0
+set_a_arr_el arr aghk=a123@0
+set_a_arr_el arr 1ghk=b123@0
+[/header]
+
+get_a_arr_el @@1
+get_a_arr_el arr 1ghk@b123@0
+get_a_arr_el arr@@1
+get_a_arr_el arr 0@@0
+get_a_arr_el arr 1@@0
+get_a_arr_el arr aghk@a123@0
+get_a_arr_el arr 1 2@@1
+get_a_arr_el arr a@@0
+get_a_arr_el arr 123@abcd@0
+get_a_arr_el arr abcd@123@0
+"
+test_10="
+[header]
+set_a_arr_el arr 123=abcd@0
+set_a_arr_el arr abcd=123@0
+set_a_arr_el arr abcd=jjjj@0
+set_a_arr_el arr 123=@0
+[/header]
+
+get_a_arr_el @@1
+get_a_arr_el arr@@1
+get_a_arr_el arr 0@@0
+get_a_arr_el arr 1@@0
+get_a_arr_el arr 1 2@@1
+get_a_arr_el arr a@@0
+get_a_arr_el arr 123@@0
+get_a_arr_el arr abcd@jjjj@0
+"
+test_11="
+[header]
+set_a_arr_el arr 123=abcd@0
+set_a_arr_el arr abcd=123@0
+set_a_arr_el arr abcd=jjjj@0
+set_a_arr_el arr 123=@0
+set_a_arr_el arr abcd=@0
+[/header]
+
+get_a_arr_el @@1
+get_a_arr_el arr@@1
+get_a_arr_el arr 0@@0
+get_a_arr_el arr 1@@0
+get_a_arr_el arr 1 2@@1
+get_a_arr_el arr a@@0
+get_a_arr_el arr 123@@0
+get_a_arr_el arr abcd@@0
+"
+test_12="
+[header]
+set_a_arr_el arr 123=\"abcd efgh 123\"@0
+set_a_arr_el arr abcd=123@0
+set_a_arr_el arr aghk=a123@0
+set_a_arr_el arr 1ghk=b123@0
+[/header]
+
+get_a_arr_el @@1
+get_a_arr_el arr 1ghk@b123@0
+get_a_arr_el arr@@1
+get_a_arr_el arr 0@@0
+get_a_arr_el arr 1@@0
+get_a_arr_el arr aghk@a123@0
+get_a_arr_el arr 1 2@@1
+get_a_arr_el arr a@@0
+get_a_arr_el arr 123@abcd efgh 123@0
+get_a_arr_el arr abcd@123@0
+"
+test_13="
+[header]
+set_a_arr_el arr abc==a@0
+set_a_arr_el arr 1==2@0
+set_a_arr_el arr1 abc=\"=a\"@0
+set_a_arr_el arr1 1=\"=2\"@0
+set_a_arr_el arr2 abc=\"abc=a\"@0
+set_a_arr_el arr2 1=\"abc=2\"@0
+set_a_arr_el arr3 abc=\"abc=2\"@0
+set_a_arr_el arr3 abc=3@0
+set_a_arr_el arr4 abc=1@0
+set_a_arr_el arr4 abc=\"abc=2\"@0
+set_a_arr_el arr4 abcd=\"e=3\"@0
+set_a_arr_el arr5 abc=\"2=\"@0
+set_a_arr_el arr5 abc=\"e=3\"@0
+
+set_a_arr_el arr6 abc=\"e=3\"@0
+set_a_arr_el arr6 abc=\"2=\"@0
+
+set_a_arr_el arr7 a=\"e=3\"@0
+set_a_arr_el arr7 a=\"2=\"@0
+set_a_arr_el arr7 b=\"2=\"@0
+set_a_arr_el arr7 a=\"=f\"@0
+[/header]
+
+get_a_arr_el @@1
+
+get_a_arr_el arr@@1
+get_a_arr_el arr 0@@0
+get_a_arr_el arr abc@=a@0
+get_a_arr_el arr 1@=2@0
+get_a_arr_el arr 2@@0
+
+get_a_arr_el arr1 abc@=a@0
+get_a_arr_el arr1 1@=2@0
+get_a_arr_el arr1 2@@0
+
+get_a_arr_el arr2 abc@abc=a@0
+get_a_arr_el arr2 1@abc=2@0
+get_a_arr_el arr2 2@@0
+
+get_a_arr_el arr3 abc@3@0
+get_a_arr_el arr3 1@@0
+
+get_a_arr_el arr4 abc@abc=2@0
+get_a_arr_el arr4 abcd@e=3@0
+get_a_arr_el arr4 e@@0
+
+get_a_arr_el arr5 abc@e=3@0
+get_a_arr_el arr5 abcd@@0
+
+get_a_arr_el arr6 abc@2=@0
+
+get_a_arr_el arr7 a@=f@0
+get_a_arr_el arr7 b@2=@0
+"
+test_14="
+[header]
+set_a_arr_el arr abc=\"\na\"@0
+[/header]
+
+get_a_arr_el arr abc@\na@0
+"
