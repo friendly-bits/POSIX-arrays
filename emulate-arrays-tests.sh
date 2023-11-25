@@ -125,7 +125,15 @@ run_test_declare_i_arr
 run_test_set_i_arr
 run_test_a_arr
 
-# for i in $(seq 1 100); do
-# 	declare_i_arr abc def ghk 123456 blah bruh "$i"
-# 	test="$(get_i_arr_el abc $i)"
+# n=24
+# for i in $(seq 1 $n); do
+# 	set_i_arr_el test_arr "$i" "a$i"
+# 	test="$(get_i_arr_el test_arr "$((n+1-i))")"
+# 	echo "$test"
+# done
+
+# for i in $(seq 1 $n); do
+# 	set_a_arr_el test_arr "$i=a$i"
+# 	test="$(get_a_arr_el test_arr "$((n+1-i))")"
+# 	echo "$test"
 # done
