@@ -157,5 +157,5 @@ get_a_arr_el() {
 	return 0
 }
 
-__delim="$(printf '\33')"
+__delim="$(printf '\37')"
 #__delim="#"
