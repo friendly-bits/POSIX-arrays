@@ -13,7 +13,9 @@ Note that the last line in emulate-arrays.sh sets the delimiter variable. That v
 
 `set_i_arr_el <array_name> <index> [value]` - assigns `[value]` to `<index>`. Indexes should always be positive integer numbers. This acts as a sparse array, so indexes don't have to be sequential.
 
-`get_i_arr_el <array_name> <index>`
+`get_i_arr_el <array_name> <index>` - reads value for `<index>` from the emulated array
+
+`get_i_arr_all <array_name>` - reads all values from the emulated array and outputs a sorted (by index) whitespace-separated list
 
 **Examples**:
 
