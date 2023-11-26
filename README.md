@@ -9,13 +9,13 @@ Note that the last line in emulate-arrays.sh sets the delimiter variable. That v
 
 **Indexed arrays**:
 
-`declare_i_arr <array_name> [value] [value] ... [value]` - resets the array and assigns values to sequential indices, starting from 0
+`declare_i_arr <array_name> [value] [value] ... [value]` - resets the array and assigns values to sequential indices, starting from 0.
 
-`set_i_arr_el <array_name> <index> [value]` - assigns `[value]` to `<index>`. indices should always be positive integer numbers. This acts as a sparse array, so indices don't have to be sequential.
+`set_i_arr_el <array_name> <index> [value]` - assigns `[value]` to `<index>`. Indices should always be nonnegative integer numbers. This acts as a sparse array, so indices don't have to be sequential.
 
-`get_i_arr_el <array_name> <index>` - prints value for `<index>` from the indexed array
+`get_i_arr_el <array_name> <index>` - prints value for `<index>` from the indexed array.
 
-`get_i_arr_all <array_name>` - prints all values from the indexed array as a sorted (by index) whitespace-separated list
+`get_i_arr_all <array_name>` - prints all values from the indexed array as a sorted (by index) whitespace-separated list.
 
 **Examples**:
 
@@ -39,11 +39,11 @@ Output: `val3 123 etc`
 
 **Associative arrays**:
 
-`set_a_arr_el <array_name> <key>=[value]` - assigns `value` to `key`. if `value` is empty string, stores the empty string as a value for `key`.
+`set_a_arr_el <array_name> <key>=[value]` - assigns `value` to `key`. If `value` is empty string, stores the empty string as a value for `key`.
 
-`get_a_arr_el <array_name> <key>` - prints value for `key` from associative array
+`get_a_arr_el <array_name> <key>` - prints value for `key` from associative array.
 
-`get_a_arr_all_keys <array_name>` - prints all keys from the associative array as an unsorted whitespace-separated list
+`get_a_arr_all_keys <array_name>` - prints all keys from the associative array as an unsorted whitespace-separated list.
 
 **Example**:
 
