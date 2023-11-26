@@ -84,7 +84,7 @@ get_a_arr_all_keys() {
 # 3 - value (if no value, unsets the index)
 # no additional arguments are allowed
 set_i_arr_el() {
-	if [ $# -lt 2 ] || [ $# -gt 3 ]; then echo "set_i_arr_el: Error: not enough arguments." >&2; return 1; fi
+	if [ $# -lt 2 ] || [ $# -gt 3 ]; then echo "set_i_arr_el: Error: Wrong number of arguments." >&2; return 1; fi
 	___arr_name="$1"; ___arr_index=$2; ___new_val="$3"
 
 	case $___arr_index in ''|*[!0-9]*) echo "get_i_arr_el: Error: no index specified or '$___arr_index' is not a nonnegative integer." >&2; return 1 ;; esac
