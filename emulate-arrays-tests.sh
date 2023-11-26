@@ -41,15 +41,21 @@ run_test() {
 	lines_cnt="$(printf '%s\n' "$test" | wc -l)"
 
 	# execute 'declare' and 'set' commands
-	for i in $(seq 1 "$header_lines_cnt"); do
-		header_line="$(printf '%s\n' "$header" | awk "NR==$i")"
+#	for i in $(seq 1 "$header_lines_cnt"); do
+	while [ -n "$header" ]; do
+		# get line/s for the next command
+		header_line="$(printf '%s\n' "$header" | \
+			sed -n -e /"_${arr_type}_arr"/\{:1 -e p\;n\;/"_${arr_type}_arr"/q\;b1 -e \})"
+		# remove next command line/s from the list
+		header="${header#"$header_line"}"; header="${header#?}"
+		# extract test specifics
 		test_command="${header_line%@*}"
 		expected_rv="${header_line#*@}"
-		echo "test_command: '$test_command'"
+		echo "**header test_command: '$test_command'"
 
 		# gather array names from the test to reset the variables in the end
-		arr_name="$(printf '%s' "$test_command" | cut -d' ' -f2)"
-		case "$arr_name" in *_i_arr_* ) ;; *) arr_names="${arr_name}${newline}${arr_names}"; esac
+		arr_name="$(printf '%s' "$test_command" | head -n1 | cut -d' ' -f2)"
+		case "$arr_name" in *_arr_* ) ;; *) arr_names="${arr_name}${newline}${arr_names}"; esac
 
 		if [ -z "$print_stderr" ]; then eval "$test_command" 2>/dev/null; rv=$?
 		else eval "$test_command"; rv=$?
@@ -59,8 +65,13 @@ run_test() {
 	done
 
 	# execute the 'get' commands
-	for i in $(seq 1 "$lines_cnt" ); do
-		line="$(printf '%s\n' "$test" | awk "NR==$i")"
+	while [ -n "$test" ]; do
+		# get line/s for the next command
+		line="$(printf '%s\n' "$test" | \
+			sed -n -e /"_${arr_type}_arr"/\{:1 -e p\;n\;/"_${arr_type}_arr"/q\;b1 -e \})"
+		# remove next command line/s from the list
+		test="${test#"$line"}"; test="${test#?}"
+		# extract test specifics
 		test_command="${line%%@*}"
 		other_stuff="${line#*@}"
 		expected_val="${other_stuff%@*}"
@@ -71,8 +82,10 @@ run_test() {
 		else val="$($test_command)"; rv=$?
 		fi
 
-		[ "$val" != "$expected_val" ] && echo "Error: test '$id', test line: '$line', expected val: '$expected_val', got val: '$val'" >&2
-		[ "$rv" != "$expected_rv" ] && echo "Error: test '$id', test line: '$line', expected rv: '$expected_rv', got rv: '$rv'" >&2
+		[ "$val" != "$expected_val" ] && \
+			echo "Error: test '$id', test line: '$line', expected val: '$expected_val', got val: '$val'" >&2
+		[ "$rv" != "$expected_rv" ] \
+			&& echo "Error: test '$id', test line: '$line', expected rv: '$expected_rv', got rv: '$rv'" >&2
 		printf '%s' "."
 	done
 	printf '\n'
