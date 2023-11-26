@@ -29,12 +29,13 @@ run_test() {
 	last_test_num=${4:-100}
 
 	# shellcheck disable=SC1090
-	. "$test_file"
+	. "$test_file" || { echo "$me: Error: Can't source '$test_file'." >&2; exit 1; }
 
 	k="$first_test_num"
 
 	# load the first test unit
 	eval "test_unit=\"\$test_$k\""
+	[ -z "$test_unit" ] && { echo "$me: Error: failed to load the test unit for 'test_$k'." >&2; exit 1; }
 
 	while [ -n "$test_unit" ] && [ "$k" -le "$last_test_num" ]; do
 		# gather test variables names to unset them later
