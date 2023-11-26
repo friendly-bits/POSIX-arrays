@@ -56,10 +56,7 @@ get_a_arr_el test_arr some_key
 
 Output: `this is a test`
 
-## More details
-- The emulated arrays are stored in dynamically created variables. The base for the name of such variable is the same as the emulated array's name, except when creating the variable, the function prefixes it with `emu_[x]_`, where `[x]` stands for the type of the array: `a` for associative array, `i` for indexed array.
-- For example, if calling a function to create an indexed array: `set_i_arr_el test_arr 5 "test_value"`, the function will create a variable called `emu_i_test_arr` and store the value in it.
-- The delimiter used internally is ASCII code `\37` (octal). It's an escape code defined as "unit separator". That definition doesn't really matter. What matters is that this code doesn't correspond to any "normal" character. This way arrays can hold strings that have any "normal" delimiter in them, including whitespaces and newlines. The only downside is that if you try to directly access the variable holding the emulated array, you probably will not get a normally-looking value out of it, since the ASCII escape code will mess it up.
+## Details
 - Functions check for correct number of arguments and return an error if it's incorrect.
 - The indexed array functions check the index to make sure it's a nonnegative integer, and return an error otherwise.
 - The indices start at 0
@@ -68,3 +65,9 @@ Output: `this is a test`
 - The declare function for the indexed array is not necessary to create an array. It's just a way to set N values sequentially in one command. Otherwise you can create an indexed array by simply calling the `set_i_arr_el()` function.
 - Similarly, you can create an associative array by calling the `set_a_arr_el()` function.
 - The code is as efficient as I could make it, only using the shell built-ins (except for get-i-arr-all() function where I used the `tr` and `sort` utilities for sorting). However, it's still shell code which performance-wise can't compete with native implementation of arrays. Should be fine for lightweight arrays use.
+
+## Some more details
+- The emulated arrays are stored in dynamically created variables. The base for the name of such variable is the same as the emulated array's name, except when creating the variable, the function prefixes it with `emu_[x]_`, where `[x]` stands for the type of the array: `a` for associative array, `i` for indexed array.
+- For example, if calling a function to create an indexed array: `set_i_arr_el test_arr 5 "test_value"`, the function will create a variable called `emu_i_test_arr` and store the value in it.
+- The delimiter used internally is ASCII code `\37` (octal). It's an escape code defined as "unit separator". That definition doesn't really matter. What matters is that this code doesn't correspond to any "normal" character. This way arrays can hold strings that have any "normal" delimiter in them, including whitespaces and newlines. The only downside is that if you try to directly access the variable holding the emulated array, you probably will not get a normally-looking value out of it, since the ASCII escape code will mess it up.
+- The additional files (besides the `emulate-arrays.sh` script) are used for testing the main script. The test units are not very systematic but I tried to cover all points where the functionality may be fragile. To test in your environment, download all files into the same directory and then run the `emulate-arrays-tests.sh` script.
