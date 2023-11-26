@@ -73,6 +73,6 @@ Output: `this is a test`
 
 ## Test units
 - The additional files (besides the `emulate-arrays.sh` script) are used for testing the main script. The test units are not very systematic but I tried to cover all points where the functionality may be fragile. To test in your environment, download all files into the same directory and then run the `emulate-arrays-tests.sh` script.
-- To run a specific test set rather than all of them, comment the irrelevant lines in the `####Main` section starting with `run_test_`
+- To run a specific test set rather than all of them, comment the irrelevant lines in the `#### Main` section starting with `run_test_`
 - To limit the test units executed, add arguments to the `run_test_` call, for example: `run_test_a_arr 5 8` will run test units from 5 through 8.
 - Test units check for correct return codes, including in cases where an error is expected. So a significant portion of the tests intentionally induce errors in the functions. In order to avoid errors spam, by default STDERR output from the functions under test is silenced. If you want to see the errors anyway, uncomment the line `#print_stderr=true`.
