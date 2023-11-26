@@ -304,10 +304,10 @@ get_a_arr_all_keys arr7@b a@0
 
 test_14="
 [header]
-set_a_arr_el arr abc=\"\na\"@0
+set_a_arr_el arr abc=\"${newline}a\"@0
 [/header]
 
-get_a_arr_el arr abc@\na@0
+get_a_arr_el arr abc@${newline}a@0
 
 get_a_arr_all_keys arr@abc@0
 "
