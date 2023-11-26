@@ -116,7 +116,7 @@ run_test_a_arr() {
 		eval "test=\"\$test_$j\""
 	done
 	# shellcheck disable=SC2086
-	unset $tests_list; unset tests
+	unset $tests_list; unset tests_list
 }
 
 run_test_set_i_arr() {
@@ -134,7 +134,7 @@ run_test_set_i_arr() {
 		eval "test=\"\$test_$j\""
 	done
 	# shellcheck disable=SC2086
-	unset $tests_list; unset tests
+	unset $tests_list; unset tests_list
 }
 
 run_test_declare_i_arr() {
@@ -152,7 +152,7 @@ run_test_declare_i_arr() {
 		eval "test=\"\$test_$j\""
 	done
 	# shellcheck disable=SC2086
-	unset $tests_list; unset tests
+	unset $tests_list; unset tests_list
 }
 
 
