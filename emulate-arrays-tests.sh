@@ -78,7 +78,7 @@ run_test() {
 			fi
 			
 			[ "$rv" != "$expected_rv" ] && {
-				echo "Error: test '$test_id', expected rv: '$expected_rv', got rv: '$rv'" >&2
+				printf '\n%s\n' "Error: test '$test_id', header line: '$header_line', expected rv: '$expected_rv', got rv: '$rv'" >&2
 				err_num=$((err_num+1)); }
 		done
 
@@ -101,10 +101,10 @@ run_test() {
 			fi
 
 			[ "$val" != "$expected_val" ] && {
-				echo "Error: test '$test_id', test line: '$line', expected val: '$expected_val', got val: '$val'" >&2
+				printf '\n%s\n' "Error: test '$test_id', test line: '$line', expected val: '$expected_val', got val: '$val'" >&2
 				err_num=$((err_num+1)); }
 			[ "$rv" != "$expected_rv" ] && {
-				echo "Error: test '$test_id', test line: '$line', expected rv: '$expected_rv', got rv: '$rv'" >&2
+				printf '\n%s\n' "Error: test '$test_id', test line: '$line', expected rv: '$expected_rv', got rv: '$rv'" >&2
 				err_num=$((err_num+1)); }
 			printf '%s' "."
 		done
