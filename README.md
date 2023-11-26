@@ -1,5 +1,5 @@
 # POSIX-arrays
-POSIX-compliant shell functions emulating some aspects of arrays
+POSIX-compliant shell functions emulating some aspects of arrays.
 
 ## Usage
 1) Source the script emulate-arrays.sh in your script like so: `. [path]/emulate-arrays.sh`
