@@ -191,10 +191,10 @@ get_a_arr_el() {
 }
 
 
+___newline="
+"
 
 # delimiter which is used to separate pairs of values
 # \37 is an ASCII escape code for 'unit separator'
 # the specific escape code doesn't really matter here, as long as it's not a character
-___newline="
-"
 ___emu_arr_delim="$(printf '\37')"
