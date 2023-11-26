@@ -115,7 +115,7 @@ run_test_a_arr() {
 		j=$((j+1))
 		eval "test=\"\$test_$j\""
 	done
-	eval "unset $tests_list"; unset tests
+	unset $tests_list; unset tests
 }
 
 run_test_set_i_arr() {
@@ -132,7 +132,7 @@ run_test_set_i_arr() {
 		j=$((j+1))
 		eval "test=\"\$test_$j\""
 	done
-	eval "unset $tests_list"; unset tests
+	unset $tests_list; unset tests
 }
 
 run_test_declare_i_arr() {
@@ -149,7 +149,7 @@ run_test_declare_i_arr() {
 		j=$((j+1))
 		eval "test=\"\$test_$j\""
 	done
-	eval "unset $tests_list"; unset tests
+	unset $tests_list; unset tests
 }
 
 
