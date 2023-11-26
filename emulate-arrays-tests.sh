@@ -25,7 +25,7 @@ run_test() {
 
 	id="$1"
 	arr_type="$2"
-	eval "test=\"\$test_$id\""
+	test="$3"
 	echo; echo "Test id: $id."
 
 	# remove extra whitespaces, tabs and newlines
@@ -41,7 +41,6 @@ run_test() {
 	lines_cnt="$(printf '%s\n' "$test" | wc -l)"
 
 	# execute 'declare' and 'set' commands
-#	for i in $(seq 1 "$header_lines_cnt"); do
 	while [ -n "$header" ]; do
 		# get line/s for the next command
 		header_line="$(printf '%s\n' "$header" | \
@@ -61,7 +60,9 @@ run_test() {
 		else eval "$test_command"; rv=$?
 		fi
 		
-		[ "$rv" != "$expected_rv" ] && echo "Error: test '$id', expected rv: '$expected_rv', got rv: '$rv'" >&2
+		[ "$rv" != "$expected_rv" ] && {
+			echo "Error: test '$id', expected rv: '$expected_rv', got rv: '$rv'" >&2
+			err_num=$((err_num+1)); }
 	done
 
 	# execute the 'get' commands
@@ -82,67 +83,74 @@ run_test() {
 		else val="$($test_command)"; rv=$?
 		fi
 
-		[ "$val" != "$expected_val" ] && \
+		[ "$val" != "$expected_val" ] && {
 			echo "Error: test '$id', test line: '$line', expected val: '$expected_val', got val: '$val'" >&2
-		[ "$rv" != "$expected_rv" ] \
-			&& echo "Error: test '$id', test line: '$line', expected rv: '$expected_rv', got rv: '$rv'" >&2
+			err_num=$((err_num+1)); }
+		[ "$rv" != "$expected_rv" ] && {
+			echo "Error: test '$id', test line: '$line', expected rv: '$expected_rv', got rv: '$rv'" >&2
+			err_num=$((err_num+1)); }
 		printf '%s' "."
 	done
 	printf '\n'
 
 	arr_names="$(printf '%s\n' "$arr_names" | sort -u)"
 	for arr_name in $arr_names; do
-		unset "emu_${arr_type}_${arr_name}"
+		unset "emu_${arr_type}_${arr_name}" 2>/dev/null
 	done
 	unset test_command other_stuff expected_val expected_rv val arr_names
 }
 
 
-run_test_a_arr() (
+run_test_a_arr() {
 	. "$script_dir/tests-set_a_arr.list"
 	echo
-	echo "*** testing 'set_a_arr_el' and 'get_a_arr_el'... ***"
-	next_test="start"
+	echo "*** Testing 'set_a_arr_el' and 'get_a_arr_el'... ***"
 	first_test=${1:-1}
 	last_test=${2:-100}
 	j="$first_test"
-	while [ -n "$next_test" ] && [ "$j" -le "$last_test" ]; do
-		run_test "$j" a
+	test="$test_1"
+	while [ -n "$test" ] && [ "$j" -le "$last_test" ]; do
+		tests_list="test_$j $tests_list"
+		run_test "$j" a "$test"
 		j=$((j+1))
-		eval "next_test=\"\$test_$j"\"
+		eval "test=\"\$test_$j\""
 	done
-)
+	eval "unset $tests_list"; unset tests
+}
 
-run_test_set_i_arr() (
+run_test_set_i_arr() {
 	. "$script_dir/tests-set_i_arr.list"
 	echo
-	echo "*** testing 'set_i_arr_el' and 'get_i_arr_el'... ***"
-	next_test="start"
+	echo "*** Testing 'set_i_arr_el' and 'get_i_arr_el'... ***"
 	first_test=${1:-1}
 	last_test=${2:-100}
 	j="$first_test"
-	while [ -n "$next_test" ] && [ "$j" -le "$last_test" ]; do
-		run_test "$j" i
+	test="$test_1"
+	while [ -n "$test" ] && [ "$j" -le "$last_test" ]; do
+		tests_list="test_$j $tests_list"
+		run_test "$j" i "$test"
 		j=$((j+1))
-		eval "next_test=\"\$test_$j"\"
+		eval "test=\"\$test_$j\""
 	done
-)
+	eval "unset $tests_list"; unset tests
+}
 
-run_test_declare_i_arr() (
+run_test_declare_i_arr() {
 	. "$script_dir/tests-declare_i_arr.list"
 	echo
-	echo "*** testing 'declare_i_arr' and 'get_i_arr_el'... ***"
-	next_test="start"
-
+	echo "*** Testing 'declare_i_arr' and 'get_i_arr_el'... ***"
 	first_test=${1:-1}
 	last_test=${2:-100}
 	j="$first_test"
-	while [ -n "$next_test" ] && [ "$j" -le "$last_test" ]; do
-		run_test "$j" i
+	test="$test_1"
+	while [ -n "$test" ] && [ "$j" -le "$last_test" ]; do
+		tests_list="test_$j $tests_list"
+		run_test "$j" i "$test"
 		j=$((j+1))
-		eval "next_test=\"\$test_$j"\"
+		eval "test=\"\$test_$j\""
 	done
-)
+	eval "unset $tests_list"; unset tests
+}
 
 
 #### Main
@@ -152,10 +160,11 @@ newline="
 
 #print_stderr=true
 
+err_num=0
 run_test_declare_i_arr
 run_test_set_i_arr
 run_test_a_arr
-
+printf '\n%s\n' "Total errors: $err_num."
 
 ### Performance tests
 
