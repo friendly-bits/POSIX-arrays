@@ -157,7 +157,8 @@ newline="
 
 # To print errors returned by the functions under test, uncomment the following line
 # Some of the test units intentionally induce errors, so expect an error spam in the console
-#print_stderr=true
+
+# print_stderr=true
 
 err_num=0
 
@@ -173,7 +174,7 @@ printf '\n%s\n' "Total errors: $err_num."
 
 ### Performance tests
 
-# n=1400
+#  n=1400
 
 # for i in $(seq 1 $n); do
 # 	set_i_arr_el test_arr "$i" "a$i"
