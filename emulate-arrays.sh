@@ -92,13 +92,14 @@ set_i_arr_el() {
 
 	eval "___pairs=\"\$emu_i_${___arr_name}\""
 
+	# this is ugly but massively faster than 'for' loop, grep, awk and sed solutions
 	case "$___pairs" in
 		*"${___emu_arr_delim}${___index}${___pair_delim}"* )
 			___pairs_pt1="${___pairs%%"${___emu_arr_delim}${___index}${___pair_delim}"*}"
 			___pairs_pt2="${___pairs#*"${___emu_arr_delim}${___index}${___pair_delim}"*"${___emu_arr_delim}"}"
 			___new_pairs="$___pairs_pt1${___emu_arr_delim}$___pairs_pt2"
 		;;
-		* )___new_pairs="$___pairs"; [ -z "$___new_pairs" ] && ___new_pairs="${___emu_arr_delim}"
+		* ) ___new_pairs="$___pairs"; [ -z "$___new_pairs" ] && ___new_pairs="${___emu_arr_delim}"
 	esac
 
 	[ -n "$___new_val" ] && ___new_pairs="${___new_pairs}${___index}${___pair_delim}${___new_val}${___emu_arr_delim}"
@@ -124,13 +125,15 @@ set_a_arr_el() {
 	[ -z "$___key" ] && { echo "set_a_arr_el: Error: empty value provided for key in input '$___new_pair'." >&2; return 1; }
 
 	eval "___pairs=\"\$emu_a_${___arr_name}\""
+
+	# this is ugly but massively faster than 'for' loop, grep, awk and sed solutions
 	case "$___pairs" in
 		*"${___emu_arr_delim}${___key}${___pair_delim}"* )
 			___pairs_pt1="${___pairs%%"${___emu_arr_delim}${___key}${___pair_delim}"*}"
 			___pairs_pt2="${___pairs#*"${___emu_arr_delim}${___key}${___pair_delim}"*"${___emu_arr_delim}"}"
 			___new_pairs="$___pairs_pt1${___emu_arr_delim}$___pairs_pt2"
 		;;
-		* )___new_pairs="$___pairs"; [ -z "$___new_pairs" ] && ___new_pairs="${___emu_arr_delim}"
+		* ) ___new_pairs="$___pairs"; [ -z "$___new_pairs" ] && ___new_pairs="${___emu_arr_delim}"
 	esac
 
 	___new_pairs="${___new_pairs}${___key}${___pair_delim}${___new_val}${___emu_arr_delim}"
