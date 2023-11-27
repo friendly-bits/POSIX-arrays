@@ -18,10 +18,9 @@ declare_i_arr() {
 
 	if [ -n "$*" ]; then
 		for ___val in "$@"; do
-			___values="${___values}${___emu_arr_delim}$___index $___val"
+			___values="${___values}${___emu_arr_delim}$___index${___pair_delim}$___val"
 			___index=$((___index+1))
 		done
-		___values="${___values#"${___emu_arr_delim}"}"
 	fi
 
 	eval "emu_i_$___arr_name=\"$___values\""
@@ -43,12 +42,12 @@ get_i_arr_all() {
 		IFS_OLD="$IFS"
 		IFS="$___newline"
 		for ___pair in $___pairs_sorted; do
-			printf '%s' "${___pair#* } "
+			printf '%s' "${___pair#*"${___pair_delim}"} "
 		done
 		IFS="$IFS_OLD"
 	)"
 
-	printf '%s\n' "${___all_values% }"
+	printf '%s\n' "${___all_values%" "}"
 	unset ___all_values ___arr_name ___pairs_sorted
 
 	return 0
@@ -61,18 +60,20 @@ get_a_arr_all_keys() {
 	[ $# -ne 1 ] && { echo "get_a_arr_all_keys: Error: wrong number of arguments." >&2; return 1; }
 	___arr_name="$1"
 	eval "___pairs=\"\$emu_a_${___arr_name}\""
+	___pairs="${___pairs#"${___emu_arr_delim}"}"
+
 	# shellcheck disable=SC2154
 	___all_keys="$(
 		IFS_OLD="$IFS"
 		IFS="${___emu_arr_delim}"
 		for ___pair in $___pairs; do
-			printf '%s' "${___pair%% *} "
+			printf '%s' "${___pair%%"${___pair_delim}"*} "
 		done
 		IFS="$IFS_OLD"
 	)"
 
 	printf '%s\n' "${___all_keys% }"
-	unset ___all_keys ___arr_name
+	unset ___all_keys ___arr_name ___pairs
 
 	return 0
 }
@@ -85,27 +86,26 @@ get_a_arr_all_keys() {
 # no additional arguments are allowed
 set_i_arr_el() {
 	if [ $# -lt 2 ] || [ $# -gt 3 ]; then echo "set_i_arr_el: Error: Wrong number of arguments." >&2; return 1; fi
-	___arr_name="$1"; ___arr_index=$2; ___new_val="$3"
+	___arr_name="$1"; ___index=$2; ___new_val="$3"
 
-	case $___arr_index in ''|*[!0-9]*) echo "get_i_arr_el: Error: no index specified or '$___arr_index' is not a nonnegative integer." >&2; return 1 ;; esac
+	case $___index in ''|*[!0-9]*) echo "get_i_arr_el: Error: no index specified or '$___index' is not a nonnegative integer." >&2; return 1 ;; esac
 
 	eval "___pairs=\"\$emu_i_${___arr_name}\""
-	___new_pairs="$(
-		IFS_OLD="$IFS"
-		IFS="${___emu_arr_delim}"
-		# shellcheck disable=SC2154
-		for ___pair in $___pairs; do
-			[ "$___arr_index" != "${___pair%% *}" ] && printf '%s' "${___emu_arr_delim}${___pair}"
-		done
-		IFS="$IFS_OLD"
-	)"
 
-	[ -n "$___new_val" ] && ___new_pairs="${___new_pairs}${___emu_arr_delim}${___arr_index} ${___new_val}"
-	___new_pairs="${___new_pairs#"${___emu_arr_delim}"}"
+	case "$___pairs" in
+		*"${___emu_arr_delim}${___index}${___pair_delim}"* )
+			___pairs_pt1="${___pairs%%"${___emu_arr_delim}${___index}${___pair_delim}"*}"
+			___pairs_pt2="${___pairs#*"${___emu_arr_delim}${___index}${___pair_delim}"*"${___emu_arr_delim}"}"
+			___new_pairs="$___pairs_pt1${___emu_arr_delim}$___pairs_pt2"
+		;;
+		* )___new_pairs="$___pairs"; [ -z "$___new_pairs" ] && ___new_pairs="${___emu_arr_delim}"
+	esac
+
+	[ -n "$___new_val" ] && ___new_pairs="${___new_pairs}${___index}${___pair_delim}${___new_val}${___emu_arr_delim}"
 
 	eval "emu_i_$___arr_name=\"$___new_pairs\""
 
-	unset ___arr_name ___new_val ___new_pairs ___arr_index ___pairs
+	unset ___arr_name ___new_val ___new_pairs ___index ___pairs ___pairs_pt1 ___pairs_pt2
 	return 0
 }
 
@@ -118,28 +118,26 @@ set_a_arr_el() {
 	___arr_name="$1"; ___new_pair="$2"
 
 	case "$___new_pair" in *=*) ;; *) echo "set_a_arr_el: Error: '$___new_pair' is not a 'key=value' pair." >&2; return 1 ;; esac
-	___new_key="${___new_pair%%=*}"
+	___key="${___new_pair%%=*}"
 	___new_val="${___new_pair#*=}"
 
-	[ -z "$___new_key" ] && { echo "set_a_arr_el: Error: empty value provided for key in input '$___new_pair'." >&2; return 1; }
+	[ -z "$___key" ] && { echo "set_a_arr_el: Error: empty value provided for key in input '$___new_pair'." >&2; return 1; }
 
 	eval "___pairs=\"\$emu_a_${___arr_name}\""
-	___new_pairs="$(
-		IFS_OLD="$IFS"
-		IFS="${___emu_arr_delim}"
-		# shellcheck disable=SC2154
-		for ___pair in $___pairs; do
-			[ "$___new_key" != "${___pair%% *}" ] && printf '%s' "${___emu_arr_delim}${___pair}"
-		done
-		IFS="$IFS_OLD"
-	)"
+	case "$___pairs" in
+		*"${___emu_arr_delim}${___key}${___pair_delim}"* )
+			___pairs_pt1="${___pairs%%"${___emu_arr_delim}${___key}${___pair_delim}"*}"
+			___pairs_pt2="${___pairs#*"${___emu_arr_delim}${___key}${___pair_delim}"*"${___emu_arr_delim}"}"
+			___new_pairs="$___pairs_pt1${___emu_arr_delim}$___pairs_pt2"
+		;;
+		* )___new_pairs="$___pairs"; [ -z "$___new_pairs" ] && ___new_pairs="${___emu_arr_delim}"
+	esac
 
-	___new_pairs="${___new_pairs}${___emu_arr_delim}${___new_key} ${___new_val}"
-	___new_pairs="${___new_pairs#"${___emu_arr_delim}"}"
+	___new_pairs="${___new_pairs}${___key}${___pair_delim}${___new_val}${___emu_arr_delim}"
 
 	eval "emu_a_$___arr_name=\"$___new_pairs\""
 
-	unset ___arr_name ___new_pair ___new_key ___new_val ___new_pairs
+	unset ___arr_name ___new_pair ___key ___new_val ___new_pairs ___pairs_pt1 ___pairs_pt2
 	return 0
 }
 
@@ -148,7 +146,7 @@ set_a_arr_el() {
 # 1 - array name
 # 2 - key/index
 ___get_arr_el() {
-	___val=""; ___arr_name="$1"; ___key="$2"
+	___val=""; ___arr_name="$1"; ___arg_key="$2"
 
 	eval "___pairs=\"\$emu_${___arr_type}_${___arr_name}\""
 
@@ -156,13 +154,13 @@ ___get_arr_el() {
 	IFS="${___emu_arr_delim}"
 	# shellcheck disable=SC2154
 	for ___pair in $___pairs; do
-		___arr_key="${___pair%% *}"
-		[ "$___arr_key" = "$___key" ] && { ___val="${___pair#* }"; break; }
+		___key="${___pair%%"${___pair_delim}"*}"
+		[ "$___key" = "$___arg_key" ] && { ___val="${___pair#*"${___arg_key}${___pair_delim}"}"; break; }
 	done
 	IFS="$IFS_OLD"
 
 	printf '%s\n' "$___val"
-	unset ___val ___arr_name ___key ___pairs ___pair ___arr_key
+	unset ___val ___arr_name ___arg_key ___pairs ___pair ___key
 
 	return 0
 }
@@ -195,6 +193,9 @@ ___newline="
 "
 
 # delimiter which is used to separate pairs of values
+# \35 is an ASCII escape code for 'group separator'
 # \37 is an ASCII escape code for 'unit separator'
-# the specific escape code doesn't really matter here, as long as it's not a character
-___emu_arr_delim="$(printf '\37')"
+# the specific escape codes shouldn't really matter here, as long as it's not a character
+
+___emu_arr_delim="$(printf '\35')"
+___pair_delim="$(printf '\37')"
