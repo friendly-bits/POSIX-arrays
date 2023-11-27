@@ -170,13 +170,19 @@ run_test_a_arr
 
 printf '\n%s\n' "Total errors: $err_num."
 
+
 ### Performance tests
 
-# n=1000
+# n=1400
 
 # for i in $(seq 1 $n); do
 # 	set_i_arr_el test_arr "$i" "a$i"
-# 	test="$(get_i_arr_el test_arr "$((n+1-i))")"
+# #	test="$(get_i_arr_el test_arr "$((n+1-i))")"
+# done
+
+# for i in $(seq 1 $n); do
+# 	get_i_arr_el test_arr "$i" >/dev/null
+# 	#echo "$test"
 # done
 
 # for i in $(seq 1 $n); do
@@ -184,10 +190,6 @@ printf '\n%s\n' "Total errors: $err_num."
 # 	test="$(get_a_arr_el test_arr "$((n+1-i))")"
 # done
 
-# for i in $(seq 1 $n); do
-# 	get_i_arr_el test_arr "$i" >/dev/null
-# 	#echo "$test"
-# done
 
 
 
