@@ -137,7 +137,7 @@ get_a_arr_el arr a@@0
 get_a_arr_el arr abcd@123@0
 get_a_arr_el arr 123@abcd@0
 
-get_a_arr_all_keys arr@123 abcd@0
+get_a_arr_all_keys arr@123${newline}abcd@0
 "
 
 
@@ -162,7 +162,7 @@ get_a_arr_el arr aghk@a123@0
 get_a_arr_el arr 123@abcd@0
 get_a_arr_el arr abcd@123@0
 
-get_a_arr_all_keys arr@123 abcd aghk 1ghk@0
+get_a_arr_all_keys arr@123${newline}abcd${newline}aghk${newline}1ghk@0
 "
 
 
@@ -184,7 +184,7 @@ get_a_arr_el arr 123@@0
 get_a_arr_el arr abcd@jjjj@0
 
 
-get_a_arr_all_keys arr@abcd 123@0
+get_a_arr_all_keys arr@123${newline}abcd@0
 "
 
 
@@ -206,7 +206,7 @@ get_a_arr_el arr a@@0
 get_a_arr_el arr 123@@0
 get_a_arr_el arr abcd@@0
 
-get_a_arr_all_keys arr@123 abcd@0
+get_a_arr_all_keys arr@123${newline}abcd@0
 "
 
 
@@ -229,7 +229,7 @@ get_a_arr_el arr a@@0
 get_a_arr_el arr 123@abcd efgh 123@0
 get_a_arr_el arr abcd@123@0
 
-get_a_arr_all_keys arr@123 abcd aghk 1ghk@0
+get_a_arr_all_keys arr@123${newline}abcd${newline}aghk${newline}1ghk@0
 "
 
 
@@ -294,11 +294,11 @@ get_a_arr_el arr6 abc@2=@0
 get_a_arr_el arr7 a@=f@0
 get_a_arr_el arr7 b@2=@0
 
-get_a_arr_all_keys arr@abc 1@0
-get_a_arr_all_keys arr1@abc 1@0
+get_a_arr_all_keys arr@abc${newline}1@0
+get_a_arr_all_keys arr1@abc${newline}1@0
 get_a_arr_all_keys arr3@abc@0
-get_a_arr_all_keys arr4@abc abcd@0
-get_a_arr_all_keys arr7@b a@0
+get_a_arr_all_keys arr4@abc${newline}abcd@0
+get_a_arr_all_keys arr7@a${newline}b@0
 "
 
 

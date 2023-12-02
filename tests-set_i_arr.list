@@ -420,7 +420,7 @@ set_i_arr_el arr3 15 \"a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## 
 get_i_arr_el arr 0@ABCD123@0
 get_i_arr_el arr 11@A@0
 get_i_arr_el arr 30@a bcd 123@0
-get_i_arr_all arr@ABCD123 A a bcd 123@0
+get_i_arr_all arr@ABCD123${newline}A${newline}a bcd 123@0
 
 get_i_arr_el arr2 0@a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
 get_i_arr_el arr2 1@123ABCD@0
@@ -428,7 +428,7 @@ get_i_arr_el arr2 90@ABCD1234@0
 
 get_i_arr_el arr3 11@a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
 get_i_arr_el arr3 15@a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
-get_i_arr_all arr3@a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## = a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
+get_i_arr_all arr3@a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =${newline}a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
 
 get_i_arr_el arr2 2@@0
 get_i_arr_el arr2 89@@0
@@ -465,7 +465,7 @@ get_i_arr_el arr 2@#123=1@0
 get_i_arr_el arr 3@=a#@0
 get_i_arr_el arr 4@#@0
 get_i_arr_el arr 5@###@0
-get_i_arr_all arr@abc#= #123=1 =a# # ###@0
+get_i_arr_all arr@abc#=${newline}#123=1${newline}=a#${newline}#${newline}###@0
 
 get_i_arr_el arr_1 15@a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
 get_i_arr_all arr_1@a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
@@ -531,7 +531,7 @@ set_i_arr_el arr 200 c@0
 set_i_arr_el arr 100 d@0
 [/header]
 
-get_i_arr_all arr@b d c a@0
+get_i_arr_all arr@b${newline}d${newline}c${newline}a@0
 "
 
 # test for get_i_arr_all with empty array
@@ -570,9 +570,9 @@ set_i_arr_el arr3 0 c@0
 set_i_arr_el arr3 2 a@0
 [/header]
 
-get_i_arr_all arr1@b a@0
-get_i_arr_all arr2@a b@0
-get_i_arr_all arr3@c a@0
+get_i_arr_all arr1@b${newline}a@0
+get_i_arr_all arr2@a${newline}b@0
+get_i_arr_all arr3@c${newline}a@0
 "
 
 
@@ -585,6 +585,6 @@ set_i_arr_el arr 10000 ccc@0
 set_i_arr_el arr 1 ddd@0
 [/header]
 
-get_i_arr_all arr@ddd bbb aaa ccc@0
+get_i_arr_all arr@ddd${newline}bbb${newline}aaa${newline}ccc@0
 "
 
