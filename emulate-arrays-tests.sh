@@ -113,8 +113,9 @@ run_test() {
 		# unset the variables holding the arrays
 		arr_names="$(printf '%s\n' "$arr_names" | sort -u)"
 		for arr_name in $arr_names; do
-			unset "emu_${arr_type}_${arr_name}" 2>/dev/null
+			clean_${arr_type}_arr "$arr_name"
 		done
+
 		unset test_command other_stuff expected_val expected_rv val arr_names
 
 		# load the next test unit
@@ -142,6 +143,13 @@ run_test_set_i_arr() {
 	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
 }
 
+run_test_set_igc_arr() {
+	first_test_num=$1; last_test_num=$2; arr_type="igc"
+	test_file="$script_dir/tests-set_igc_arr.list"
+	echo; echo "*** Testing 'set_igc_arr_el' and 'get_igc_arr_el'... ***"
+	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
+}
+
 run_test_declare_i_arr() {
 	first_test_num=$1; last_test_num=$2; arr_type="i"
 	test_file="$script_dir/tests-declare_i_arr.list"
@@ -158,16 +166,16 @@ newline="
 # To print errors returned by the functions under test, uncomment the following line
 # Some of the test units intentionally induce errors, so expect an error spam in the console
 
-# print_stderr=true
+#print_stderr=true
 
 err_num=0
 
 # To only run a specific test set, comment out some of the following lines starting with run_test_
 # To limit to sepcific test units, use this format run_test_* [first_test_num_number] [last_test_num_number]
 # For example, 'run_test_a_arr 5 8' will run test units 5 through 8
-run_test_declare_i_arr
+# run_test_declare_i_arr
 run_test_set_i_arr
-run_test_a_arr
+# run_test_a_arr
 
 printf '\n%s\n' "Total errors: $err_num."
 
