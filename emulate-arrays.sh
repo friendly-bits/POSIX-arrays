@@ -267,4 +267,3 @@ ___newline="
 # the specific escape codes shouldn't really matter here, as long as it's not a character
 
 ___emu_arr_delim="$(printf '\35')"
-___pair_delim="$(printf '\37')"
