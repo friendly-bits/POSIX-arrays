@@ -4,8 +4,9 @@
 
 # emulates arrays in a POSIX shell
 
-# array contents are stored in a variable with the same name as the 'array' but with 'emu_[x]_' prefix
+# each array element is stored in a variable named in the format '___emu_[x]_[arr_name]_[key/index]'
 # where [x] is either 'a' for associative array or [i] for indexed array
+
 
 # declare an emulated indexed array while populating first elements
 # 1 - array name
