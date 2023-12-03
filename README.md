@@ -21,8 +21,7 @@ Note that the last line in emulate-arrays.sh sets the delimiter variable. That v
 
 `clean_i_arr <array_name>` - unsets all variables used to store the array in memory.
 
-**Examples**:
-
+<details> <summary> Examples </summary>
 Input:
 
 ```
@@ -40,6 +39,7 @@ get_i_arr_el test_arr 2
 ```
 
 Output: `val3 123 etc`
+</details>
 
 **Associative arrays**:
 
@@ -55,7 +55,7 @@ Output: `val3 123 etc`
 
 `clean_a_arr <array_name>` - unsets all variables used to store the array in memory.
 
-**Example**:
+<details> <summary> Example </summary>
 
 Input:
 
@@ -65,6 +65,7 @@ get_a_arr_el test_arr some_key
 ```
 
 Output: `this is a test`
+</details>
 
 ## Details
 - The arrays can hold strings that have any characters in them, including whitespaces and newlines.
