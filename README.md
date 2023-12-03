@@ -75,13 +75,13 @@ Output: `this is a test`
 - The declare functions are not necessary to create an array. It's just a way to set N elements in one command. Otherwise you can create an indexed array by simply calling the `set_i_arr_el()` function or an associative array by calling the `set_a_arr_el()` function.
 
 ## Performance
-- The code is quite efficient for a shell script. It went through multiple rounds of optimization and quite a few different algorithms have been tested. Currently the performance for small arrays (<= 200 elements) is comparable to Bash arrays. The script performs reasonably well with arrays containing up to 1000 elements. Higher than that, the performance drops significanly. All that applies to performance on a fairly old x86 CPU.
+- The code went through multiple rounds of optimization and quite a few different algorithms have been tested. Currently the performance for small arrays (<= 200 elements) is comparable to Bash arrays. The script performs reasonably well with arrays containing up to 1000 elements. Higher than that, the performance drops significanly. All that applies to performance on a fairly old x86 CPU.
 - While the code works if run under Bash or probably any other Unix-compatible shell, it runs much faster in a simpler shell like Dash. In my comparison it was about 3x faster under Dash compared to Bash.
 
 <details> <summary>Benchmarks:</summary>
 
 
-Measured on i7-4770 with 40-characters strings in each element:
+Measured on i7-4770 with 40-characters strings in each element. For associative arrays, measured with 16-18 characters keys.
 
 
 10 elements array:
@@ -101,10 +101,10 @@ Measured on i7-4770 with 40-characters strings in each element:
 | -------------|--------------------------|-------|
 | Indexed    |   set individual elements  | 3ms   |
 | Indexed    |   get individual elements  | 3ms   |
-| Indexed    |   get all elements    |      3ms   |
-| Associative  | set individual elements  | 2ms   |
+| Indexed    |   get all elements    |      2ms   |
+| Associative  | set individual elements  | 3ms   |
 | Associative  | get individual elements  | 3ms   |
-| Associative  | get all elements    |      3ms   |
+| Associative  | get all elements    |      2ms   |
 
 500 elements array:
 
@@ -113,7 +113,7 @@ Measured on i7-4770 with 40-characters strings in each element:
 | Indexed    |   set individual elements  | 11ms  |
 | Indexed    |   get individual elements  | 7ms   |
 | Indexed    |   get all elements    |      4ms   |
-| Associative  | set individual elements  | 10ms  |
+| Associative  | set individual elements  | 14ms  |
 | Associative  | get individual elements  | 7ms   |
 | Associative  | get all elements    |      4ms   |
 
@@ -124,8 +124,8 @@ Measured on i7-4770 with 40-characters strings in each element:
 | Indexed    |   set elements        |      18ms  |
 | Indexed    |   get elements        |      14ms  |
 | Indexed    |   get all elements    |      7ms   |
-| Associative  | set individual elements  | 22ms  |
-| Associative  | get individual elements  | 16ms  |
+| Associative  | set individual elements  | 27ms  |
+| Associative  | get individual elements  | 15ms  |
 | Associative  | get all elements    |      7ms   |
 
 5000 elements array:
@@ -135,9 +135,9 @@ Measured on i7-4770 with 40-characters strings in each element:
 | Indexed    |   set individual elements  | 135ms |
 | Indexed    |   get individual elements  | 90ms  |
 | Indexed    |   get all elements    |      80ms  |
-| Associative  | set individual elements  | 200ms |
-| Associative  | get individual elements  | 110ms |
-| Associative  | get all elements    |      57ms  |
+| Associative  | set individual elements  | 340ms |
+| Associative  | get individual elements  | 90ms |
+| Associative  | get all elements    |      50ms  |
 
 10000 elements array:
 
@@ -146,8 +146,8 @@ Measured on i7-4770 with 40-characters strings in each element:
 | Indexed    |   set individual elements  | 500ms |
 | Indexed    |   get individual elements  | 200ms |
 | Indexed    |   get all elements    |      320ms |
-| Associative  | set individual elements  | 680ms |
-| Associative  | get individual elements  | 280ms |
+| Associative  | set individual elements  |1280ms |
+| Associative  | get individual elements  | 230ms |
 | Associative  | get all elements    |      160ms |
 
 </details>
