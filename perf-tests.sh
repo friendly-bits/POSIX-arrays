@@ -62,7 +62,7 @@ warmup
 
 # Test
 f=1
-n=100
+n=3000
 arr_type="i"
 
 keys=$(seq $f $n)
