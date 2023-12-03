@@ -23,9 +23,9 @@ get_a_arr_el arr abc@@0
 get_a_arr_el arr 1 a@@1
 get_a_arr_el arr a 1@@1
 
-get_a_arr_all_keys@@1
-get_a_arr_all_keys arr 1@@1
-get_a_arr_all_keys arr@@0
+get_a_arr_keys@@1
+get_a_arr_keys arr 1@@1
+get_a_arr_keys arr@@0
 "
 
 
@@ -118,7 +118,7 @@ get_a_arr_el arr a@@0
 get_a_arr_el arr abcd@@0
 get_a_arr_el arr 123@abcd@0
 
-get_a_arr_all_keys arr@123@0
+get_a_arr_keys arr@123@0
 "
 
 
@@ -137,7 +137,7 @@ get_a_arr_el arr a@@0
 get_a_arr_el arr abcd@123@0
 get_a_arr_el arr 123@abcd@0
 
-get_a_arr_all_keys arr@123${newline}abcd@0
+get_a_arr_keys arr@123${newline}abcd@0
 "
 
 
@@ -162,7 +162,7 @@ get_a_arr_el arr aghk@a123@0
 get_a_arr_el arr 123@abcd@0
 get_a_arr_el arr abcd@123@0
 
-get_a_arr_all_keys arr@123${newline}1ghk${newline}abcd${newline}aghk@0
+get_a_arr_keys arr@123${newline}1ghk${newline}abcd${newline}aghk@0
 "
 
 
@@ -184,7 +184,7 @@ get_a_arr_el arr 123@@0
 get_a_arr_el arr abcd@jjjj@0
 
 
-get_a_arr_all_keys arr@123${newline}abcd@0
+get_a_arr_keys arr@123${newline}abcd@0
 "
 
 
@@ -206,7 +206,7 @@ get_a_arr_el arr a@@0
 get_a_arr_el arr 123@@0
 get_a_arr_el arr abcd@@0
 
-get_a_arr_all_keys arr@123${newline}abcd@0
+get_a_arr_keys arr@123${newline}abcd@0
 "
 
 
@@ -229,7 +229,7 @@ get_a_arr_el arr a@@0
 get_a_arr_el arr 123@abcd efgh 123@0
 get_a_arr_el arr abcd@123@0
 
-get_a_arr_all_keys arr@123${newline}1ghk${newline}abcd${newline}aghk@0
+get_a_arr_keys arr@123${newline}1ghk${newline}abcd${newline}aghk@0
 "
 
 
@@ -294,11 +294,11 @@ get_a_arr_el arr6 abc@2=@0
 get_a_arr_el arr7 a@=f@0
 get_a_arr_el arr7 b@2=@0
 
-get_a_arr_all_keys arr@1${newline}abc@0
-get_a_arr_all_keys arr1@1${newline}abc@0
-get_a_arr_all_keys arr3@abc@0
-get_a_arr_all_keys arr4@abc${newline}abcd@0
-get_a_arr_all_keys arr7@a${newline}b@0
+get_a_arr_keys arr@1${newline}abc@0
+get_a_arr_keys arr1@1${newline}abc@0
+get_a_arr_keys arr3@abc@0
+get_a_arr_keys arr4@abc${newline}abcd@0
+get_a_arr_keys arr7@a${newline}b@0
 "
 
 
@@ -309,5 +309,5 @@ set_a_arr_el arr abc=\"${newline}a\"@0
 
 get_a_arr_el arr abc@${newline}a@0
 
-get_a_arr_all_keys arr@abc@0
+get_a_arr_keys arr@abc@0
 "

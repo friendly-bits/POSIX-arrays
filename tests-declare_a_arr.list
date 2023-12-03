@@ -23,7 +23,7 @@ get_a_arr_el arr 1 2@@1
 get_a_arr_el arr a@@0
 get_a_arr_el arr 1 a@@1
 get_a_arr_el arr a 1@@1
-get_a_arr_all arr@@0
+get_a_arr_values arr@@0
 "
 
 test_2="
@@ -37,13 +37,13 @@ get_a_arr_el@@1
 get_a_arr_el arr@@1
 get_a_arr_el arr 0@@0
 get_a_arr_el arr 1@@0
-get_a_arr_all arr@@0
-get_a_arr_all_keys arr@@0
+get_a_arr_values arr@@0
+get_a_arr_keys arr@@0
 
 get_a_arr_el arr1 0@@0
 get_a_arr_el arr1 test@abc@0
-get_a_arr_all arr1@abc@0
-get_a_arr_all_keys arr1@test@0
+get_a_arr_values arr1@abc@0
+get_a_arr_keys arr1@test@0
 "
 
 test_3="
@@ -57,8 +57,8 @@ get_a_arr_el arr 0@abc@0
 get_a_arr_el arr 1@123@0
 get_a_arr_el arr 2@@0
 get_a_arr_el arr a@@0
-get_a_arr_all arr@abc${newline}123@0
-get_a_arr_all_keys arr@0${newline}1@0
+get_a_arr_values arr@abc${newline}123@0
+get_a_arr_keys arr@0${newline}1@0
 "
 
 test_4="
@@ -74,8 +74,8 @@ get_a_arr_el arr t_est@a@0
 get_a_arr_el arr t@@0
 get_a_arr_el arr T@@0
 get_a_arr_el arr a@@0
-get_a_arr_all arr@abc${newline}456${newline}a${newline}123${newline}789@0
-get_a_arr_all_keys arr@Test${newline}_test${newline}t_est${newline}test${newline}test_@0
+get_a_arr_values arr@abc${newline}456${newline}a${newline}123${newline}789@0
+get_a_arr_keys arr@Test${newline}_test${newline}t_est${newline}test${newline}test_@0
 "
 
 test_5="
@@ -91,8 +91,8 @@ get_a_arr_el arr test2@123@0
 get_a_arr_el arr test3@a bcd 123@0
 get_a_arr_el arr test4@@0
 get_a_arr_el arr a@@0
-get_a_arr_all arr@abc${newline}123${newline}a bcd 123@0
-get_a_arr_all_keys arr@test1${newline}test2${newline}test3@0
+get_a_arr_values arr@abc${newline}123${newline}a bcd 123@0
+get_a_arr_keys arr@test1${newline}test2${newline}test3@0
 
 get_a_arr_el arr2@@1
 get_a_arr_el arr2 test7@def@0
@@ -101,8 +101,8 @@ get_a_arr_el arr2 test3@@0
 get_a_arr_el arr2 test4@@0
 get_a_arr_el arr2 test5@@0
 get_a_arr_el arr2 test6@@0
-get_a_arr_all arr2@def@0
-get_a_arr_all_keys arr2@test7@0
+get_a_arr_values arr2@def@0
+get_a_arr_keys arr2@test7@0
 "
 
 
@@ -116,8 +116,8 @@ get_a_arr_el arr __@123@0
 get_a_arr_el arr ___@a bcd 123@0
 get_a_arr_el arr ____@=@0
 get_a_arr_el arr _____@@0
-get_a_arr_all arr@abc${newline}123${newline}a bcd 123${newline}=@0
-get_a_arr_all_keys arr@_${newline}__${newline}___${newline}____@0
+get_a_arr_values arr@abc${newline}123${newline}a bcd 123${newline}=@0
+get_a_arr_keys arr@_${newline}__${newline}___${newline}____@0
 "
 
 
@@ -132,7 +132,7 @@ get_a_arr_el arr 2@=a@0
 get_a_arr_el arr 3@@0
 get_a_arr_el arr 123@@0
 get_a_arr_el arr abc@@0
-get_a_arr_all arr@abc=${newline}123=1${newline}=a@0
+get_a_arr_values arr@abc=${newline}123=1${newline}=a@0
 "
 
 
@@ -151,8 +151,8 @@ get_a_arr_el arr #123@@1
 get_a_arr_el arr a#@@1
 get_a_arr_el arr =a#@@1
 get_a_arr_el arr #@@1
-get_a_arr_all arr@abc#=${newline}#123=1${newline}=a#${newline}#${newline}###@0
-get_a_arr_all_keys arr@0${newline}1${newline}2${newline}3${newline}4@0
+get_a_arr_values arr@abc#=${newline}#123=1${newline}=a#${newline}#${newline}###@0
+get_a_arr_keys arr@0${newline}1${newline}2${newline}3${newline}4@0
 "
 
 
@@ -162,6 +162,6 @@ declare_a_arr arr 0=abc 1=abcd 2=\"abc def\"@0
 clean_a_arr arr@0
 [/header]
 
-get_a_arr_all arr@@0
-get_a_arr_all_keys arr@@0
+get_a_arr_values arr@@0
+get_a_arr_keys arr@@0
 "

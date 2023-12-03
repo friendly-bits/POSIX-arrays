@@ -23,7 +23,7 @@ get_i_arr_el arr 1 2@@1
 get_i_arr_el arr a@@1
 get_i_arr_el arr 1 a@@1
 get_i_arr_el arr a 1@@1
-get_i_arr_all arr@@0
+get_i_arr_values arr@@0
 "
 
 test_2="
@@ -41,7 +41,7 @@ get_i_arr_el arr 1 2@@1
 get_i_arr_el arr a@@1
 get_i_arr_el arr 1 a@@1
 get_i_arr_el arr a 1@@1
-get_i_arr_all arr@abc@0
+get_i_arr_values arr@abc@0
 "
 
 test_3="
@@ -57,7 +57,7 @@ get_i_arr_el arr 2@@0
 get_i_arr_el arr 3@@0
 get_i_arr_el arr 1 2@@1
 get_i_arr_el arr a@@1
-get_i_arr_all arr@abc${newline}123@0
+get_i_arr_values arr@abc${newline}123@0
 "
 
 test_4="
@@ -73,7 +73,7 @@ get_i_arr_el arr 2@a@0
 get_i_arr_el arr 3@@0
 get_i_arr_el arr 1 2@@1
 get_i_arr_el arr a@@1
-get_i_arr_all arr@abc${newline}123${newline}a@0
+get_i_arr_values arr@abc${newline}123${newline}a@0
 "
 
 test_5="
@@ -92,14 +92,14 @@ get_i_arr_el arr 2@a bcd 123@0
 get_i_arr_el arr 3@@0
 get_i_arr_el arr 1 2@@1
 get_i_arr_el arr a@@1
-get_i_arr_all arr@abc${newline}123${newline}a bcd 123@0
+get_i_arr_values arr@abc${newline}123${newline}a bcd 123@0
 
 get_i_arr_el arr2@@1
 get_i_arr_el arr2 0@def@0
 get_i_arr_el arr2 1@@0
 get_i_arr_el arr2 2@@0
 get_i_arr_el arr2 3@@0
-get_i_arr_all arr2@def@0
+get_i_arr_values arr2@def@0
 "
 
 
@@ -117,7 +117,7 @@ get_i_arr_el arr 3@=@0
 get_i_arr_el arr 4@@0
 get_i_arr_el arr 1 2@@1
 get_i_arr_el arr a@@1
-get_i_arr_all arr@abc${newline}123${newline}a bcd 123${newline}=@0
+get_i_arr_values arr@abc${newline}123${newline}a bcd 123${newline}=@0
 "
 
 
@@ -134,7 +134,7 @@ get_i_arr_el arr 2@=a@0
 get_i_arr_el arr 3@@0
 get_i_arr_el arr 1 2@@1
 get_i_arr_el arr a@@1
-get_i_arr_all arr@abc=${newline}123=1${newline}=a@0
+get_i_arr_values arr@abc=${newline}123=1${newline}=a@0
 "
 
 
@@ -149,5 +149,5 @@ get_i_arr_el arr 2@=a#@0
 get_i_arr_el arr 3@#@0
 get_i_arr_el arr 4@###@0
 get_i_arr_el arr 5@@0
-get_i_arr_all arr@abc#=${newline}#123=1${newline}=a#${newline}#${newline}###@0
+get_i_arr_values arr@abc#=${newline}#123=1${newline}=a#${newline}#${newline}###@0
 "

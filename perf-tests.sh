@@ -9,45 +9,54 @@ script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 . "$script_dir/emulate-arrays.sh" || { echo "$me: Error: Can't source '$script_dir/emulate-arrays.sh'." >&2; exit 1; }
 
 warmup() {
-	for i in $keys; do
-		set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-	done
+	if [ "$arr_type" = "i" ]; then
+		for i in $elements; do
+			set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+		done
+	else
+		for i in $elements; do
+			set_${arr_type}_arr_el test_arr "abcdefghijklmn$i=a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+		done
+	fi
 }
  
 test_set() {
-	for i in $keys; do
-		set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-        # test_arr[$i]="a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@!%% "
-	done
+	if [ "$arr_type" = "i" ]; then
+		for i in $elements; do
+			set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+		done
+	else
+		for i in $elements; do
+			set_${arr_type}_arr_el test_arr "abcdefghijklmn$i=a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+		done
+	fi
 }
  
-test_unset1() {
-	for i in $keys; do
-		set_${arr_type}_arr_el test_arr "$i" ""
-        # test_arr[$i]=""
-	done
-}
- 
-test_unset2() {
-	for i in $keys; do
-		set_${arr_type}_arr_el test_arr "$i" ""
-        # test_arr[$i]=""
-	done
-}
- 
-test_unset3() {
-	for i in $keys; do
-		set_${arr_type}_arr_el test_arr "$i" ""
-        # test_arr[$i]=""
-	done
+test_unset() {
+	if [ "$arr_type" = "i" ]; then
+		for i in $elements; do
+			set_${arr_type}_arr_el test_arr "$i" ""
+		done
+	else
+		for i in $elements; do
+			set_${arr_type}_arr_el test_arr "abcdefghijklmn$i="
+		done
+	fi
 }
  
 test_get() {
-	for i in $keys; do
-		get_${arr_type}_arr_el test_arr $i >/dev/null
-        # printf '%s\n' "${test_arr[$i]}" >/dev/null
-	done
-    printf '\n'
+	if [ "$arr_type" = "i" ]; then
+		for i in $elements; do
+			get_${arr_type}_arr_el test_arr $i >/dev/null
+			# printf '%s\n' "${test_arr[$i]}" >/dev/null
+		done
+ 	else
+		for i in $elements; do
+			get_${arr_type}_arr_el test_arr "abcdefghijklmn$i" >/dev/null
+			# printf '%s\n' "${test_arr[$i]}" >/dev/null
+		done
+	fi
+  printf '\n'
 }
 
 # Check the 'date' command output
@@ -65,7 +74,7 @@ fi
 f=1
 n=1
 arr_type="i"
-keys=$(seq $f $n)
+elements=$(seq $f $n)
 warmup
 
 #echo "Indices after warmup:"
@@ -73,41 +82,41 @@ warmup
 
 # Test
 f=1
-n=3000
-arr_type="i"
+n=1000
+arr_type="a"
 
-keys=$(seq $f $n)
+elements=$(seq $f $n)
 __start_set=$(date +%s%N)
 test_set
 __end_set=$(date +%s%N)
  
-keys=$(seq $f $n)
+elements=$(seq $f $n)
 __start_get=$(date +%s%N)
 test_get
 __end_get=$(date +%s%N)
  
 #echo
 __start_get_all1=$(date +%s%N)
-get_${arr_type}_arr_all test_arr >/dev/null
+get_${arr_type}_arr_values test_arr >/dev/null
 __end_get_all1=$(date +%s%N)
 
-keys=$(seq $((f + (n-f)/4)) $((n-(n-f)/4)) )
+elements=$(seq $((f + (n-f)/4)) $((n-(n-f)/4)) )
 __start_unset3=$(date +%s%N)
-test_unset3
+test_unset
 __end_unset3=$(date +%s%N)
 
-keys=$(seq $f $((f+(n-f)/4 - 1)) )
+elements=$(seq $f $((f+(n-f)/4 - 1)) )
 __start_unset1=$(date +%s%N)
-test_unset1
+test_unset
 __end_unset1=$(date +%s%N)
  
-keys=$(seq $n -1 $((n + 1 - (n-f)/4)) )
+elements=$(seq $n -1 $((n + 1 - (n-f)/4)) )
 __start_unset2=$(date +%s%N)
-test_unset2
+test_unset
 __end_unset2=$(date +%s%N)
  
 __start_get_all2=$(date +%s%N)
-resulting_values="$(get_${arr_type}_arr_all test_arr)"
+resulting_values="$(get_${arr_type}_arr_values test_arr)"
 __end_get_all2=$(date +%s%N)
  
 
@@ -121,7 +130,7 @@ echo "Total unset3 time: $(( (__end_unset3 - __start_unset3)/timefactor )) $time
 echo "get all 2 time: $(( (__end_get_all2 - __start_get_all2)/timefactor )) $timeunits"
 
 # echo "Resulting keys:"
-# echo "$___emu_i_test_arr_keys"
+# eval echo "\$___emu_${arr_type}_test_arr_keys"
 
-# echo "Resulting values:"
-# echo "'$resulting_values'"
+echo "Resulting values:"
+echo "'$resulting_values'"
