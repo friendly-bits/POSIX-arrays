@@ -80,17 +80,17 @@ get_i_arr_all_indices() {
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_i_arr_all_indices: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 
 	eval "___indices=\"\$___emu_i_${___arr_name}_indices\""
-	___indices_sorted="$(printf '%s' "$___indices" | sort -u | sort -n)"
-	___all_indices="$(
-		for ___index in $___indices_sorted; do
+	___sorted="$(printf '%s' "$___indices" | sort -u | sort -n)"
+	___indices="$(
+		for ___index in $___indices; do
 			eval "___val=\"\$___emu_i_${___arr_name}_${___index}\""
 			[ -n "$___val" ] && printf '%s\n' "$___index"
 		done
 	)"
-	eval "___emu_i_${___arr_name}_indices=\"$___all_indices\""
-	printf '%s' "$___all_indices"
+	eval "___emu_i_${___arr_name}_indices=\"$___indices\""
+	printf '%s' "$___indices"
 
-	unset ___indices ___indices_sorted ___index ___all_indices
+	unset ___indices ___index
 	return 0
 }
 
@@ -113,7 +113,7 @@ set_i_arr_el() {
 
 	eval "___emu_i_${___arr_name}_${___index}=\"$___new_val\""
 
-	unset ___arr_name ___index ___new_val ___indices ___old_val
+	unset ___index ___new_val ___old_val
 	return 0
 }
 
@@ -127,6 +127,7 @@ get_i_arr_el() {
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_i_arr_el: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 	case "$___index" in *[!0-9]*) echo "get_i_arr_el: Error: no index specified or '$___index' is not a nonnegative integer." >&2; return 1; esac
 	eval "printf '%s\n' \"\$___emu_i_${___arr_name}_${___index}\""
+	unset ___index
 }
 
 
@@ -149,6 +150,7 @@ declare_a_arr() {
 			___val="${___pair#*=}"
 			case "$___key" in *[!A-Za-z0-9_]*) echo "declare_a_arr: Error: invalid key '$___key'." >&2; return 1; esac
 			eval "___emu_a_${___arr_name}_${___key}=\"$___val\""
+			eval "_${___arr_name}_${___key}_=1"
 			___keys="$___keys$___key$___newline"
 		done
 	fi
@@ -159,7 +161,7 @@ declare_a_arr() {
 	return 0
 }
 
-# get all values from an emulated associative array (unsorted)
+# get all values from an emulated associative array (alphabetically sorted by key)
 # 1 - array name
 # no additional arguments are allowed
 get_a_arr_all() {
@@ -179,7 +181,7 @@ get_a_arr_all() {
 	return 0
 }
 
-# get all keys from an emulated associative array (unsorted)
+# get all keys from an emulated associative array (alphabetically sorted)
 # 1 - array name
 # no additional arguments are allowed
 get_a_arr_all_keys() {
@@ -188,24 +190,25 @@ get_a_arr_all_keys() {
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_a_arr_all_keys: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 
 	eval "___keys=\"\$___emu_a_${___arr_name}_keys\""
-	___all_keys="$(
+	___keys="$(printf '%s\n' "$___keys" | sort -u)"
+	___keys="$(
 		for ___key in $___keys; do
-			eval "___val=\"\$___emu_a_${___arr_name}_${___key}\""
-			printf '%s\n' "$___key"
+			eval "___key_set=\"\$_${___arr_name}_${___key}_\""
+			[ -n "$___key_set" ] && printf '%s\n' "$___key"
 		done
 	)"
 
-	eval "___emu_a_${___arr_name}_keys=\"$___all_keys\""
-	printf '%s' "$___all_keys"
+	eval "___emu_a_${___arr_name}_keys=\"$___keys\""
+	printf '%s' "$___keys"
 
-	unset ___keys ___key ___all_keys
+	unset ___keys ___key ___key_set
 	return 0
 }
 
 # set a value in an emulated associative array
 # 1 - array name
 # 2 - key
-# 3 - value (if no value, unsets the key)
+# 3 - value (if no value, sets an empty string)
 # no additional arguments are allowed
 set_a_arr_el() {
 	___arr_name="$1"; ___pair="$2"
@@ -216,15 +219,16 @@ set_a_arr_el() {
 	___new_val="${___pair#*=}"
 	case "$___key" in *[!A-Za-z0-9_]*) echo "set_a_arr_el: Error: invalid key '$___key'." >&2; return 1; esac
 
-	eval "___old_val=\"\$___emu_a_${___arr_name}_${___key}\""
+	eval "___key_set=\"\$_${___arr_name}_${___key}_\""
 
-	if [ -z "$___old_val" ] && [ -n "$___new_val" ]; then
+	if [ -z "$___key_set" ] && [ -n "$___key" ]; then
+		eval "_${___arr_name}_${___key}_=1"
 		eval "___emu_a_${___arr_name}_keys=\"\${___emu_a_${___arr_name}_keys}${___key}${___newline}\""
 	fi
 
 	eval "___emu_a_${___arr_name}_${___key}=\"$___new_val\""
 
-	unset ___arr_name ___key ___new_val ___keys ___old_val
+	unset ___key ___new_val ___old_val ___key_set
 	return 0
 }
 
@@ -239,6 +243,7 @@ get_a_arr_el() {
 	case "$___key" in *[!A-Za-z0-9_]*) echo "get_a_arr_el: Error: invalid key '$___key'." >&2; return 1; esac
 
 	eval "printf '%s\n' \"\$___emu_a_${___arr_name}_${___key}\""
+	unset ___key
 }
 
 clean_a_arr() {
@@ -249,6 +254,7 @@ clean_a_arr() {
 
 	for ___key in $___keys; do
 		unset "___emu_a_${___arr_name}_${___key}"
+		unset "_${___arr_name}_${___key}_"
 	done
 	unset "___emu_a_${___arr_name}_keys"
 	unset ___keys ___key
