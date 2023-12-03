@@ -11,11 +11,15 @@ Note that the last line in emulate-arrays.sh sets the delimiter variable. That v
 
 `declare_i_arr <array_name> [value] [value] ... [value]` - resets the array and assigns values to sequential indices, starting from 0.
 
-`set_i_arr_el <array_name> <index> [value]` - assigns `[value]` to `<index>`. Indices should always be nonnegative integer numbers. This acts as a sparse array, so indices don't have to be sequential.
+`set_i_arr_el <array_name> <index> [value]` - assigns `[value]` to `<index>`. Indices should always be nonnegative integer numbers. This acts as a sparse array, so indices don't have to be sequential. If `value` is an empty string, unsets the value.
 
 `get_i_arr_el <array_name> <index>` - prints value for `<index>` from the indexed array.
 
-`get_i_arr_all <array_name>` - prints all values from the indexed array as a sorted (by index) whitespace-separated list.
+`get_i_arr_values <array_name>` - prints all values from an indexed array as a sorted (by index) newline-separated list.
+
+`get_i_arr_indices <array_name>` - prints all indices as a sorted newline-separated list.
+
+`clean_i_arr <array_name>` - unsets all variables used to store the array in memory.
 
 **Examples**:
 
@@ -39,11 +43,17 @@ Output: `val3 123 etc`
 
 **Associative arrays**:
 
-`set_a_arr_el <array_name> <key>=[value]` - assigns `value` to `key`. If `value` is empty string, stores the empty string as a value for `key`.
+`declare_a_arr <array_name> [key=value] [key=value] ... [key=value]` - resets the array and assigns values to keys.
+
+`set_a_arr_el <array_name> <key>=[value]` - assigns `value` to `key`. If `value` is an empty string, stores the empty string as a value for `key`.
 
 `get_a_arr_el <array_name> <key>` - prints value for `key` from associative array.
 
-`get_a_arr_all_keys <array_name>` - prints all keys from the associative array as an unsorted whitespace-separated list.
+`get_a_arr_values <array_name>` - prints all values as an alphabetically sorted (by key) newline-separated list.
+
+`get_a_arr_keys <array_name>` - prints all keys as an alphabetically sorted newline-separated list.
+
+`clean_a_arr <array_name>` - unsets all variables used to store the array in memory.
 
 **Example**:
 
@@ -57,19 +67,94 @@ get_a_arr_el test_arr some_key
 Output: `this is a test`
 
 ## Details
-- Functions check for correct number of arguments and return an error if it's incorrect.
-- The indexed array functions check the index to make sure it's a nonnegative integer, and return an error otherwise.
+- The arrays can hold strings that have any characters in them, including whitespaces and newlines.
+- Array names and (for associative arrays) keys are limited to alphanumeric characters and underlines - `_`.
 - The indices start at 0
 - As is default for shells, if you request a value corresponding to an index or to a key that has not been set previously, the functions will output an empty string and not return an error.
 - The indexed array effectively works as a sparse array, meaning that the indices do not have to be sequential. For example, you can set a value for index 10 and for index 100 while all other indices will not be set.
-- The declare function for the indexed array is not necessary to create an array. It's just a way to set N values sequentially in one command. Otherwise you can create an indexed array by simply calling the `set_i_arr_el()` function.
-- Similarly, you can create an associative array by calling the `set_a_arr_el()` function.
-- The code is as efficient as I could make it, only using the shell built-ins (except for get-i-arr-all() function where I used the `tr` and `sort` utilities for sorting). However, it's still shell code which performance-wise can't compete with native implementation of arrays. Should be fine for lightweight arrays use.
+- The declare functions are not necessary to create an array. It's just a way to set N elements in one command. Otherwise you can create an indexed array by simply calling the `set_i_arr_el()` function or an associative array by calling the `set_a_arr_el()` function.
+
+## Performance
+- The code is quite efficient for a shell script. It went through multiple rounds of optimization and quite a few different algorithms have been tested. Currently the performance for small arrays (<= 200 elements) is comparable to Bash arrays. The script performs reasonably well with arrays containing up to 1000 elements. Higher than that, the performance drops significanly. All that applies to performance on a fairly old x86 CPU.
+- While the code works if run under Bash or probably any other Unix-compatible shell, it runs much faster in a simpler shell like Dash. In my comparison it was about 3x faster under Dash compared to Bash.
+
+<details> <summary>Benchmarks:</summary>
+
+
+Measured on i7-4770 with 40-characters strings in each element:
+
+
+10 elements array:
+
+| Array type     |    Test          |       Time  |
+| -------------|--------------------------|-------|
+| Indexed    |   set individual elements  | 1ms   |
+| Indexed    |   get individual elements  | 1ms   |
+| Indexed    |   get all elements    |      2ms   |
+| Associative  | set individual elements  | 1ms   |
+| Associative  | get individual elements  | 1ms   |
+| Associative  | get all elements    |      2ms   |
+
+100 elements array:
+
+| Array type     |    Test          |       Time  |
+| -------------|--------------------------|-------|
+| Indexed    |   set individual elements  | 3ms   |
+| Indexed    |   get individual elements  | 3ms   |
+| Indexed    |   get all elements    |      3ms   |
+| Associative  | set individual elements  | 2ms   |
+| Associative  | get individual elements  | 3ms   |
+| Associative  | get all elements    |      3ms   |
+
+500 elements array:
+
+| Array type     |    Test          |       Time  |
+| -------------|--------------------------|-------|
+| Indexed    |   set individual elements  | 11ms  |
+| Indexed    |   get individual elements  | 7ms   |
+| Indexed    |   get all elements    |      4ms   |
+| Associative  | set individual elements  | 10ms  |
+| Associative  | get individual elements  | 7ms   |
+| Associative  | get all elements    |      4ms   |
+
+1000 elements array:
+
+| Array type     |    Test          |       Time  |
+| -------------|--------------------------|-------|
+| Indexed    |   set elements        |      18ms  |
+| Indexed    |   get elements        |      14ms  |
+| Indexed    |   get all elements    |      7ms   |
+| Associative  | set individual elements  | 22ms  |
+| Associative  | get individual elements  | 16ms  |
+| Associative  | get all elements    |      7ms   |
+
+5000 elements array:
+
+| Array type     |    Test          |       Time  |
+| -------------|--------------------------|-------|
+| Indexed    |   set individual elements  | 135ms |
+| Indexed    |   get individual elements  | 90ms  |
+| Indexed    |   get all elements    |      80ms  |
+| Associative  | set individual elements  | 200ms |
+| Associative  | get individual elements  | 110ms |
+| Associative  | get all elements    |      57ms  |
+
+10000 elements array:
+
+| Array type     |    Test          |       Time  |
+| -------------|--------------------------|-------|
+| Indexed    |   set individual elements  | 500ms |
+| Indexed    |   get individual elements  | 200ms |
+| Indexed    |   get all elements    |      320ms |
+| Associative  | set individual elements  | 680ms |
+| Associative  | get individual elements  | 280ms |
+| Associative  | get all elements    |      160ms |
+
+</details>
 
 ## Some more details
 - The emulated arrays are stored in dynamically created variables. The base for the name of such variable is the same as the emulated array's name, except when creating the variable, the function prefixes it with `emu_[x]_`, where `[x]` stands for the type of the array: `a` for associative array, `i` for indexed array.
 - For example, if calling a function to create an indexed array: `set_i_arr_el test_arr 5 "test_value"`, the function will create a variable called `emu_i_test_arr` and store the value in it.
-- The delimiters used internally are ASCII codes `\35` (to separate between pairs of key-value) and `\37` (to separate the key from the value). The definition of these codes doesn't really matter. What matters is that they doen't correspond to any "normal" character. This way arrays can hold strings that have any "normal" character in them, including whitespaces and newlines. The only downside is that if you try to directly access the variable holding the emulated array, you probably will not get a normally-looking value out of it, since the ASCII escape codes will mess it up.
 
 ## Test units
 - The additional files (besides the `emulate-arrays.sh` script) are used for testing the main script. The test units are not very systematic but I tried to cover all points where the functionality may be fragile. To test in your environment, download all files into the same directory and then run the `emulate-arrays-tests.sh` script.
