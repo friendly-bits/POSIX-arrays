@@ -173,9 +173,9 @@ err_num=0
 # To only run a specific test set, comment out some of the following lines starting with run_test_
 # To limit to sepcific test units, use this format run_test_* [first_test_num_number] [last_test_num_number]
 # For example, 'run_test_a_arr 5 8' will run test units 5 through 8
-# run_test_declare_i_arr
+run_test_declare_i_arr
 run_test_set_i_arr
-# run_test_a_arr
+run_test_a_arr
 
 printf '\n%s\n' "Total errors: $err_num."
 
