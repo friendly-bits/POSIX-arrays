@@ -50,6 +50,17 @@ test_get() {
     printf '\n'
 }
 
+# Check the 'date' command output
+testdate="$(date +%N)"
+if [ -z "$testdate" ]; then
+	timeunits="s"; timefactor="1"
+	echo "Note: time measurement precision is limited to seconds on this sytem."
+elif [ ${#testdate} -eq 9 ]; then
+	timeunits="ms"; timefactor="1000000"
+else
+	echo "Error: Unexpected result from 'date +%N" command; exit 1
+fi
+
 # Warmup
 f=1
 n=1
@@ -99,15 +110,15 @@ __start_get_all2=$(date +%s%N)
 resulting_values="$(get_${arr_type}_arr_all test_arr)"
 __end_get_all2=$(date +%s%N)
  
- 
-echo "Total set time: $(( (__end_set - __start_set)/1000000 )) ms"
 
-echo "Total get time: $(( (__end_get - __start_get)/1000000 )) ms"
-echo "get all time: $(( (__end_get_all1 - __start_get_all1)/1000000 )) ms"
-echo "Total unset1 time: $(( (__end_unset1 - __start_unset1)/1000000 )) ms"
-echo "Total unset2 time: $(( (__end_unset2 - __start_unset2)/1000000 )) ms"
-echo "Total unset3 time: $(( (__end_unset3 - __start_unset3)/1000000 )) ms"
-echo "get all 2 time: $(( (__end_get_all2 - __start_get_all2)/1000000 )) ms"
+echo "Total set time: $(( (__end_set - __start_set)/timefactor )) $timeunits"
+
+echo "Total get time: $(( (__end_get - __start_get)/timefactor )) $timeunits"
+echo "get all time: $(( (__end_get_all1 - __start_get_all1)/timefactor )) $timeunits"
+echo "Total unset1 time: $(( (__end_unset1 - __start_unset1)/timefactor )) $timeunits"
+echo "Total unset2 time: $(( (__end_unset2 - __start_unset2)/timefactor )) $timeunits"
+echo "Total unset3 time: $(( (__end_unset3 - __start_unset3)/timefactor )) $timeunits"
+echo "get all 2 time: $(( (__end_get_all2 - __start_get_all2)/timefactor )) $timeunits"
 
 # echo "Resulting keys:"
 # echo "$___emu_i_test_arr_keys"
