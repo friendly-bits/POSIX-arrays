@@ -2,10 +2,12 @@
 
 # emulate-arrays.sh
 
-# emulates arrays in a POSIX shell
+# emulates arrays in POSIX shell
 
 # each array element is stored in a variable named in the format '___emu_[x]_[arr_name]_[key/index]'
-# where [x] is either 'a' for associative array or [i] for indexed array
+# where [x] is either 'a' for associative array or 'i' for indexed array
+
+# keys/indices are stored in a variable named in the format '___emu_[x]_[arr_name]_keys' or '___emu_[x]_[arr_name]_indices'
 
 
 # declare an emulated indexed array while populating first elements
@@ -22,7 +24,7 @@ declare_i_arr() {
 	if [ -n "$*" ]; then
 		for ___val in "$@"; do
 			eval "___emu_i_${___arr_name}_${___index}=\"$___val\""
-			___indices="$___indices$___index$___emu_arr_delim"
+			___indices="$___indices$___index$___newline"
 			___index=$((___index+1))
 		done
 	fi
@@ -39,9 +41,9 @@ clean_i_arr() {
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "clean_i_arr: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 
 	eval "___indices=\"\$___emu_i_${___arr_name}_indices\""
-	___indices_sorted="$(printf '%s' "$___indices" | tr "$___emu_arr_delim" '\n' | sort -n)"
+	___indices="$(printf '%s' "$___indices" | sort -u)"
 
-	for ___index in $___indices_sorted; do
+	for ___index in $___indices; do
 		unset "___emu_i_${___arr_name}_${___index}"
 	done
 	unset "___emu_i_${___arr_name}_indices"
@@ -57,14 +59,15 @@ get_i_arr_all() {
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_i_arr_all: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 
 	eval "___indices=\"\$___emu_i_${___arr_name}_indices\""
-	___indices_sorted="$(printf '%s' "$___indices" | tr "$___emu_arr_delim" '\n' | sort -u | sort -n)"
-	for ___index in $___indices_sorted; do
+	___indices="$(printf '%s' "$___indices" | sort -u | sort -n)"
+	for ___index in $___indices; do
 		eval "___val=\"\$___emu_i_${___arr_name}_${___index}\""
-		[ -n "$___val" ] && { printf '%s\n' "$___val"; ___all_indices="$___all_indices$___index$___emu_arr_delim"; }
+		[ -n "$___val" ] && { printf '%s\n' "$___val"; ___all_indices="$___all_indices$___index$___newline"; }
 	done
-	eval "___emu_i_${___arr_name}_indices=\"$(printf '%s' "$___all_indices" | tr '\n' "$___emu_arr_delim")\""
 
-	unset ___all_values ___indices ___indices_sorted ___index ___val ___all_indices
+	eval "___emu_i_${___arr_name}_indices=\"$___all_indices\""
+
+	unset ___all_values ___indices ___index ___val ___all_indices
 	return 0
 }
 
@@ -77,14 +80,14 @@ get_i_arr_all_indices() {
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_i_arr_all_indices: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 
 	eval "___indices=\"\$___emu_i_${___arr_name}_indices\""
-	___indices_sorted="$(printf '%s' "$___indices" | tr "$___emu_arr_delim" '\n' | sort -u | sort -n)"
+	___indices_sorted="$(printf '%s' "$___indices" | sort -u | sort -n)"
 	___all_indices="$(
 		for ___index in $___indices_sorted; do
 			eval "___val=\"\$___emu_i_${___arr_name}_${___index}\""
 			[ -n "$___val" ] && printf '%s\n' "$___index"
 		done
 	)"
-	eval "___emu_i_${___arr_name}_indices=\"$(printf '%s' "$___all_indices" | tr '\n' "$___emu_arr_delim")\""
+	eval "___emu_i_${___arr_name}_indices=\"$___all_indices\""
 	printf '%s' "$___all_indices"
 
 	unset ___indices ___indices_sorted ___index ___all_indices
@@ -105,7 +108,7 @@ set_i_arr_el() {
 	eval "___old_val=\"\$___emu_i_${___arr_name}_${___index}\""
 
 	if [ -z "$___old_val" ] && [ -n "$___new_val" ]; then
-		eval "___emu_i_${___arr_name}_indices=\"\${___emu_i_${___arr_name}_indices}${___index}${___emu_arr_delim}\""
+		eval "___emu_i_${___arr_name}_indices=\"\${___emu_i_${___arr_name}_indices}${___index}${___newline}\""
 	fi
 
 	eval "___emu_i_${___arr_name}_${___index}=\"$___new_val\""
@@ -146,7 +149,7 @@ declare_a_arr() {
 			___val="${___pair#*=}"
 			case "$___key" in *[!A-Za-z0-9_]*) echo "declare_a_arr: Error: invalid key '$___key'." >&2; return 1; esac
 			eval "___emu_a_${___arr_name}_${___key}=\"$___val\""
-			___keys="$___keys$___key$___emu_arr_delim"
+			___keys="$___keys$___key$___newline"
 		done
 	fi
 
@@ -165,16 +168,14 @@ get_a_arr_all() {
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_a_arr_all: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 
 	eval "___keys=\"$(printf '%s' "\$___emu_a_${___arr_name}_keys")\""
-	IFS_OLD="$IFS"
-	IFS="$___emu_arr_delim"
+	___keys="$(printf '%s' "$___keys" | sort -u)"
 	for ___key in $___keys; do
 		eval "___val=\"\$___emu_a_${___arr_name}_${___key}\""
-		[ -n "$___val" ] && { printf '%s\n' "$___val"; ___all_keys="$___all_keys$___key$___emu_arr_delim"; }
+		[ -n "$___val" ] && printf '%s\n' "$___val"
 	done
-	IFS="$IFS_OLD"
-	eval "___emu_a_${___arr_name}_keys=\"$___all_keys\""
 
-	unset ___keys ___key ___all_keys
+	eval "___emu_a_${___arr_name}_keys=\"$___keys\""
+	unset ___keys ___key
 	return 0
 }
 
@@ -188,14 +189,13 @@ get_a_arr_all_keys() {
 
 	eval "___keys=\"\$___emu_a_${___arr_name}_keys\""
 	___all_keys="$(
-		IFS="$___emu_arr_delim"
 		for ___key in $___keys; do
 			eval "___val=\"\$___emu_a_${___arr_name}_${___key}\""
 			printf '%s\n' "$___key"
 		done
 	)"
 
-	eval "___emu_a_${___arr_name}_keys=\"$(printf '%s' "$___all_keys" | tr '\n' "$___emu_arr_delim")\""
+	eval "___emu_a_${___arr_name}_keys=\"$___all_keys\""
 	printf '%s' "$___all_keys"
 
 	unset ___keys ___key ___all_keys
@@ -219,7 +219,7 @@ set_a_arr_el() {
 	eval "___old_val=\"\$___emu_a_${___arr_name}_${___key}\""
 
 	if [ -z "$___old_val" ] && [ -n "$___new_val" ]; then
-		eval "___emu_a_${___arr_name}_keys=\"\${___emu_a_${___arr_name}_keys}${___key}${___emu_arr_delim}\""
+		eval "___emu_a_${___arr_name}_keys=\"\${___emu_a_${___arr_name}_keys}${___key}${___newline}\""
 	fi
 
 	eval "___emu_a_${___arr_name}_${___key}=\"$___new_val\""
@@ -247,24 +247,13 @@ clean_a_arr() {
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "clean_a_arr: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 	eval "___keys=\"\$___emu_a_${___arr_name}_keys\""
 
-	IFS_OLD="$IFS"
-	IFS="$___emu_arr_delim"
 	for ___key in $___keys; do
 		unset "___emu_a_${___arr_name}_${___key}"
 	done
-	IFS="$IFS_OLD"
 	unset "___emu_a_${___arr_name}_keys"
 	unset ___keys ___key
 }
 
 
-
 ___newline="
 "
-
-# delimiter which is used to separate pairs of values
-# \35 is an ASCII escape code for 'group separator'
-# \37 is an ASCII escape code for 'unit separator'
-# the specific escape codes shouldn't really matter here, as long as it's not a character
-
-___emu_arr_delim="$(printf '\35')"
