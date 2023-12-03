@@ -53,7 +53,7 @@ clean_i_arr() {
 # get all values from an emulated indexed array (sorted by index)
 # 1 - array name
 # no additional arguments are allowed
-get_i_arr_all() {
+get_i_arr_values() {
 	[ $# -ne 1 ] && { echo "get_i_arr_all: Error: wrong number of arguments." >&2; return 1; }
 	___arr_name="$1"; ___all_indices=""
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_i_arr_all: Error: invalid array name '$___arr_name'." >&2; return 1; esac
@@ -74,7 +74,7 @@ get_i_arr_all() {
 # get all indices from an emulated indexed array (sorted)
 # 1 - array name
 # no additional arguments are allowed
-get_i_arr_all_indices() {
+get_i_arr_indices() {
 	[ $# -ne 1 ] && { echo "get_i_arr_all_indices: Error: wrong number of arguments." >&2; return 1; }
 	___arr_name="$1"
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_i_arr_all_indices: Error: invalid array name '$___arr_name'." >&2; return 1; esac
@@ -164,7 +164,7 @@ declare_a_arr() {
 # get all values from an emulated associative array (alphabetically sorted by key)
 # 1 - array name
 # no additional arguments are allowed
-get_a_arr_all() {
+get_a_arr_values() {
 	[ $# -ne 1 ] && { echo "get_a_arr_all: Error: wrong number of arguments." >&2; return 1; }
 	___arr_name="$1"; ___all_keys=""
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_a_arr_all: Error: invalid array name '$___arr_name'." >&2; return 1; esac
@@ -184,7 +184,7 @@ get_a_arr_all() {
 # get all keys from an emulated associative array (alphabetically sorted)
 # 1 - array name
 # no additional arguments are allowed
-get_a_arr_all_keys() {
+get_a_arr_keys() {
 	[ $# -ne 1 ] && { echo "get_a_arr_all_keys: Error: wrong number of arguments." >&2; return 1; }
 	___arr_name="$1"
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_a_arr_all_keys: Error: invalid array name '$___arr_name'." >&2; return 1; esac
