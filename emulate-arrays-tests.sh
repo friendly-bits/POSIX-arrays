@@ -129,13 +129,6 @@ run_test() {
 }
 
 
-run_test_a_arr() {
-	first_test_num=$1; last_test_num=$2; arr_type="a"
-	test_file="$script_dir/tests-set_a_arr.list"
-	echo; echo "*** Testing 'set_a_arr_el' and 'get_a_arr_el'... ***"
-	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
-}
-
 run_test_set_i_arr() {
 	first_test_num=$1; last_test_num=$2; arr_type="i"
 	test_file="$script_dir/tests-set_i_arr.list"
@@ -143,17 +136,24 @@ run_test_set_i_arr() {
 	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
 }
 
-run_test_set_igc_arr() {
-	first_test_num=$1; last_test_num=$2; arr_type="igc"
-	test_file="$script_dir/tests-set_igc_arr.list"
-	echo; echo "*** Testing 'set_igc_arr_el' and 'get_igc_arr_el'... ***"
-	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
-}
-
 run_test_declare_i_arr() {
 	first_test_num=$1; last_test_num=$2; arr_type="i"
 	test_file="$script_dir/tests-declare_i_arr.list"
 	echo; echo "*** Testing 'declare_i_arr' and 'get_i_arr_el'... ***"
+	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
+}
+
+run_test_a_arr() {
+	first_test_num=$1; last_test_num=$2; arr_type="a"
+	test_file="$script_dir/tests-set_a_arr.list"
+	echo; echo "*** Testing 'set_a_arr_el' and 'get_a_arr_el'... ***"
+	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
+}
+
+run_test_declare_a_arr() {
+	first_test_num=$1; last_test_num=$2; arr_type="a"
+	test_file="$script_dir/tests-declare_a_arr.list"
+	echo; echo "*** Testing 'declare_a_arr'... ***"
 	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
 }
 
@@ -175,6 +175,7 @@ err_num=0
 # For example, 'run_test_a_arr 5 8' will run test units 5 through 8
 run_test_declare_i_arr
 run_test_set_i_arr
+run_test_declare_a_arr
 run_test_a_arr
 
 printf '\n%s\n' "Total errors: $err_num."
