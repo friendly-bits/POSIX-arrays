@@ -9,7 +9,9 @@ Note that the last line in emulate-arrays.sh sets the delimiter variable. That v
 
 **Indexed arrays**:
 
-`declare_i_arr <array_name> [value] [value] ... [value]` - Resets the array and assigns values to sequential indices, starting from 0.
+`declare_i_arr <array_name> [value] [value] ... [value]` - Resets the array and assigns values to sequential elements, starting from index 0.
+
+`read_i_arr <array_name> [ -f file ]|[string]` - Resets the array, then reads lines from `[file]` or from `[string]` and assigns each line as a value to sequential elements, starting from index 0.
 
 `add_i_arr_el <array_name> <value>` - Adds a new element to the array and assigns a value to it. Index is set to previous highest index+1, or to 0 if no prior elements exist.
 
@@ -95,6 +97,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add all elements one by one  | 2ms   |
 | Indexed      | get all elements one by one  | 1ms   |
 | Indexed      | get all elements             | 2ms   |
+| Indexed      | read elements from file      | 4ms   |
 | Associative  | set all elements one by one  | 1ms   |
 | Associative  | get all elements one by one  | 1ms   |
 | Associative  | get all elements             | 2ms   |
@@ -107,6 +110,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add all elements one by one  | 4ms   |
 | Indexed      | get all elements one by one  | 3ms   |
 | Indexed      | get all elements             | 2ms   |
+| Indexed      | read elements from file      | 5ms   |
 | Associative  | set all elements one by one  | 3ms   |
 | Associative  | get all elements one by one  | 3ms   |
 | Associative  | get all elements             | 2ms   |
@@ -119,6 +123,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add all elements one by one  | 12ms  |
 | Indexed      | get all elements one by one  | 7ms   |
 | Indexed      | get all elements             | 3ms   |
+| Indexed      | read elements from file      | 8ms   |
 | Associative  | set all elements one by one  | 12ms  |
 | Associative  | get all elements one by one  | 8ms   |
 | Associative  | get all elements             | 3ms   |
@@ -131,6 +136,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add all elements one by one  | 22ms  |
 | Indexed      | get all elements one by one  | 14ms  |
 | Indexed      | get all elements             | 5ms   |
+| Indexed      | read elements from file      | 13ms  |
 | Associative  | set all elements one by one  | 24ms  |
 | Associative  | get all elements one by one  | 15ms  |
 | Associative  | get all elements             | 5ms   |
@@ -143,6 +149,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add all elements one by one  | 47ms  |
 | Indexed      | get all elements one by one  | 18ms  |
 | Indexed      | get all elements             | 10ms  |
+| Indexed      | read elements from file      | 23ms  |
 | Associative  | set all elements one by one  | 55ms  |
 | Associative  | get all elements one by one  | 30ms  |
 | Associative  | get all elements             | 12ms  |
@@ -155,6 +162,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add all elements one by one  | 220ms |
 | Indexed      | get all elements one by one  | 85ms  |
 | Indexed      | get all elements             | 40ms  |
+| Indexed      | read elements from file      | 72ms  |
 | Associative  | set all elements one by one  | 280ms |
 | Associative  | get all elements one by one  | 85ms  |
 | Associative  | get all elements             | 40ms  |
@@ -167,6 +175,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add all elements one by one  | 800ms |
 | Indexed      | get all elements one by one  | 200ms |
 | Indexed      | get all elements             | 130ms |
+| Indexed      | read elements from file      | 235ms |
 | Associative  | set all elements one by one  |1100ms |
 | Associative  | get all elements one by one  | 210ms |
 | Associative  | get all elements             | 120ms |
