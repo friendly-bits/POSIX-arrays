@@ -29,6 +29,7 @@ declare_i_arr() {
 		done
 	fi
 
+	eval "___emu_i_${___arr_name}_high_index=\"$((___index - 1))\""
 	eval "___emu_i_${___arr_name}_indices=\"$___indices\""
 
 	unset ___val ___index ___indices
@@ -46,7 +47,7 @@ clean_i_arr() {
 		unset "___emu_i_${___arr_name}_${___index}"
 	done
 	unset "___emu_i_${___arr_name}_indices"
-	unset ___indices ___index
+	unset ___indices ___index "___emu_i_${___arr_name}_high_index"
 }
 
 # get all values from an emulated indexed array (sorted by index)
@@ -91,6 +92,42 @@ get_i_arr_indices() {
 	return 0
 }
 
+# add a new element to an indexed array and set its value
+# 1 - array name
+# 2 - value
+# no additional arguments are allowed
+add_i_arr_el() {
+	___arr_name="$1"; ___new_val="$2"; ___verified_indices=""
+	if [ $# -ne 2 ]; then echo "add_i_arr_el: Error: Wrong number of arguments." >&2; return 1; fi
+	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "add_i_arr_el: Error: invalid array name '$___arr_name'." >&2; return 1; esac
+
+	eval "___high_index=\"\$___emu_i_${___arr_name}_high_index\""
+
+	if [ -z "$___high_index" ]; then
+		___indices="$(eval "printf '%s' \"\$___emu_i_${___arr_name}_indices\"" | sort -nu)"
+		___high_index="-1"
+
+		for ___index in $___indices; do
+			eval "___val=\"\$___emu_i_${___arr_name}_${___index}\""
+			if [ -n "$___val" ]; then
+				___verified_indices="${___verified_indices}$___index$___newline"
+				[ "$___index" -gt "$___high_index" ] && ___high_index="$___index"
+			fi
+		done
+		___index=$((___high_index + 1))
+		eval "___emu_i_${___arr_name}_indices=\"${___verified_indices}${___index}${___newline}\""
+	else
+		___index=$((___high_index + 1))
+		eval "___emu_i_${___arr_name}_indices=\"\$___emu_i_${___arr_name}_indices\"\"${___index}${___newline}\""
+	fi
+
+	eval "___emu_i_${___arr_name}_high_index=\"$___index\""
+	eval "___emu_i_${___arr_name}_${___index}=\"$___new_val\""
+
+	unset ___new_val ___val ___indices ___index ___high_index ___verified_indices
+	return 0
+}
+
 # set a value in an emulated indexed sparse array
 # 1 - array name
 # 2 - index
@@ -108,6 +145,7 @@ set_i_arr_el() {
 		eval "___emu_i_${___arr_name}_indices=\"\${___emu_i_${___arr_name}_indices}${___index}${___newline}\""
 	fi
 
+	unset "___emu_i_${___arr_name}_high_index"
 	eval "___emu_i_${___arr_name}_${___index}=\"$___new_val\""
 
 	unset ___index ___new_val ___old_val
