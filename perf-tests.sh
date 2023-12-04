@@ -73,7 +73,7 @@ fi
 # Warmup
 f=1
 n=1
-arr_type="i"
+arr_type="a"
 elements=$(seq $f $n)
 warmup
 
