@@ -85,69 +85,69 @@ Measured on i7-4770 with 40-characters strings in each element. For associative 
 
 10 elements array:
 
-| Array type     |    Test              |       Time  |
+| Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
-| Indexed    |   set all elements one by one  | 1ms   |
-| Indexed    |   get all elements one by one  | 1ms   |
-| Indexed    |   get all elements    |          2ms   |
+| Indexed      | set all elements one by one  | 1ms   |
+| Indexed      | get all elements one by one  | 1ms   |
+| Indexed      | get all elements             | 2ms   |
 | Associative  | set all elements one by one  | 1ms   |
 | Associative  | get all elements one by one  | 1ms   |
-| Associative  | get all elements    |          2ms   |
+| Associative  | get all elements             | 2ms   |
 
 100 elements array:
 
-| Array type     |    Test              |       Time  |
+| Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
-| Indexed    |   set all elements one by one  | 3ms   |
-| Indexed    |   get all elements one by one  | 3ms   |
-| Indexed    |   get all elements    |          2ms   |
+| Indexed      | set all elements one by one  | 3ms   |
+| Indexed      | get all elements one by one  | 3ms   |
+| Indexed      | get all elements             | 2ms   |
 | Associative  | set all elements one by one  | 3ms   |
 | Associative  | get all elements one by one  | 3ms   |
-| Associative  | get all elements    |          2ms   |
+| Associative  | get all elements             | 2ms   |
 
 500 elements array:
 
-| Array type     |    Test              |       Time  |
+| Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
-| Indexed    |   set all elements one by one  | 11ms  |
-| Indexed    |   get all elements one by one  | 7ms   |
-| Indexed    |   get all elements    |          4ms   |
-| Associative  | set all elements one by one  | 14ms  |
-| Associative  | get all elements one by one  | 7ms   |
-| Associative  | get all elements    |          4ms   |
+| Indexed      | set all elements one by one  | 10ms  |
+| Indexed      | get all elements one by one  | 7ms   |
+| Indexed      | get all elements             | 3ms   |
+| Associative  | set all elements one by one  | 12ms  |
+| Associative  | get all elements one by one  | 8ms   |
+| Associative  | get all elements             | 3ms   |
 
 1000 elements array:
 
-| Array type     |    Test              |       Time  |
+| Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
-| Indexed    |   set all elements one by one  | 18ms  |
-| Indexed    |   get all elements one by one  | 14ms  |
-| Indexed    |   get all elements    |      7ms   |
-| Associative  | set all elements one by one  | 27ms  |
+| Indexed      | set all elements one by one  | 18ms  |
+| Indexed      | get all elements one by one  | 14ms  |
+| Indexed      | get all elements             | 5ms   |
+| Associative  | set all elements one by one  | 24ms  |
 | Associative  | get all elements one by one  | 15ms  |
-| Associative  | get all elements        |      7ms   |
+| Associative  | get all elements             | 5ms   |
 
 5000 elements array:
 
-| Array type     |    Test          |           Time  |
+| Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
-| Indexed    |   set all elements one by one  | 135ms |
-| Indexed    |   get all elements one by one  | 90ms  |
-| Indexed    |   get all elements        |      80ms  |
-| Associative  | set all elements one by one  | 340ms |
-| Associative  | get all elements one by one  |  90ms |
-| Associative  | get all elements        |      50ms  |
+| Indexed      | set all elements one by one  | 135ms |
+| Indexed      | get all elements one by one  | 85ms  |
+| Indexed      | get all elements             | 40ms  |
+| Associative  | set all elements one by one  | 280ms |
+| Associative  | get all elements one by one  | 85ms  |
+| Associative  | get all elements             | 40ms  |
 
 10000 elements array:
 
-| Array type     |    Test          |           Time  |
+| Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
-| Indexed    |   set all elements one by one  | 500ms |
-| Indexed    |   get all elements one by one  | 200ms |
-| Indexed    |   get all elements        |      320ms |
-| Associative  | set all elements one by one  |1280ms |
-| Associative  | get all elements one by one  | 230ms |
-| Associative  | get all elements        |      160ms |
+| Indexed      | set all elements one by one  | 500ms |
+| Indexed      | get all elements one by one  | 200ms |
+| Indexed      | get all elements             | 130ms |
+| Associative  | set all elements one by one  |1100ms |
+| Associative  | get all elements one by one  | 210ms |
+| Associative  | get all elements             | 120ms |
 
 </details>
 
