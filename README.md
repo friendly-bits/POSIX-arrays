@@ -93,91 +93,91 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
-| Indexed      | set all elements one by one  | 1ms   |
-| Indexed      | add all elements one by one  | 2ms   |
-| Indexed      | get all elements one by one  | 1ms   |
-| Indexed      | get all elements             | 2ms   |
 | Indexed      | read elements from file      | 4ms   |
-| Associative  | set all elements one by one  | 1ms   |
-| Associative  | get all elements one by one  | 1ms   |
+| Indexed      | set elements one by one      | 1ms   |
+| Indexed      | add elements one by one      | 2ms   |
+| Indexed      | get elements one by one      | 1ms   |
+| Indexed      | get all elements             | 2ms   |
+| Associative  | set elements one by one      | 1ms   |
+| Associative  | get elements one by one      | 1ms   |
 | Associative  | get all elements             | 2ms   |
 
 100 elements:
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
-| Indexed      | set all elements one by one  | 3ms   |
-| Indexed      | add all elements one by one  | 4ms   |
-| Indexed      | get all elements one by one  | 3ms   |
-| Indexed      | get all elements             | 2ms   |
 | Indexed      | read elements from file      | 5ms   |
-| Associative  | set all elements one by one  | 3ms   |
-| Associative  | get all elements one by one  | 3ms   |
+| Indexed      | set elements one by one      | 3ms   |
+| Indexed      | add elements one by one      | 4ms   |
+| Indexed      | get elements one by one      | 3ms   |
+| Indexed      | get all elements             | 2ms   |
+| Associative  | set elements one by one      | 3ms   |
+| Associative  | get elements one by one      | 3ms   |
 | Associative  | get all elements             | 2ms   |
 
 500 elements:
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
-| Indexed      | set all elements one by one  | 10ms  |
-| Indexed      | add all elements one by one  | 12ms  |
-| Indexed      | get all elements one by one  | 7ms   |
-| Indexed      | get all elements             | 3ms   |
 | Indexed      | read elements from file      | 8ms   |
-| Associative  | set all elements one by one  | 12ms  |
-| Associative  | get all elements one by one  | 8ms   |
+| Indexed      | set elements one by one      | 10ms  |
+| Indexed      | add elements one by one      | 12ms  |
+| Indexed      | get elements one by one      | 7ms   |
+| Indexed      | get all elements             | 3ms   |
+| Associative  | set elements one by one      | 12ms  |
+| Associative  | get elements one by one      | 8ms   |
 | Associative  | get all elements             | 3ms   |
 
 1000 elements:
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
-| Indexed      | set all elements one by one  | 18ms  |
-| Indexed      | add all elements one by one  | 22ms  |
-| Indexed      | get all elements one by one  | 14ms  |
-| Indexed      | get all elements             | 5ms   |
 | Indexed      | read elements from file      | 13ms  |
-| Associative  | set all elements one by one  | 24ms  |
-| Associative  | get all elements one by one  | 15ms  |
+| Indexed      | set elements one by one      | 18ms  |
+| Indexed      | add elements one by one      | 22ms  |
+| Indexed      | get elements one by one      | 14ms  |
+| Indexed      | get all elements             | 5ms   |
+| Associative  | set elements one by one      | 24ms  |
+| Associative  | get elements one by one      | 15ms  |
 | Associative  | get all elements             | 5ms   |
 
 2000 elements:
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
-| Indexed      | set all elements one by one  | 38ms  |
-| Indexed      | add all elements one by one  | 47ms  |
-| Indexed      | get all elements one by one  | 18ms  |
-| Indexed      | get all elements             | 10ms  |
 | Indexed      | read elements from file      | 23ms  |
-| Associative  | set all elements one by one  | 55ms  |
-| Associative  | get all elements one by one  | 30ms  |
+| Indexed      | set elements one by one      | 38ms  |
+| Indexed      | add elements one by one      | 47ms  |
+| Indexed      | get elements one by one      | 18ms  |
+| Indexed      | get all elements             | 10ms  |
+| Associative  | set elements one by one      | 55ms  |
+| Associative  | get elements one by one      | 30ms  |
 | Associative  | get all elements             | 12ms  |
 
 5000 elements:
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
-| Indexed      | set all elements one by one  | 135ms |
-| Indexed      | add all elements one by one  | 220ms |
-| Indexed      | get all elements one by one  | 85ms  |
-| Indexed      | get all elements             | 40ms  |
 | Indexed      | read elements from file      | 72ms  |
-| Associative  | set all elements one by one  | 280ms |
-| Associative  | get all elements one by one  | 85ms  |
+| Indexed      | set elements one by one      | 135ms |
+| Indexed      | add elements one by one      | 220ms |
+| Indexed      | get elements one by one      | 85ms  |
+| Indexed      | get all elements             | 40ms  |
+| Associative  | set elements one by one      | 280ms |
+| Associative  | get elements one by one      | 85ms  |
 | Associative  | get all elements             | 40ms  |
 
 10000 elements:
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
-| Indexed      | set all elements one by one  | 500ms |
-| Indexed      | add all elements one by one  | 800ms |
-| Indexed      | get all elements one by one  | 200ms |
-| Indexed      | get all elements             | 130ms |
 | Indexed      | read elements from file      | 235ms |
-| Associative  | set all elements one by one  |1100ms |
-| Associative  | get all elements one by one  | 210ms |
+| Indexed      | set elements one by one      | 500ms |
+| Indexed      | add elements one by one      | 800ms |
+| Indexed      | get elements one by one      | 200ms |
+| Indexed      | get all elements             | 130ms |
+| Associative  | set elements one by one      |1100ms |
+| Associative  | get elements one by one      | 210ms |
 | Associative  | get all elements             | 120ms |
 
 </details>
