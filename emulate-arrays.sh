@@ -40,14 +40,13 @@ clean_i_arr() {
 	___arr_name="$1"
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "clean_i_arr: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 
-	eval "___indices=\"\$___emu_i_${___arr_name}_indices\""
-	___indices="$(printf '%s' "$___indices" | sort -u)"
+	___indices="$(eval "printf '%s' \"\$___emu_i_${___arr_name}_indices\"" | sort -u)"
 
 	for ___index in $___indices; do
 		unset "___emu_i_${___arr_name}_${___index}"
 	done
 	unset "___emu_i_${___arr_name}_indices"
-	unset ___indices ___indices_sorted ___index
+	unset ___indices ___index
 }
 
 # get all values from an emulated indexed array (sorted by index)
@@ -55,19 +54,18 @@ clean_i_arr() {
 # no additional arguments are allowed
 get_i_arr_values() {
 	[ $# -ne 1 ] && { echo "get_i_arr_all: Error: wrong number of arguments." >&2; return 1; }
-	___arr_name="$1"; ___all_indices=""
+	___arr_name="$1"
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_i_arr_all: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 
-	eval "___indices=\"\$___emu_i_${___arr_name}_indices\""
-	___indices="$(printf '%s' "$___indices" | sort -u | sort -n)"
+	___indices="$(eval "printf '%s' \"\$___emu_i_${___arr_name}_indices\"" | sort -nu)"
 	for ___index in $___indices; do
 		eval "___val=\"\$___emu_i_${___arr_name}_${___index}\""
-		[ -n "$___val" ] && { printf '%s\n' "$___val"; ___all_indices="$___all_indices$___index$___newline"; }
+		[ -n "$___val" ] && printf '%s\n' "$___val" 
 	done
 
-	eval "___emu_i_${___arr_name}_indices=\"$___all_indices\""
+	eval "___emu_i_${___arr_name}_indices=\"$___indices\""
 
-	unset ___all_values ___indices ___index ___val ___all_indices
+	unset ___all_values ___indices ___index ___val
 	return 0
 }
 
@@ -79,8 +77,7 @@ get_i_arr_indices() {
 	___arr_name="$1"
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_i_arr_all_indices: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 
-	eval "___indices=\"\$___emu_i_${___arr_name}_indices\""
-	___sorted="$(printf '%s' "$___indices" | sort -u | sort -n)"
+	___indices="$(eval "printf '%s' \"\$___emu_i_${___arr_name}_indices\"" | sort -nu)"
 	___indices="$(
 		for ___index in $___indices; do
 			eval "___val=\"\$___emu_i_${___arr_name}_${___index}\""
@@ -123,7 +120,7 @@ set_i_arr_el() {
 # no additional arguments are allowed
 get_i_arr_el() {
 	if [ $# -ne 2 ]; then echo "get_i_arr_el: Error: Wrong number of arguments." >&2; return 1; fi
-	___arr_name="$1"; ___index=$2
+	___arr_name="$1"; ___index="$2"
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_i_arr_el: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 	case "$___index" in *[!0-9]*) echo "get_i_arr_el: Error: no index specified or '$___index' is not a nonnegative integer." >&2; return 1; esac
 	eval "printf '%s\n' \"\$___emu_i_${___arr_name}_${___index}\""
@@ -166,18 +163,17 @@ declare_a_arr() {
 # no additional arguments are allowed
 get_a_arr_values() {
 	[ $# -ne 1 ] && { echo "get_a_arr_all: Error: wrong number of arguments." >&2; return 1; }
-	___arr_name="$1"; ___all_keys=""
+	___arr_name="$1"
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_a_arr_all: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 
-	eval "___keys=\"$(printf '%s' "\$___emu_a_${___arr_name}_keys")\""
-	___keys="$(printf '%s' "$___keys" | sort -u)"
+	___keys="$(eval "printf '%s' \"\$___emu_a_${___arr_name}_keys\"" | sort -u)"
 	for ___key in $___keys; do
 		eval "___val=\"\$___emu_a_${___arr_name}_${___key}\""
-		[ -n "$___val" ] && printf '%s\n' "$___val"
+		[ -n "$___val" ] && printf '%s\n' "${___val#"${___delim}"}"
 	done
 
 	eval "___emu_a_${___arr_name}_keys=\"$___keys\""
-	unset ___keys ___key
+	unset ___keys ___key ___val
 	return 0
 }
 
@@ -189,19 +185,18 @@ get_a_arr_keys() {
 	___arr_name="$1"
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_a_arr_all_keys: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 
-	eval "___keys=\"\$___emu_a_${___arr_name}_keys\""
-	___keys="$(printf '%s\n' "$___keys" | sort -u)"
+	___keys="$(eval "printf '%s' \"\$___emu_a_${___arr_name}_keys\"" | sort -u)"
 	___keys="$(
 		for ___key in $___keys; do
-			eval "___key_set=\"\$_${___arr_name}_${___key}_\""
-			[ -n "$___key_set" ] && printf '%s\n' "$___key"
+			eval "___old_val=\"\$___emu_a_${___arr_name}_${___key}\""
+			[ -n "$___old_val" ] && printf '%s\n' "$___key"
 		done
 	)"
 
 	eval "___emu_a_${___arr_name}_keys=\"$___keys\""
 	printf '%s' "$___keys"
 
-	unset ___keys ___key ___key_set
+	unset ___keys ___key ___old_val
 	return 0
 }
 
@@ -219,16 +214,15 @@ set_a_arr_el() {
 	___new_val="${___pair#*=}"
 	case "$___key" in *[!A-Za-z0-9_]*) echo "set_a_arr_el: Error: invalid key '$___key'." >&2; return 1; esac
 
-	eval "___key_set=\"\$_${___arr_name}_${___key}_\""
+	eval "___old_val=\"\$___emu_a_${___arr_name}_${___key}\""
 
-	if [ -z "$___key_set" ] && [ -n "$___key" ]; then
-		eval "_${___arr_name}_${___key}_=1"
+	if [ -z "$___old_val" ] && [ -n "$___key" ]; then
 		eval "___emu_a_${___arr_name}_keys=\"\${___emu_a_${___arr_name}_keys}${___key}${___newline}\""
 	fi
 
-	eval "___emu_a_${___arr_name}_${___key}=\"$___new_val\""
+	eval "___emu_a_${___arr_name}_${___key}=\"${___delim}${___new_val}\""
 
-	unset ___key ___new_val ___old_val ___key_set
+	unset ___key ___new_val ___old_val
 	return 0
 }
 
@@ -242,7 +236,8 @@ get_a_arr_el() {
 	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "get_a_arr_el: Error: invalid array name '$___arr_name'." >&2; return 1; esac
 	case "$___key" in *[!A-Za-z0-9_]*) echo "get_a_arr_el: Error: invalid key '$___key'." >&2; return 1; esac
 
-	eval "printf '%s\n' \"\$___emu_a_${___arr_name}_${___key}\""
+	eval "___val=\"\$___emu_a_${___arr_name}_${___key}\""
+	printf '%s\n' "${___val#"${___delim}"}"
 	unset ___key
 }
 
@@ -254,7 +249,6 @@ clean_a_arr() {
 
 	for ___key in $___keys; do
 		unset "___emu_a_${___arr_name}_${___key}"
-		unset "_${___arr_name}_${___key}_"
 	done
 	unset "___emu_a_${___arr_name}_keys"
 	unset ___keys ___key
@@ -263,3 +257,4 @@ clean_a_arr() {
 
 ___newline="
 "
+___delim="$(printf '\35')"
