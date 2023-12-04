@@ -98,6 +98,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add elements one by one      | 2ms   |
 | Indexed      | get elements one by one      | 1ms   |
 | Indexed      | get all elements             | 2ms   |
+| -------------|------------------------------|-------|
 | Associative  | set elements one by one      | 1ms   |
 | Associative  | get elements one by one      | 1ms   |
 | Associative  | get all elements             | 2ms   |
@@ -111,6 +112,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add elements one by one      | 4ms   |
 | Indexed      | get elements one by one      | 3ms   |
 | Indexed      | get all elements             | 2ms   |
+| -------------|------------------------------|-------|
 | Associative  | set elements one by one      | 3ms   |
 | Associative  | get elements one by one      | 3ms   |
 | Associative  | get all elements             | 2ms   |
@@ -124,6 +126,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add elements one by one      | 12ms  |
 | Indexed      | get elements one by one      | 7ms   |
 | Indexed      | get all elements             | 3ms   |
+| -------------|------------------------------|-------|
 | Associative  | set elements one by one      | 12ms  |
 | Associative  | get elements one by one      | 8ms   |
 | Associative  | get all elements             | 3ms   |
@@ -137,6 +140,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add elements one by one      | 22ms  |
 | Indexed      | get elements one by one      | 14ms  |
 | Indexed      | get all elements             | 5ms   |
+| -------------|------------------------------|-------|
 | Associative  | set elements one by one      | 24ms  |
 | Associative  | get elements one by one      | 15ms  |
 | Associative  | get all elements             | 5ms   |
@@ -150,6 +154,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add elements one by one      | 47ms  |
 | Indexed      | get elements one by one      | 18ms  |
 | Indexed      | get all elements             | 10ms  |
+| -------------|------------------------------|-------|
 | Associative  | set elements one by one      | 55ms  |
 | Associative  | get elements one by one      | 30ms  |
 | Associative  | get all elements             | 12ms  |
@@ -163,6 +168,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add elements one by one      | 220ms |
 | Indexed      | get elements one by one      | 85ms  |
 | Indexed      | get all elements             | 40ms  |
+| -------------|------------------------------|-------|
 | Associative  | set elements one by one      | 280ms |
 | Associative  | get elements one by one      | 85ms  |
 | Associative  | get all elements             | 40ms  |
@@ -176,6 +182,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | add elements one by one      | 800ms |
 | Indexed      | get elements one by one      | 200ms |
 | Indexed      | get all elements             | 130ms |
+| -------------|------------------------------|-------|
 | Associative  | set elements one by one      |1100ms |
 | Associative  | get elements one by one      | 210ms |
 | Associative  | get all elements             | 120ms |
