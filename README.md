@@ -89,7 +89,7 @@ Output: `this is a test`
 
 Measured on i7-4770 with 40-character strings in each element. For associative arrays, measured with 16-18 character keys.
 
-10 elements:
+**10 elements**:
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
@@ -103,7 +103,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Associative  | get elements one by one      | 1ms   |
 | Associative  | get all elements             | 2ms   |
 
-100 elements:
+**100 elements**:
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
@@ -117,7 +117,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Associative  | get elements one by one      | 3ms   |
 | Associative  | get all elements             | 2ms   |
 
-500 elements:
+**500 elements**:
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
@@ -131,7 +131,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Associative  | get elements one by one      | 8ms   |
 | Associative  | get all elements             | 3ms   |
 
-1000 elements:
+**1000 elements**:
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
@@ -145,7 +145,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Associative  | get elements one by one      | 15ms  |
 | Associative  | get all elements             | 5ms   |
 
-2000 elements:
+**2000 elements**:
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
@@ -159,7 +159,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Associative  | get elements one by one      | 30ms  |
 | Associative  | get all elements             | 12ms  |
 
-5000 elements:
+**5000 elements**:
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
@@ -173,7 +173,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Associative  | get elements one by one      | 85ms  |
 | Associative  | get all elements             | 40ms  |
 
-10000 elements:
+**10000 elements**:
 
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
