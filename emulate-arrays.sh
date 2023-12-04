@@ -25,7 +25,7 @@ declare_i_arr() {
 		for ___val in "$@"; do
 			eval "___emu_i_${___arr_name}_${___index}=\"$___val\""
 			___indices="$___indices$___index$___newline"
-			___index=$((___index+1))
+			___index=$((___index + 1))
 		done
 	fi
 
@@ -33,6 +33,55 @@ declare_i_arr() {
 	eval "___emu_i_${___arr_name}_indices=\"$___indices\""
 
 	unset ___val ___index ___indices
+	return 0
+}
+
+# read lines from input string or from a file into an indexed array
+# array is reset if already exists
+# 1 - array name
+# 2, 3 - [-f filename] - input file to read from
+# 2 - if no file specified, newline-separated string
+# no additional arguments are allowed
+read_i_arr() {
+
+	___arr_name="$1"; shift
+	case "$___arr_name" in *[!A-Za-z0-9_]*) echo "read_i_arr: Error: invalid array name '$___arr_name'." >&2; return 1; esac
+
+	while getopts ":f:" opt; do
+		case $opt in
+			f) ___input_file=$OPTARG;;
+			\?) echo "read_i_arr: Error: Unknown option: '$OPTARG'."; return 1
+		esac
+	done
+	shift $((OPTIND - 1))
+
+	if [ -n "$___input_file" ]; then
+		[ -n "$*" ] && { echo "read_i_arr: Error: invalid arguments '$*'."; return 1; }
+		___lines="$(cat "$___input_file")" || \
+			{ echo "read_i_arr: Error: failed to read file '$___input_file'."; return 1; }
+	else
+		___lines="$1"; shift
+		[ -n "$*" ] && { echo "read_i_arr: Error: invalid arguments '$*'."; return 1; }
+	fi
+	[ -z "$___lines" ] && { echo "read_i_arr: Error: received an empty string."; return 1; }
+
+	clean_i_arr "$___arr_name"
+
+	___indices=""
+	___index=0
+    IFS_OLD="$IFS"
+    IFS="$___newline"
+	for ___line in $___lines; do
+		eval "___emu_i_${___arr_name}_${___index}=\"$___line\""
+		___indices="$___indices$___index$___newline"
+		___index=$((___index + 1))
+	done
+    IFS="$IFS_OLD"
+
+	eval "___emu_i_${___arr_name}_high_index=\"$((___index - 1))\""
+	eval "___emu_i_${___arr_name}_indices=\"$___indices\""
+
+	unset ___line ___lines ___index ___indices ___input_file
 	return 0
 }
 
