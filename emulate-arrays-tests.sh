@@ -129,30 +129,30 @@ run_test() {
 }
 
 
-run_test_set_i_arr() {
+run_test_i_arr_1() {
 	first_test_num=$1; last_test_num=$2; arr_type="i"
-	test_file="$script_dir/tests-set_i_arr.list"
-	echo; echo "*** Testing 'set_i_arr_el' and 'get_i_arr_el'... ***"
-	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
-}
-
-run_test_declare_i_arr() {
-	first_test_num=$1; last_test_num=$2; arr_type="i"
-	test_file="$script_dir/tests-declare_i_arr.list"
+	test_file="$script_dir/tests-i_arr_1.list"
 	echo; echo "*** Testing 'declare_i_arr' and 'get_i_arr_el'... ***"
 	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
 }
 
-run_test_a_arr() {
+run_test_i_arr_2() {
+	first_test_num=$1; last_test_num=$2; arr_type="i"
+	test_file="$script_dir/tests-i_arr_2.list"
+	echo; echo "*** Testing 'set_i_arr_el' and 'get_i_arr_el'... ***"
+	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
+}
+
+run_test_a_arr_1() {
 	first_test_num=$1; last_test_num=$2; arr_type="a"
-	test_file="$script_dir/tests-set_a_arr.list"
+	test_file="$script_dir/tests-a_arr_1.list"
 	echo; echo "*** Testing 'set_a_arr_el' and 'get_a_arr_el'... ***"
 	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
 }
 
-run_test_declare_a_arr() {
+run_test_a_arr_2() {
 	first_test_num=$1; last_test_num=$2; arr_type="a"
-	test_file="$script_dir/tests-declare_a_arr.list"
+	test_file="$script_dir/tests-a_arr_2.list"
 	echo; echo "*** Testing 'declare_a_arr'... ***"
 	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
 }
@@ -173,49 +173,9 @@ err_num=0
 # To only run a specific test set, comment out some of the following lines starting with run_test_
 # To limit to sepcific test units, use this format run_test_* [first_test_num_number] [last_test_num_number]
 # For example, 'run_test_a_arr 5 8' will run test units 5 through 8
-run_test_declare_i_arr
-run_test_set_i_arr
-run_test_declare_a_arr
-run_test_a_arr
+run_test_i_arr_1
+run_test_i_arr_2
+run_test_a_arr_1
+run_test_a_arr_2
 
 printf '\n%s\n' "Total errors: $err_num."
-
-
-### Performance tests
-
-#  n=1400
-
-# for i in $(seq 1 $n); do
-# 	set_i_arr_el test_arr "$i" "a$i"
-# #	test="$(get_i_arr_el test_arr "$((n+1-i))")"
-# done
-
-# for i in $(seq 1 $n); do
-# 	get_i_arr_el test_arr "$i" >/dev/null
-# 	#echo "$test"
-# done
-
-# for i in $(seq 1 $n); do
-# 	set_a_arr_el test_arr "$i=a$i"
-# 	test="$(get_a_arr_el test_arr "$((n+1-i))")"
-# done
-
-
-
-
-
-# for i in $(seq 1000 1600); do
-# 	set_i_arr_el test_arr "$i" "x"
-# done
- 
-# ### performance - START
- 
-# n=500
-# for i in $(seq 1 $n); do
-# 	set_i_arr_el test_arr "$i" "a"
-# 	get_i_arr_el test_arr "$i" >/dev/null
-# 	set_i_arr_el test_arr "$i" "b"
-# 	get_i_arr_el test_arr "$i" >/dev/null
-# 	set_i_arr_el test_arr "$i" "c"
-# 	get_i_arr_el test_arr "$i" >/dev/null
-# done

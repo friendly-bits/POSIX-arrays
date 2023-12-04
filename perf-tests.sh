@@ -20,6 +20,14 @@ warmup() {
 	fi
 }
  
+test_add() {
+	if [ "$arr_type" = "i" ]; then
+		for i in $elements; do
+			add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+		done
+	fi
+}
+ 
 test_set() {
 	if [ "$arr_type" = "i" ]; then
 		for i in $elements; do
@@ -73,7 +81,7 @@ fi
 # Warmup
 f=1
 n=1
-arr_type="a"
+arr_type="i"
 elements=$(seq $f $n)
 warmup
 
@@ -83,7 +91,7 @@ warmup
 # Test
 f=1
 n=1000
-arr_type="a"
+arr_type="i"
 
 elements=$(seq $f $n)
 __start_set=$(date +%s%N)
@@ -115,22 +123,29 @@ __start_unset2=$(date +%s%N)
 test_unset
 __end_unset2=$(date +%s%N)
  
+ elements=$(seq $f $n)
+__start_add=$(date +%s%N)
+test_add
+__end_add=$(date +%s%N)
+ 
+
 __start_get_all2=$(date +%s%N)
 resulting_values="$(get_${arr_type}_arr_values test_arr)"
 __end_get_all2=$(date +%s%N)
  
 
-echo "Total set time: $(( (__end_set - __start_set)/timefactor )) $timeunits"
+echo "set time: $(( (__end_set - __start_set)/timefactor )) $timeunits"
 
-echo "Total get time: $(( (__end_get - __start_get)/timefactor )) $timeunits"
+echo "get time: $(( (__end_get - __start_get)/timefactor )) $timeunits"
 echo "get all time: $(( (__end_get_all1 - __start_get_all1)/timefactor )) $timeunits"
-echo "Total unset1 time: $(( (__end_unset1 - __start_unset1)/timefactor )) $timeunits"
-echo "Total unset2 time: $(( (__end_unset2 - __start_unset2)/timefactor )) $timeunits"
-echo "Total unset3 time: $(( (__end_unset3 - __start_unset3)/timefactor )) $timeunits"
-echo "get all 2 time: $(( (__end_get_all2 - __start_get_all2)/timefactor )) $timeunits"
+echo "unset1 time: $(( (__end_unset1 - __start_unset1)/timefactor )) $timeunits"
+echo "unset2 time: $(( (__end_unset2 - __start_unset2)/timefactor )) $timeunits"
+echo "unset3 time: $(( (__end_unset3 - __start_unset3)/timefactor )) $timeunits"
+echo "add time: $(( (__end_add - __start_add)/timefactor )) $timeunits"
+echo "get all_2 time: $(( (__end_get_all2 - __start_get_all2)/timefactor )) $timeunits"
 
 # echo "Resulting keys:"
 # eval echo "\$___emu_${arr_type}_test_arr_keys"
 
-echo "Resulting values:"
-echo "'$resulting_values'"
+# echo "Resulting values:"
+# echo "'$resulting_values'"

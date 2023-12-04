@@ -151,3 +151,144 @@ get_i_arr_el arr 4@###@0
 get_i_arr_el arr 5@@0
 get_i_arr_values arr@abc#=${newline}#123=1${newline}=a#${newline}#${newline}###@0
 "
+
+
+test_9="
+[header]
+add_i_arr_el@1
+add_i_arr_el arr@1
+[/header]
+
+get_i_arr_values arr@@0
+get_i_arr_indices arr@@0
+"
+
+
+test_10="
+[header]
+declare_i_arr arr1@0
+add_i_arr_el arr1 a@0
+
+declare_i_arr arr2 b@0
+add_i_arr_el arr2 c@0
+
+declare_i_arr arr3 10 20@0
+add_i_arr_el arr3 30@0
+add_i_arr_el arr3 0@0
+
+add_i_arr_el arr4 abcd@0
+
+add_i_arr_el arr5 1@0
+add_i_arr_el arr5 \"ab cd ${newline} ef\"@0
+
+add_i_arr_el arr6 1@0
+declare_i_arr arr6 ddd@0
+
+add_i_arr_el arr7 1@0
+add_i_arr_el arr7 2@0
+add_i_arr_el arr7 3@0
+declare_i_arr arr7 ddd eee@0
+[/header]
+
+get_i_arr_values arr1@a@0
+get_i_arr_indices arr1@0@0
+
+get_i_arr_values arr2@b${newline}c@0
+get_i_arr_indices arr2@0${newline}1@0
+
+get_i_arr_values arr3@10${newline}20${newline}30${newline}0@0
+get_i_arr_indices arr3@0${newline}1${newline}2${newline}3@0
+
+get_i_arr_values arr4@abcd@0
+get_i_arr_indices arr4@0@0
+
+get_i_arr_values arr5@1${newline}ab cd ${newline} ef@0
+get_i_arr_indices arr5@0${newline}1@0
+
+get_i_arr_values arr6@ddd@0
+get_i_arr_indices arr6@0@0
+
+get_i_arr_values arr7@ddd${newline}eee@0
+get_i_arr_indices arr7@0${newline}1@0
+"
+
+
+test_11="
+[header]
+add_i_arr_el arr1 c@0
+set_i_arr_el arr1 3 b@0
+
+add_i_arr_el arr2 c@0
+set_i_arr_el arr2 3 b@0
+add_i_arr_el arr2 a@0
+
+add_i_arr_el arr3 c@0
+set_i_arr_el arr3 3 b@0
+add_i_arr_el arr3 a@0
+set_i_arr_el arr3 4 d@0
+
+set_i_arr_el arr4 3 b@0
+add_i_arr_el arr4 c@0
+add_i_arr_el arr4 a@0
+set_i_arr_el arr4 4 d@0
+add_i_arr_el arr4 e@0
+[/header]
+
+get_i_arr_values arr1@c${newline}b@0
+get_i_arr_indices arr1@0${newline}3@0
+
+get_i_arr_values arr2@c${newline}b${newline}a@0
+get_i_arr_indices arr2@0${newline}3${newline}4@0
+
+get_i_arr_values arr3@c${newline}b${newline}d@0
+get_i_arr_indices arr3@0${newline}3${newline}4@0
+
+get_i_arr_values arr4@b${newline}d${newline}a${newline}e@0
+get_i_arr_indices arr4@3${newline}4${newline}5${newline}6@0
+"
+
+test_12="
+[header]
+declare_i_arr arr1 a b@0
+add_i_arr_el arr1 c@0
+set_i_arr_el arr1 3 d@0
+
+declare_i_arr arr2 a b c@0
+set_i_arr_el arr2 3 d@0
+add_i_arr_el arr2 e@0
+
+declare_i_arr arr3 a b c@0
+set_i_arr_el arr3 4 d@0
+add_i_arr_el arr3 e@0
+
+declare_i_arr arr4 a b c@0
+set_i_arr_el arr4 2 d@0
+add_i_arr_el arr4 e@0
+
+declare_i_arr arr5 a b c@0
+set_i_arr_el arr5 1 d@0
+add_i_arr_el arr5 e@0
+[/header]
+
+get_i_arr_values arr1@a${newline}b${newline}c${newline}d@0
+get_i_arr_indices arr1@0${newline}1${newline}2${newline}3@0
+
+get_i_arr_values arr2@a${newline}b${newline}c${newline}d${newline}e@0
+get_i_arr_indices arr2@0${newline}1${newline}2${newline}3${newline}4@0
+
+get_i_arr_values arr3@a${newline}b${newline}c${newline}d${newline}e@0
+get_i_arr_indices arr3@0${newline}1${newline}2${newline}4${newline}5@0
+get_i_arr_el arr3 0@a@0
+get_i_arr_el arr3 1@b@0
+get_i_arr_el arr3 2@c@0
+get_i_arr_el arr3 3@@0
+get_i_arr_el arr3 4@d@0
+get_i_arr_el arr3 5@e@0
+
+get_i_arr_values arr4@a${newline}b${newline}d${newline}e@0
+get_i_arr_indices arr4@0${newline}1${newline}2${newline}3@0
+
+get_i_arr_values arr5@a${newline}d${newline}c${newline}e@0
+get_i_arr_indices arr5@0${newline}1${newline}2${newline}3@0
+"
+
