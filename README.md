@@ -81,7 +81,7 @@ Output: `this is a test`
 - The code went through multiple rounds of optimization and quite a few different algorithms have been tested. Currently the performance for small arrays (<= 200 elements) is comparable to Bash arrays. The script performs reasonably well with arrays containing up to 2000 elements. Higher than that, the performance drops significanly. All that applies to performance on a fairly old x86 CPU.
 - While the code works if run under Bash or probably any other Unix-compatible shell, it runs much faster in a simpler shell like Dash. In my comparison it was about 3x faster under Dash compared to Bash.
 - Performance is affected by the length of the strings stored in the array, and for associative arrays, by the length of the strings used as keys.
-- For indexed arrays, the set_i_arr_el() is faster than add_i_arr_el() because the latter needs to check and update the highest index in the array.
+- For indexed arrays, `set_i_arr_el()` is faster than `add_i_arr_el()` because the latter needs to check and update the highest index in the array.
 
 <details> <summary> Benchmarks: </summary>
 
