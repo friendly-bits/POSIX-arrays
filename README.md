@@ -177,8 +177,9 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 </details>
 
 ## Some more details
-- The emulated arrays are stored in dynamically created variables. The base for the name of such variable is the same as the emulated array's name, except when creating the variable, the function prefixes it with `emu_[x]_`, where `[x]` stands for the type of the array: `a` for associative array, `i` for indexed array.
-- For example, if calling a function to create an indexed array: `set_i_arr_el test_arr 5 "test_value"`, the function will create a variable called `emu_i_test_arr` and store the value in it.
+- The emulated arrays are stored in dynamically created variables. The name of such variable is in the format `___emu_[x]_[arr_name]_[key/index]`, where `[x]` stands for the type of the array: `a` for associative array, `i` for indexed array.
+- For example, if calling a function to create an indexed array: `set_i_arr_el test_arr 5 "test_value"`, the function will create a variable called `___emu_i_test_arr_5` and store the value in it.
+- This is the same for associative arrays, except `set_a_arr_el()` `declare_a_arr()` prepend ASCII code `\35` to the value when storing the variable. That is done to mark the key as set, even if assigning an empty value. This way, all set keys are always, which follows the convention of Bash associative arrays. Functions that retrieve values from associative arrays remove the ASCII prefix before assigning the result to the output variable.
 
 ## Test units
 - The additional files (besides the `emulate-arrays.sh` script) are used for testing the main script. The test units are not very systematic but I tried to cover all points where the functionality may be fragile. To test in your environment, download all files into the same directory and then run the `emulate-arrays-tests.sh` script.
@@ -188,4 +189,4 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 - You can add your own test units following the same format. The test functions automatically parse the `.list` files and execute the tests inside, as long as they comply with the format.
 
 ## P.s.
-If you like this project, please consider taking a second to give it a star. That will help other people to find it.
+If you like this project, please consider taking a second to give it a star. This will help other people to find it.
