@@ -265,7 +265,7 @@ declare_a_arr() {
 		for ___pair in "$@"; do
 			case "$___pair" in *=*) ;; *) echo "declare_a_arr: Error: '$___pair' is not a 'key=value' pair." >&2; return 1 ;; esac
 			___key="${___pair%%=*}"
-			___val="${___pair#*=}"
+			___val="$___delim${___pair#*=}"
 			case "$___key" in *[!A-Za-z0-9_]*) echo "declare_a_arr: Error: invalid key '$___key'." >&2; return 1; esac
 			eval "___emu_a_${___arr_name}_${___key}=\"$___val\""
 			eval "_${___arr_name}_${___key}_=1"
@@ -336,6 +336,7 @@ get_a_arr_keys() {
 	___res_keys="$(
 		for ___key in $___keys; do
 			eval "___val=\"\$___emu_a_${___arr_name}_${___key}\""
+			# shellcheck disable=SC2031
 			[ -n "$___val" ] && printf '%s ' "$___key"
 		done
 	)"
@@ -384,6 +385,7 @@ get_a_arr_el() {
 	case "$___key" in *[!A-Za-z0-9_]*) echo "get_a_arr_el: Error: invalid key '$___key'." >&2; return 1; esac
 
 	eval "___val=\"\$___emu_a_${___arr_name}_${___key}\""
+	# shellcheck disable=SC2031
 	eval "$___out_var=\"${___val#"${___delim}"}\""
 	unset ___key ___out_var
 }
