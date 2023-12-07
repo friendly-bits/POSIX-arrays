@@ -95,9 +95,10 @@ run_test() {
 			expected_val="${other_stuff%@*}"
 			expected_rv="${other_stuff#*@}"
 
+			val=''
 			# shellcheck disable=SC2086
-			if [ -z "$print_stderr" ]; then val="$($test_command 2>/dev/null)"; rv=$?
-			else val="$($test_command)"; rv=$?
+			if [ -z "$print_stderr" ]; then eval "$test_command" 2>/dev/null; rv=$?
+			else eval "$test_command"; rv=$?
 			fi
 
 			[ "$val" != "$expected_val" ] && {
