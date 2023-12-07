@@ -82,6 +82,7 @@ $ jazz, classical, rock
 - Array names and (for associative arrays) keys are limited to alphanumeric characters and underlines - `_`.
 - For indexed arrays, indices start at 0.
 - As is default for shells, if you request a value corresponding to an index or to a key that has not been set previously, the functions will output an empty string and not return an error.
+- Similarly, if you request a value from an array that has not been created, the functions output an empty string and not return an error.
 - The indexed array effectively works as a sparse array, so indices do not have to be sequential.
 - The declare functions are not necessary to create an array. It's just a way to set N elements in one command. Otherwise you can create an indexed array by simply calling the `set_i_arr_el()` function or an associative array by calling the `set_a_arr_el()` function.
 - The reason why functions provide output via a variable is because this way performance is better, and for some functions much better.
