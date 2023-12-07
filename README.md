@@ -186,3 +186,6 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 - To limit the test units executed, add arguments to the `run_test_` call, for example: `run_test_a_arr 5 8` will run test units from 5 through 8.
 - Test units check for correct return codes, including in cases where an error is expected. So a significant portion of the tests intentionally induce errors in the functions. In order to avoid errors spam, by default STDERR output from the functions under test is silenced. If you want to see the errors anyway, uncomment the line `#print_stderr=true`.
 - You can add your own test units following the same format. The test functions automatically parse the `.list` files and execute the tests inside, as long as they comply with the format.
+
+## P.s.
+If you like this project, please consider taking a second to give it a star. That will help other people to find it.
