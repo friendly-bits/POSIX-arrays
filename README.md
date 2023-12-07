@@ -58,7 +58,7 @@ $ val3 123 etc
 
 `clean_a_arr <array_name>` - Unsets all variables used to store the array in memory.
 
-<details> <summary> Example </summary>
+<details> <summary> Examples </summary>
 
 ```
 set_a_arr_el test_arr some_key="this is a test"
@@ -74,6 +74,7 @@ $ cars music_genres
 
 get_a_arr_el test_arr music_genres genres; echo "$genres"
 $ jazz, classical, rock
+```
 </details>
 
 ## Details
