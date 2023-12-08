@@ -104,7 +104,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
 | Indexed      | set elements one by one      | 1ms   |
-| Indexed      | add elements one by one      | 2ms   |
+| Indexed      | add elements one by one      | 1ms   |
 | Indexed      | get elements one by one      | 1ms   |
 | Indexed      | get all values               | 1ms   |
 | Indexed      | get all indices              | 2ms   |
@@ -119,8 +119,8 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
 | Indexed      | set elements one by one      | 3ms   |
-| Indexed      | add elements one by one      | 4ms   |
-| Indexed      | get elements one by one      | 3ms   |
+| Indexed      | add elements one by one      | 3ms   |
+| Indexed      | get elements one by one      | 1ms   |
 | Indexed      | get all values               | 1ms   |
 | Indexed      | get all indices              | 3ms   |
 | -------------|------------------------------|-------|
@@ -134,9 +134,9 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
 | Indexed      | set elements one by one      | 11ms  |
-| Indexed      | add elements one by one      | 12ms  |
-| Indexed      | get elements one by one      | 10ms  |
-| Indexed      | get all values               | 3ms   |
+| Indexed      | add elements one by one      | 8ms   |
+| Indexed      | get elements one by one      | 5ms   |
+| Indexed      | get all values               | 4ms   |
 | Indexed      | get all indices              | 4ms   |
 | -------------|------------------------------|-------|
 | Associative  | set elements one by one      | 13ms  |
@@ -149,8 +149,8 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
 | Indexed      | set elements one by one      | 19ms  |
-| Indexed      | add elements one by one      | 20ms  |
-| Indexed      | get elements one by one      | 18ms  |
+| Indexed      | add elements one by one      | 17ms  |
+| Indexed      | get elements one by one      | 8ms   |
 | Indexed      | get all values               | 6ms   |
 | Indexed      | get all indices              | 6ms   |
 | -------------|------------------------------|-------|
@@ -164,8 +164,8 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Array type   |      Test                    | Time  |
 | -------------|------------------------------|-------|
 | Indexed      | set elements one by one      | 39ms  |
-| Indexed      | add elements one by one      | 54ms  |
-| Indexed      | get elements one by one      | 38ms  |
+| Indexed      | add elements one by one      | 37ms  |
+| Indexed      | get elements one by one      | 18ms  |
 | Indexed      | get all values               | 13ms  |
 | Indexed      | get all indices              | 13ms  |
 | -------------|------------------------------|-------|
