@@ -93,7 +93,7 @@ $ jazz, classical, rock
 [TRANSLATION-EXAMPLES.md](/TRANSLATION-EXAMPLES.md)
 
 ## Performance
-- The code went through multiple rounds of optimization. Currently for most use cases, the performance for small arrays (<= 200 elements) is comparable to Bash arrays. Functions perform reasonably well with arrays containing up to 2000 elements. Higher than that, the performance drops significanly.
+- The code went through multiple rounds of optimization. Currently for most use cases, the performance for small arrays (<= 200 elements) is comparable to Bash arrays. Functions perform reasonably well with arrays containing up to 2000 elements. Higher than that, the performance drops at an accelerating rate, mainly because the system takes longer to look up variables in memory.
 - Performance is affected by the length of the strings stored in the array, and for associative arrays, by the length of the strings used as keys.
 - Performance is also affected by the workload - more on that in the Limitations section.
 
