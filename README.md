@@ -90,9 +90,8 @@ $ jazz, classical, rock
 ## Performance
 - The code went through multiple rounds of optimization. Currently for most use cases, the performance for small arrays (<= 200 elements) is comparable to Bash arrays. Functions perform reasonably well with arrays containing up to 2000 elements. Higher than that, the performance of functions which require sorting the keys/indices drops significanly.
 - Performance is affected by the length of the strings stored in the array, and for associative arrays, by the length of the strings used as keys.
-- Performance is also affected by the workload. Some functions require a sorted list of keys/indices, and/or having all elements "verified", aka not having any registered keys/indices that in fact have no assigned value (after the value had been previously unset). However keeping a permanently verified and sorted array would be very slow if implemented in shell code. Therefore, sorting and verification of the array occur when needed. Once the array is sorted, a flag is set so further queries are fast. Same applies to verification. Some heuristics are implemented which identify cases where sorting and verification can be avoided. Setting a new index-value (or key-value) pair may trigger the removal of the flag in cases where the heuristics can't determine that the array stays sorted and verified after the action. Functions that require a sorted array are `get_[x]_arr_[values/indices/keys]` and `add_i_arr_el`. Functions that require a verified array are `get_[x]_arr_[values/indices/keys]`. The removal of the flag is triggered when `set_[x]_arr_el` functions are called (in cases where optimization heuristic can't help avoid it). The `declare_[x]_arr` functions reset the array and set the sorted and verified flags before exiting.
-- The most efficient way to use the functions is by grouping calls to the `set_[x]_arr_el` functions separately from calls to other functions and avoiding mixing calls to former with calls to latter.
-- That said, for small arrays the functions should be fast enough regardless. Also the optimizations cover most common use cases, such as setting consecutive indexed array elements or changing values of existing elements. So for the typical tasks, performance should be fine.
+- Performance is also affected by the workload. Some functions require a sorted list of keys/indices, and/or having all elements "verified", aka not having any registered keys/indices that in fact have no assigned value (after the value had been previously unset). However keeping a permanently verified and sorted array would be very slow if implemented in shell code. Therefore, sorting and verification of the array occur when needed. Once the array is sorted, a flag is set so further queries are fast. Same applies to verification. The following actions may trigger the removal of one or both flags: setting a new index-value (or key-value) pair via the `set_[x]_arr_el` functions, unsetting a previously set value (via the same function) for indexed arrays, unsetting a previously set element (via the unset_a_arr_el) for associative arrays. Functions that require a sorted array are `get_[x]_arr_[values/indices/keys]` and `add_i_arr_el`. Heuristics are implemented which identify cases where sorting and verification can be avoided.
+- For small arrays, the functions should be fast enough regardless. Also the optimization heuristics cover most common use cases, such as setting consecutive indexed array elements or changing values of existing elements. So for the typical tasks, performance should be fine.
 
 <details> <summary> Benchmarks: </summary>
 
@@ -104,12 +103,12 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | -------------|------------------------------|-------|
 | Indexed      | set elements one by one      | 1ms   |
 | Indexed      | add elements one by one      | 1ms   |
-| Indexed      | get elements one by one      | 1ms   |
+| Indexed      | get values one by one        | 1ms   |
 | Indexed      | get all values               | 1ms   |
 | Indexed      | get all indices              | 2ms   |
 | -------------|------------------------------|-------|
 | Associative  | set elements one by one      | 1ms   |
-| Associative  | get elements one by one      | 1ms   |
+| Associative  | get values one by one        | 1ms   |
 | Associative  | get all values               | 1ms   |
 | Associative  | get all keys                 | 2ms   |
 
@@ -119,12 +118,12 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | -------------|------------------------------|-------|
 | Indexed      | set elements one by one      | 3ms   |
 | Indexed      | add elements one by one      | 3ms   |
-| Indexed      | get elements one by one      | 1ms   |
+| Indexed      | get values one by one        | 1ms   |
 | Indexed      | get all values               | 1ms   |
 | Indexed      | get all indices              | 3ms   |
 | -------------|------------------------------|-------|
 | Associative  | set elements one by one      | 3ms   |
-| Associative  | get elements one by one      | 3ms   |
+| Associative  | get values one by one        | 3ms   |
 | Associative  | get all values               | 2ms   |
 | Associative  | get all keys                 | 3ms   |
 
@@ -134,12 +133,12 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | -------------|------------------------------|-------|
 | Indexed      | set elements one by one      | 11ms  |
 | Indexed      | add elements one by one      | 8ms   |
-| Indexed      | get elements one by one      | 5ms   |
+| Indexed      | get values one by one        | 5ms   |
 | Indexed      | get all values               | 4ms   |
 | Indexed      | get all indices              | 4ms   |
 | -------------|------------------------------|-------|
 | Associative  | set elements one by one      | 13ms  |
-| Associative  | get elements one by one      | 10ms  |
+| Associative  | get values one by one        | 10ms  |
 | Associative  | get all values               | 4ms   |
 | Associative  | get all keys                 | 4ms   |
 
@@ -149,12 +148,12 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | -------------|------------------------------|-------|
 | Indexed      | set elements one by one      | 19ms  |
 | Indexed      | add elements one by one      | 17ms  |
-| Indexed      | get elements one by one      | 8ms   |
+| Indexed      | get values one by one        | 8ms   |
 | Indexed      | get all values               | 6ms   |
 | Indexed      | get all indices              | 6ms   |
 | -------------|------------------------------|-------|
 | Associative  | set elements one by one      | 24ms  |
-| Associative  | get elements one by one      | 21ms  |
+| Associative  | get values one by one        | 21ms  |
 | Associative  | get all values               | 7ms   |
 | Associative  | get all keys                 | 6ms   |
 
@@ -164,12 +163,12 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | -------------|------------------------------|-------|
 | Indexed      | set elements one by one      | 39ms  |
 | Indexed      | add elements one by one      | 37ms  |
-| Indexed      | get elements one by one      | 18ms  |
+| Indexed      | get values one by one        | 18ms  |
 | Indexed      | get all values               | 13ms  |
 | Indexed      | get all indices              | 13ms  |
 | -------------|------------------------------|-------|
 | Associative  | set elements one by one      | 57ms  |
-| Associative  | get elements one by one      | 41ms  |
+| Associative  | get values one by one        | 41ms  |
 | Associative  | get all values               | 14ms  |
 | Associative  | get all keys                 | 14ms  |
 
