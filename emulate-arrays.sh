@@ -84,8 +84,9 @@ read_i_arr() {
 	return 0
 }
 
-clean_i_arr() {
-	___me="clean_i_arr"
+# unsets all variables used to store the array
+unset_i_arr() {
+	___me="unset_i_arr"
 	[ $# -ne 1 ] && { eval "$___wrongargs" >&2; return 1; }
 	___arr_name="$1"
 	case "$___arr_name" in *[!A-Za-z0-9_]*) eval "$___wrongname" >&2; return 1; esac
@@ -442,7 +443,8 @@ get_a_arr_val() {
 	unset ___key ___out_var
 }
 
-clean_a_arr() {
+# unsets all variables used to store the array
+unset_a_arr() {
 	___me="get_a_arr_val"
 	[ $# -ne 1 ] && { eval "$___wrongargs" >&2; return 1; }
 	___arr_name="$1"
