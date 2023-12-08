@@ -79,19 +79,23 @@ $ jazz, classical, rock
 
 ## Details
 - The arrays can hold strings that have any characters in them, including whitespaces and newlines.
-- Array names and (for associative arrays) keys are limited to alphanumeric characters and underlines - `_`.
 - For indexed arrays, indices start at 0.
 - As is default for shells, if you request a value corresponding to an index or to a key that has not been set previously, the functions will output an empty string and not return an error.
 - Similarly, if you request a value from an array that has not been created, the functions output an empty string and not return an error.
 - The indexed array effectively works as a sparse array, so indices do not have to be sequential.
 - The declare functions are not necessary to create an array. It's just a way to set N elements in one command. Otherwise you can create an indexed array by simply calling the `set_i_arr_el()` function or an associative array by calling the `set_a_arr_el()` function.
-- The reason why functions provide output via a variable is because this way performance is better, and for some functions much better.
+- For associative arrays, assigning an empty string to a key doesn't unset the array element. This mimics the behavior of Bash arrays. To unset the element in an associative array, use the `unset_a_arr_el()` function.
+- The reason why functions provide output via a variable is because this way the performance is better, in some cases much better.
 
 ## Performance
-- The code went through multiple rounds of optimization. Currently for most use cases, the performance for small arrays (<= 200 elements) is comparable to Bash arrays. Functions perform reasonably well with arrays containing up to 2000 elements. Higher than that, the performance of functions which require sorting the keys/indices drops significanly.
+- The code went through multiple rounds of optimization. Currently for most use cases, the performance for small arrays (<= 200 elements) is comparable to Bash arrays. Functions perform reasonably well with arrays containing up to 2000 elements. Higher than that, the performance drops significanly.
 - Performance is affected by the length of the strings stored in the array, and for associative arrays, by the length of the strings used as keys.
-- Performance is also affected by the workload. Some functions require a sorted list of keys/indices, and/or having all elements "verified", aka not having any registered keys/indices that in fact have no assigned value (after the value had been previously unset). However keeping a permanently verified and sorted array would be very slow if implemented in shell code. Therefore, sorting and verification of the array occur when needed. Once the array is sorted, a flag is set so further queries are fast. Same applies to verification. The following actions may trigger the removal of one or both flags: setting a new index-value (or key-value) pair via the `set_[x]_arr_el` functions, unsetting a previously set value (via the same function) for indexed arrays, unsetting a previously set element (via the unset_a_arr_el) for associative arrays. Functions that require a sorted array are `get_[x]_arr_[values/indices/keys]` and `add_i_arr_el`. Heuristics are implemented which identify cases where sorting and verification can be avoided.
-- For small arrays, the functions should be fast enough regardless. Also the optimization heuristics cover most common use cases, such as setting consecutive indexed array elements or changing values of existing elements. So for the typical tasks, performance should be fine.
+- Performance is also affected by the workload - more on that in the Limitations section.
+
+## Limitations
+- Functions which output all keys/indices or all values require a sorted list of keys/indices, and/or having all elements "verified", aka not having any registered keys/indices without an assigned value (which happens after unsetting an array element). However keeping a permanently verified and sorted array would be very slow if implemented in shell code. Therefore, sorting and verification of the array occurs when needed. These operations take some time, which may cause a temporary slowdown. Once the array is sorted, a flag is set so further queries are fast. Same applies to verification. The following actions may trigger the removal of one or both flags: setting a new index-value (or key-value) pair via the `set_[x]_arr_el` functions, unsetting a previously set value (via the same function) for indexed arrays, unsetting a previously set element (via the `unset_a_arr_el()` function) for associative arrays. Heuristics are implemented which identify cases where sorting and verification can be avoided.
+- For small arrays, the functions should be fast enough regardless. Also the optimization heuristics cover most common use cases of indexed arrays, such as setting consecutive indexed array elements or changing values of existing elements. And some common use cases of associative arrays. So for the typical tasks, performance should be fine. For associative arrays, to avoid performance degradation caused by repeated sorting, group calls to the `set_a_arr_el()` function separately from calls to `get_a_arr_values()` and `get_a_arr_keys()` functions. For both types of arrays, to avoid performance degradation caused by repeated verification, group unsetting elements separately from calls to get_[x]_arr_values() and `get_[x]_arr_[keys/indices]()` functions.
+- Array names and (for associative arrays) keys are limited to alphanumeric characters and underlines - `_`.
 
 <details> <summary> Benchmarks: </summary>
 
