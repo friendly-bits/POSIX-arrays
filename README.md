@@ -84,7 +84,8 @@ $ jazz, classical, rock
 - Similarly, if you request a value from an array that has not been created, the functions output an empty string and not return an error.
 - The indexed array effectively works as a sparse array, so indices do not have to be sequential.
 - The declare functions are not necessary to create an array. It's just a way to set N elements in one command. Otherwise you can create an indexed array by simply calling the `set_i_arr_el()` function or an associative array by calling the `set_a_arr_el()` function.
-- For associative arrays, assigning an empty string to a key doesn't unset the array element. This mimics the behavior of Bash arrays. To unset the element in an associative array, use the `unset_a_arr_el()` function.
+- For indexed arrays, assigning en empty string as a value of an element unsets the element.
+- For associative arrays, assigning an empty string as a value doesn't unset the array element. This mimics the behavior of Bash arrays. To unset an element of an associative array, use the `unset_a_arr_el()` function.
 - The reason why functions provide output via a variable is because this way the performance is better, in some cases much better.
 
 ## Performance
