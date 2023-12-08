@@ -13,16 +13,16 @@ set_a_arr_el@1
 set_a_arr_el arr@1
 [/header]
 
-get_a_arr_el@@1
-get_a_arr_el arr@@1
-get_a_arr_el arr 0@@1
-get_a_arr_el arr 0 val@@0
-get_a_arr_el arr 1 val@@0
-get_a_arr_el arr 1 2 val@@1
-get_a_arr_el arr a val@@0
-get_a_arr_el arr abc val@@0
-get_a_arr_el arr 1 a val@@1
-get_a_arr_el arr a 1 val@@1
+get_a_arr_val@@1
+get_a_arr_val arr@@1
+get_a_arr_val arr 0@@1
+get_a_arr_val arr 0 val@@0
+get_a_arr_val arr 1 val@@0
+get_a_arr_val arr 1 2 val@@1
+get_a_arr_val arr a val@@0
+get_a_arr_val arr abc val@@0
+get_a_arr_val arr 1 a val@@1
+get_a_arr_val arr a 1 val@@1
 
 get_a_arr_keys@@1
 get_a_arr_keys arr 1 val@@1
@@ -35,13 +35,13 @@ test_2="
 set_a_arr_el arr abc@1
 [/header]
 
-get_a_arr_el @@1
-get_a_arr_el arr@@1
-get_a_arr_el arr 0 val@@0
-get_a_arr_el arr 1 val@@0
-get_a_arr_el arr 1 2 val@@1
-get_a_arr_el arr a val@@0
-get_a_arr_el arr abc val@@0
+get_a_arr_val @@1
+get_a_arr_val arr@@1
+get_a_arr_val arr 0 val@@0
+get_a_arr_val arr 1 val@@0
+get_a_arr_val arr 1 2 val@@1
+get_a_arr_val arr a val@@0
+get_a_arr_val arr abc val@@0
 "
 
 
@@ -50,13 +50,13 @@ test_3="
 set_a_arr_el arr abc 123@1
 [/header]
 
-get_a_arr_el @@1
-get_a_arr_el arr@@1
-get_a_arr_el arr 0 val@@0
-get_a_arr_el arr 1 val@@0
-get_a_arr_el arr 1 2 val@@1
-get_a_arr_el arr a val@@0
-get_a_arr_el arr abc val@@0
+get_a_arr_val @@1
+get_a_arr_val arr@@1
+get_a_arr_val arr 0 val@@0
+get_a_arr_val arr 1 val@@0
+get_a_arr_val arr 1 2 val@@1
+get_a_arr_val arr a val@@0
+get_a_arr_val arr abc val@@0
 "
 
 
@@ -65,13 +65,13 @@ test_4="
 set_a_arr_el arr abc 123=a@1
 [/header]
 
-get_a_arr_el @@1
-get_a_arr_el arr@@1
-get_a_arr_el arr 0 val@@0
-get_a_arr_el arr 1 val@@0
-get_a_arr_el arr 1 2 val@@1
-get_a_arr_el arr a val@@0
-get_a_arr_el arr abc val@@0
+get_a_arr_val @@1
+get_a_arr_val arr@@1
+get_a_arr_val arr 0 val@@0
+get_a_arr_val arr 1 val@@0
+get_a_arr_val arr 1 2 val@@1
+get_a_arr_val arr a val@@0
+get_a_arr_val arr abc val@@0
 "
 
 
@@ -80,13 +80,13 @@ test_5="
 set_a_arr_el arr 123=a abc@1
 [/header]
 
-get_a_arr_el@@1
-get_a_arr_el arr@@1
-get_a_arr_el arr 0 val@@0
-get_a_arr_el arr 1 val@@0
-get_a_arr_el arr 1 2 val@@1
-get_a_arr_el arr a val@@0
-get_a_arr_el arr abc val@@0
+get_a_arr_val@@1
+get_a_arr_val arr@@1
+get_a_arr_val arr 0 val@@0
+get_a_arr_val arr 1 val@@0
+get_a_arr_val arr 1 2 val@@1
+get_a_arr_val arr a val@@0
+get_a_arr_val arr abc val@@0
 "
 
 
@@ -95,13 +95,13 @@ test_6="
 set_a_arr_el arr 123=a abc=d@1
 [/header]
 
-get_a_arr_el @@1
-get_a_arr_el arr@@1
-get_a_arr_el arr 0 val@@0
-get_a_arr_el arr 1 val@@0
-get_a_arr_el arr 1 2 val@@1
-get_a_arr_el arr a val@@0
-get_a_arr_el arr abc val@@0
+get_a_arr_val @@1
+get_a_arr_val arr@@1
+get_a_arr_val arr 0 val@@0
+get_a_arr_val arr 1 val@@0
+get_a_arr_val arr 1 2 val@@1
+get_a_arr_val arr a val@@0
+get_a_arr_val arr abc val@@0
 "
 
 
@@ -110,14 +110,14 @@ test_7="
 set_a_arr_el arr 123=abcd@0
 [/header]
 
-get_a_arr_el@@1
-get_a_arr_el arr@@1
-get_a_arr_el arr 0 val@@0
-get_a_arr_el arr 1 val@@0
-get_a_arr_el arr 1 2 val@@1
-get_a_arr_el arr a val@@0
-get_a_arr_el arr abcd val@@0
-get_a_arr_el arr 123 val@abcd@0
+get_a_arr_val@@1
+get_a_arr_val arr@@1
+get_a_arr_val arr 0 val@@0
+get_a_arr_val arr 1 val@@0
+get_a_arr_val arr 1 2 val@@1
+get_a_arr_val arr a val@@0
+get_a_arr_val arr abcd val@@0
+get_a_arr_val arr 123 val@abcd@0
 
 get_a_arr_keys arr@@1
 get_a_arr_keys arr val@123@0
@@ -130,14 +130,14 @@ set_a_arr_el arr 123=abcd@0
 set_a_arr_el arr abcd=123@0
 [/header]
 
-get_a_arr_el @@1
-get_a_arr_el arr@@1
-get_a_arr_el arr 0 val@@0
-get_a_arr_el arr 1 val@@0
-get_a_arr_el arr 1 2 val@@1
-get_a_arr_el arr a val@@0
-get_a_arr_el arr abcd val@123@0
-get_a_arr_el arr 123 val@abcd@0
+get_a_arr_val @@1
+get_a_arr_val arr@@1
+get_a_arr_val arr 0 val@@0
+get_a_arr_val arr 1 val@@0
+get_a_arr_val arr 1 2 val@@1
+get_a_arr_val arr a val@@0
+get_a_arr_val arr abcd val@123@0
+get_a_arr_val arr 123 val@abcd@0
 
 get_a_arr_keys arr val@123 abcd@0
 "
@@ -151,18 +151,18 @@ set_a_arr_el arr aghk=a123@0
 set_a_arr_el arr 1ghk=b123@0
 [/header]
 
-get_a_arr_el @@1
-get_a_arr_el arr@@1
-get_a_arr_el arr 1 2 val@@1
+get_a_arr_val @@1
+get_a_arr_val arr@@1
+get_a_arr_val arr 1 2 val@@1
 
-get_a_arr_el arr 0 val@@0
-get_a_arr_el arr 1 val@@0
-get_a_arr_el arr a val@@0
+get_a_arr_val arr 0 val@@0
+get_a_arr_val arr 1 val@@0
+get_a_arr_val arr a val@@0
 
-get_a_arr_el arr 1ghk val@b123@0
-get_a_arr_el arr aghk val@a123@0
-get_a_arr_el arr 123 val@abcd@0
-get_a_arr_el arr abcd val@123@0
+get_a_arr_val arr 1ghk val@b123@0
+get_a_arr_val arr aghk val@a123@0
+get_a_arr_val arr 123 val@abcd@0
+get_a_arr_val arr abcd val@123@0
 
 get_a_arr_keys arr val@123 1ghk abcd aghk@0
 "
@@ -176,14 +176,14 @@ set_a_arr_el arr abcd=jjjj@0
 set_a_arr_el arr 123=@0
 [/header]
 
-get_a_arr_el @@1
-get_a_arr_el arr@@1
-get_a_arr_el arr 0 val@@0
-get_a_arr_el arr 1 val@@0
-get_a_arr_el arr 1 2 val@@1
-get_a_arr_el arr a val@@0
-get_a_arr_el arr 123 val@@0
-get_a_arr_el arr abcd val@jjjj@0
+get_a_arr_val @@1
+get_a_arr_val arr@@1
+get_a_arr_val arr 0 val@@0
+get_a_arr_val arr 1 val@@0
+get_a_arr_val arr 1 2 val@@1
+get_a_arr_val arr a val@@0
+get_a_arr_val arr 123 val@@0
+get_a_arr_val arr abcd val@jjjj@0
 
 
 get_a_arr_keys arr val@123 abcd@0
@@ -199,13 +199,13 @@ set_a_arr_el arr 123=@0
 set_a_arr_el arr abcd=@0
 [/header]
 
-get_a_arr_el @@1
-get_a_arr_el arr@@1
-get_a_arr_el arr 0 val@@0
-get_a_arr_el arr 1 val@@0
-get_a_arr_el arr a val@@0
-get_a_arr_el arr 123 val@@0
-get_a_arr_el arr abcd val@@0
+get_a_arr_val @@1
+get_a_arr_val arr@@1
+get_a_arr_val arr 0 val@@0
+get_a_arr_val arr 1 val@@0
+get_a_arr_val arr a val@@0
+get_a_arr_val arr 123 val@@0
+get_a_arr_val arr abcd val@@0
 
 get_a_arr_keys arr val@123 abcd@0
 "
@@ -219,16 +219,16 @@ set_a_arr_el arr aghk=a123@0
 set_a_arr_el arr 1ghk=b123@0
 [/header]
 
-get_a_arr_el @@1
-get_a_arr_el arr 1ghk val@b123@0
-get_a_arr_el arr val@@1
-get_a_arr_el arr 0 val@@0
-get_a_arr_el arr 1 val@@0
-get_a_arr_el arr aghk val@a123@0
-get_a_arr_el arr 1 2 val@@1
-get_a_arr_el arr a val@@0
-get_a_arr_el arr 123 val@abcd efgh 123@0
-get_a_arr_el arr abcd val@123@0
+get_a_arr_val @@1
+get_a_arr_val arr 1ghk val@b123@0
+get_a_arr_val arr val@@1
+get_a_arr_val arr 0 val@@0
+get_a_arr_val arr 1 val@@0
+get_a_arr_val arr aghk val@a123@0
+get_a_arr_val arr 1 2 val@@1
+get_a_arr_val arr a val@@0
+get_a_arr_val arr 123 val@abcd efgh 123@0
+get_a_arr_val arr abcd val@123@0
 
 get_a_arr_keys arr val@123 1ghk abcd aghk@0
 "
@@ -264,36 +264,36 @@ set_a_arr_el arr7 b=\"2=\"@0
 set_a_arr_el arr7 a=\"=f\"@0
 [/header]
 
-get_a_arr_el @@1
+get_a_arr_val @@1
 
-get_a_arr_el arr val@@1
-get_a_arr_el arr 0 val@@0
-get_a_arr_el arr abc val@=a@0
-get_a_arr_el arr 1 val@=2@0
-get_a_arr_el arr 2 val@@0
+get_a_arr_val arr val@@1
+get_a_arr_val arr 0 val@@0
+get_a_arr_val arr abc val@=a@0
+get_a_arr_val arr 1 val@=2@0
+get_a_arr_val arr 2 val@@0
 
-get_a_arr_el arr1 abc val@=a@0
-get_a_arr_el arr1 1 val@=2@0
-get_a_arr_el arr1 2 val@@0
+get_a_arr_val arr1 abc val@=a@0
+get_a_arr_val arr1 1 val@=2@0
+get_a_arr_val arr1 2 val@@0
 
-get_a_arr_el arr2 abc val@abc=a@0
-get_a_arr_el arr2 1 val@abc=2@0
-get_a_arr_el arr2 2 val@@0
+get_a_arr_val arr2 abc val@abc=a@0
+get_a_arr_val arr2 1 val@abc=2@0
+get_a_arr_val arr2 2 val@@0
 
-get_a_arr_el arr3 abc val@3@0
-get_a_arr_el arr3 1 val@@0
+get_a_arr_val arr3 abc val@3@0
+get_a_arr_val arr3 1 val@@0
 
-get_a_arr_el arr4 abc val@abc=2@0
-get_a_arr_el arr4 abcd val@e=3@0
-get_a_arr_el arr4 e val@@0
+get_a_arr_val arr4 abc val@abc=2@0
+get_a_arr_val arr4 abcd val@e=3@0
+get_a_arr_val arr4 e val@@0
 
-get_a_arr_el arr5 abc val@e=3@0
-get_a_arr_el arr5 abcd val@@0
+get_a_arr_val arr5 abc val@e=3@0
+get_a_arr_val arr5 abcd val@@0
 
-get_a_arr_el arr6 abc val@2=@0
+get_a_arr_val arr6 abc val@2=@0
 
-get_a_arr_el arr7 a val@=f@0
-get_a_arr_el arr7 b val@2=@0
+get_a_arr_val arr7 a val@=f@0
+get_a_arr_val arr7 b val@2=@0
 
 get_a_arr_keys arr val@1 abc@0
 get_a_arr_keys arr1 val@1 abc@0
@@ -308,7 +308,7 @@ test_14="
 set_a_arr_el arr abc=\"${newline}a\"@0
 [/header]
 
-get_a_arr_el arr abc val@${newline}a@0
+get_a_arr_val arr abc val@${newline}a@0
 
 get_a_arr_keys arr val@abc@0
 "

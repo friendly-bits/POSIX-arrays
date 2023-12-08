@@ -13,41 +13,23 @@ source_file="${1:-emulate-arrays.sh}"
 warmup() {
 	if [ "$arr_type" = "i" ]; then
 		for i in $elements; do
-			set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+			set_i_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
 		done
 	else
 		for i in $elements; do
-			set_${arr_type}_arr_el test_arr "abcdefghijklmn$i=a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+			set_a_arr_el test_arr "abcdefghijklmn$i=a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
 		done
 	fi
 }
- 
+
 test_add() {
 	if [ "$arr_type" = "i" ]; then
 		for j in $elements; do
-			add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-			# set_${arr_type}_arr_el test_arr "$((j+5))" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-			# get_i_arr_values test_arr testvar
+			add_i_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+			# set_i_arr_el test_arr "$((j+5))" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+			# get_i_arr_indices test_arr testvar
 		done
-		# set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+		# set_${arr_type}_arr_val test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
 		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
 	fi
 }
@@ -55,11 +37,11 @@ test_add() {
 test_set() {
 	if [ "$arr_type" = "i" ]; then
 		for i in $elements; do
-			set_${arr_type}_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+			set_i_arr_el test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
 		done
 	else
 		for i in $elements; do
-			set_${arr_type}_arr_el test_arr "abcdefghijklmn$i=a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+			set_a_arr_el test_arr "abcdefghijklmn$i=a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
 		done
 	fi
 }
@@ -71,7 +53,7 @@ test_unset() {
 		done
 	else
 		for i in $elements; do
-			set_${arr_type}_arr_el test_arr "abcdefghijklmn$i="
+			unset_${arr_type}_arr_el test_arr "abcdefghijklmn$i"
 		done
 	fi
 }
@@ -79,14 +61,15 @@ test_unset() {
 test_get() {
 	if [ "$arr_type" = "i" ]; then
 		for i in $elements; do
-			get_${arr_type}_arr_el test_arr "$i" testvar
-			printf '%s\n' "$testvar" >/dev/null
+			get_${arr_type}_arr_val test_arr "$i" testvar
+			# shellcheck disable=SC2154
+			# printf '%s\n' "$testvar" >/dev/null
 			# printf '%s\n' "${test_arr[$i]}" >/dev/null
 		done
  	else
 		for i in $elements; do
-			get_${arr_type}_arr_el test_arr "abcdefghijklmn$i" testvar
-			printf '%s\n' "$testvar" >/dev/null
+			get_${arr_type}_arr_val test_arr "abcdefghijklmn$i" testvar
+			# printf '%s\n' "$testvar" >/dev/null
 			# printf '%s\n' "${test_arr[$i]}" >/dev/null
 		done
 	fi
@@ -110,12 +93,12 @@ arr_type="i"
 
 # Warmup
 f=1
-n=10
+n=1
 elements=$(seq $f $n)
 warmup
 
-#echo "Indices after warmup:"
-#eval "echo \"\$emu_i_test_arr_indices\""
+# echo "Indices after warmup:"
+# echo "'$___i_test_arr_indices'"
 
 # Test
 f=1
@@ -128,11 +111,10 @@ __end_set=$(date +%s%N)
  
 __start_get_keys=$(date +%s%N)
 if [ "$arr_type" = "i" ]; then
-	get_i_arr_indices test_arr testvar
+	get_i_arr_indices test_arr reskeys
 else
-	get_a_arr_keys test_arr testvar
+	get_a_arr_keys test_arr reskeys
 fi
-printf '%s\n' "$testvar" >/dev/null
 __end_get_keys=$(date +%s%N)
 
 elements=$(seq $f $n)
@@ -158,15 +140,28 @@ __end_add=$(date +%s%N)
 
 
 echo "set time: $(( (__end_set - __start_set)/timefactor )) $timeunits"
-
-echo "get time: $(( (__end_get - __start_get)/timefactor )) $timeunits"
-echo "get all time: $(( (__end_get_all - __start_get_all)/timefactor )) $timeunits"
-echo "unset time: $(( (__end_unset - __start_unset)/timefactor )) $timeunits"
 echo "add time: $(( (__end_add - __start_add)/timefactor )) $timeunits"
+echo "get time: $(( (__end_get - __start_get)/timefactor )) $timeunits"
+echo "get all vals time: $(( (__end_get_all - __start_get_all)/timefactor )) $timeunits"
 echo "get keys time: $(( (__end_get_keys - __start_get_keys)/timefactor )) $timeunits"
+echo "unset time: $(( (__end_unset - __start_unset)/timefactor )) $timeunits"
 
-# echo "Resulting keys:"
-# eval echo "\$___emu_${arr_type}_test_arr_keys"
+# echo "Resulting raw keys:"
+# if [ "$arr_type" = "i" ]; then
+# 	printf '%s\n' "'$___i_test_arr_indices'"
+# else
+# 	printf '%s\n' "'$___a_test_arr_keys'"
+# fi
 
+
+# echo "Resulting reported keys:"
+# if [ "$arr_type" = "i" ]; then
+# 	get_i_arr_indices test_arr reskeys
+# else
+# 	get_a_arr_keys test_arr reskeys
+# fi
+# printf '%s\n' "'$reskeys'"
+
+# get_${arr_type}_arr_values test_arr resulting_values
 # echo "Resulting values:"
 # echo "'$resulting_values'"

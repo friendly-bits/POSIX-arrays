@@ -114,6 +114,7 @@ run_test() {
 		# unset the variables holding the arrays
 		arr_names="$(printf '%s\n' "$arr_names" | sort -u)"
 		for arr_name in $arr_names; do
+			# shellcheck disable=SC2086
 			clean_${arr_type}_arr "$arr_name"
 		done
 
@@ -133,21 +134,21 @@ run_test() {
 run_test_i_arr_1() {
 	first_test_num=$1; last_test_num=$2; arr_type="i"
 	test_file="$script_dir/tests-i_arr_1.list"
-	echo; echo "*** Testing 'declare_i_arr' and 'get_i_arr_el'... ***"
+	echo; echo "*** Testing 'declare_i_arr' and 'get_i_arr_val'... ***"
 	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
 }
 
 run_test_i_arr_2() {
 	first_test_num=$1; last_test_num=$2; arr_type="i"
 	test_file="$script_dir/tests-i_arr_2.list"
-	echo; echo "*** Testing 'set_i_arr_el' and 'get_i_arr_el'... ***"
+	echo; echo "*** Testing 'set_i_arr_el' and 'get_i_arr_val'... ***"
 	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
 }
 
 run_test_a_arr_1() {
 	first_test_num=$1; last_test_num=$2; arr_type="a"
 	test_file="$script_dir/tests-a_arr_1.list"
-	echo; echo "*** Testing 'set_a_arr_el' and 'get_a_arr_el'... ***"
+	echo; echo "*** Testing 'set_a_arr_el' and 'get_a_arr_val'... ***"
 	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
 }
 
@@ -167,7 +168,7 @@ newline="
 # To print errors returned by the functions under test, uncomment the following line
 # Some of the test units intentionally induce errors, so expect an error spam in the console
 
-#print_stderr=true
+print_stderr=true
 
 err_num=0
 

@@ -14,16 +14,16 @@ declare_i_arr@1
 declare_i_arr arr@0
 [/header]
 
-get_i_arr_el @@1
-get_i_arr_el arr@@1
-get_i_arr_el arr 0@@1
-get_i_arr_el arr 0 val@@0
-get_i_arr_el arr 1 val@@0
-get_i_arr_el arr 2 val@@0
-get_i_arr_el arr 1 2 val@@1
-get_i_arr_el arr a val@@1
-get_i_arr_el arr 1 a val@@1
-get_i_arr_el arr a 1 val@@1
+get_i_arr_val @@1
+get_i_arr_val arr@@1
+get_i_arr_val arr 0@@1
+get_i_arr_val arr 0 val@@0
+get_i_arr_val arr 1 val@@0
+get_i_arr_val arr 2 val@@0
+get_i_arr_val arr 1 2 val@@1
+get_i_arr_val arr a val@@1
+get_i_arr_val arr 1 a val@@1
+get_i_arr_val arr a 1 val@@1
 get_i_arr_values arr val@@0
 "
 
@@ -32,16 +32,16 @@ test_2="
 declare_i_arr arr abc@0
 [/header]
 
-get_i_arr_el@@1
-get_i_arr_el arr@@1
-get_i_arr_el arr 0 val@abc@0
-get_i_arr_el arr 1 val@@0
-get_i_arr_el arr 2 val@@0
-get_i_arr_el arr 3 val@@0
-get_i_arr_el arr 1 2 val@@1
-get_i_arr_el arr a val@@1
-get_i_arr_el arr 1 a val@@1
-get_i_arr_el arr a 1 val@@1
+get_i_arr_val@@1
+get_i_arr_val arr@@1
+get_i_arr_val arr 0 val@abc@0
+get_i_arr_val arr 1 val@@0
+get_i_arr_val arr 2 val@@0
+get_i_arr_val arr 3 val@@0
+get_i_arr_val arr 1 2 val@@1
+get_i_arr_val arr a val@@1
+get_i_arr_val arr 1 a val@@1
+get_i_arr_val arr a 1 val@@1
 get_i_arr_values arr val@abc@0
 "
 
@@ -50,14 +50,14 @@ test_3="
 declare_i_arr arr abc 123@0
 [/header]
 
-get_i_arr_el @@1
-get_i_arr_el arr@@1
-get_i_arr_el arr 0 val@abc@0
-get_i_arr_el arr 1 val@123@0
-get_i_arr_el arr 2 val@@0
-get_i_arr_el arr 3 val@@0
-get_i_arr_el arr 1 2 val@@1
-get_i_arr_el arr a val@@1
+get_i_arr_val @@1
+get_i_arr_val arr@@1
+get_i_arr_val arr 0 val@abc@0
+get_i_arr_val arr 1 val@123@0
+get_i_arr_val arr 2 val@@0
+get_i_arr_val arr 3 val@@0
+get_i_arr_val arr 1 2 val@@1
+get_i_arr_val arr a val@@1
 get_i_arr_values arr val@abc 123@0
 "
 
@@ -66,14 +66,14 @@ test_4="
 declare_i_arr arr abc 123 a@0
 [/header]
 
-get_i_arr_el @@1
-get_i_arr_el arr@@1
-get_i_arr_el arr 0 val@abc@0
-get_i_arr_el arr 1 val@123@0
-get_i_arr_el arr 2 val@a@0
-get_i_arr_el arr 3 val@@0
-get_i_arr_el arr 1 2 val@@1
-get_i_arr_el arr a val@@1
+get_i_arr_val @@1
+get_i_arr_val arr@@1
+get_i_arr_val arr 0 val@abc@0
+get_i_arr_val arr 1 val@123@0
+get_i_arr_val arr 2 val@a@0
+get_i_arr_val arr 3 val@@0
+get_i_arr_val arr 1 2 val@@1
+get_i_arr_val arr a val@@1
 get_i_arr_values arr val@abc 123 a@0
 "
 
@@ -85,21 +85,21 @@ declare_i_arr arr2 abc 123 \"a bcd 123\"@0
 declare_i_arr arr2 def@0
 [/header]
 
-get_i_arr_el@@1
-get_i_arr_el arr@@1
-get_i_arr_el arr 0 val@abc@0
-get_i_arr_el arr 1 val@123@0
-get_i_arr_el arr 2 val@a bcd 123@0
-get_i_arr_el arr 3 val@@0
-get_i_arr_el arr 1 2 val@@1
-get_i_arr_el arr a val@@1
+get_i_arr_val@@1
+get_i_arr_val arr@@1
+get_i_arr_val arr 0 val@abc@0
+get_i_arr_val arr 1 val@123@0
+get_i_arr_val arr 2 val@a bcd 123@0
+get_i_arr_val arr 3 val@@0
+get_i_arr_val arr 1 2 val@@1
+get_i_arr_val arr a val@@1
 get_i_arr_values arr val@abc 123 a bcd 123@0
 
-get_i_arr_el arr2 val@@1
-get_i_arr_el arr2 0 val@def@0
-get_i_arr_el arr2 1 val@@0
-get_i_arr_el arr2 2 val@@0
-get_i_arr_el arr2 3 val@@0
+get_i_arr_val arr2 val@@1
+get_i_arr_val arr2 0 val@def@0
+get_i_arr_val arr2 1 val@@0
+get_i_arr_val arr2 2 val@@0
+get_i_arr_val arr2 3 val@@0
 get_i_arr_values arr2 val@def@0
 "
 
@@ -109,15 +109,15 @@ test_6="
 declare_i_arr arr abc 123 \"a bcd 123\" =@0
 [/header]
 
-get_i_arr_el @@1
-get_i_arr_el arr@@1
-get_i_arr_el arr 0 val@abc@0
-get_i_arr_el arr 1 val@123@0
-get_i_arr_el arr 2 val@a bcd 123@0
-get_i_arr_el arr 3 val@=@0
-get_i_arr_el arr 4 val@@0
-get_i_arr_el arr 1 2 val@@1
-get_i_arr_el arr a val@@1
+get_i_arr_val @@1
+get_i_arr_val arr@@1
+get_i_arr_val arr 0 val@abc@0
+get_i_arr_val arr 1 val@123@0
+get_i_arr_val arr 2 val@a bcd 123@0
+get_i_arr_val arr 3 val@=@0
+get_i_arr_val arr 4 val@@0
+get_i_arr_val arr 1 2 val@@1
+get_i_arr_val arr a val@@1
 get_i_arr_values arr val@abc 123 a bcd 123 =@0
 "
 
@@ -127,14 +127,14 @@ test_7="
 declare_i_arr arr abc= 123=1 =a@0
 [/header]
 
-get_i_arr_el @@1
-get_i_arr_el arr@@1
-get_i_arr_el arr 0 val@abc=@0
-get_i_arr_el arr 1 val@123=1@0
-get_i_arr_el arr 2 val@=a@0
-get_i_arr_el arr 3 val@@0
-get_i_arr_el arr 1 2 val@@1
-get_i_arr_el arr a val@@1
+get_i_arr_val @@1
+get_i_arr_val arr@@1
+get_i_arr_val arr 0 val@abc=@0
+get_i_arr_val arr 1 val@123=1@0
+get_i_arr_val arr 2 val@=a@0
+get_i_arr_val arr 3 val@@0
+get_i_arr_val arr 1 2 val@@1
+get_i_arr_val arr a val@@1
 get_i_arr_values arr val@abc= 123=1 =a@0
 "
 
@@ -144,12 +144,12 @@ test_8="
 declare_i_arr arr abc#= \"#123=1\" \"=a#\" \"#\" \"###\"@0
 [/header]
 
-get_i_arr_el arr 0 val@abc#=@0
-get_i_arr_el arr 1 val@#123=1@0
-get_i_arr_el arr 2 val@=a#@0
-get_i_arr_el arr 3 val@#@0
-get_i_arr_el arr 4 val@###@0
-get_i_arr_el arr 5 val@@0
+get_i_arr_val arr 0 val@abc#=@0
+get_i_arr_val arr 1 val@#123=1@0
+get_i_arr_val arr 2 val@=a#@0
+get_i_arr_val arr 3 val@#@0
+get_i_arr_val arr 4 val@###@0
+get_i_arr_val arr 5 val@@0
 get_i_arr_values arr val@abc#= #123=1 =a# # ###@0
 "
 
@@ -279,12 +279,12 @@ get_i_arr_indices arr2 val@0 1 2 3 4@0
 
 get_i_arr_values arr3 val@a b c d e@0
 get_i_arr_indices arr3 val@0 1 2 4 5@0
-get_i_arr_el arr3 0 val@a@0
-get_i_arr_el arr3 1 val@b@0
-get_i_arr_el arr3 2 val@c@0
-get_i_arr_el arr3 3 val@@0
-get_i_arr_el arr3 4 val@d@0
-get_i_arr_el arr3 5 val@e@0
+get_i_arr_val arr3 0 val@a@0
+get_i_arr_val arr3 1 val@b@0
+get_i_arr_val arr3 2 val@c@0
+get_i_arr_val arr3 3 val@@0
+get_i_arr_val arr3 4 val@d@0
+get_i_arr_val arr3 5 val@e@0
 
 get_i_arr_values arr4 val@a b d e@0
 get_i_arr_indices arr4 val@0 1 2 3@0
