@@ -26,11 +26,7 @@ test_add() {
 	if [ "$arr_type" = "i" ]; then
 		for j in $elements; do
 			add_i_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-			# set_i_arr_el test_arr "$((j+5))" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-			# get_i_arr_indices test_arr testvar
 		done
-		# set_${arr_type}_arr_val test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
 	fi
 }
  
@@ -62,7 +58,6 @@ test_get() {
 	if [ "$arr_type" = "i" ]; then
 		for i in $elements; do
 			get_${arr_type}_arr_val test_arr "$i" testvar
-			# shellcheck disable=SC2154
 			# printf '%s\n' "$testvar" >/dev/null
 			# printf '%s\n' "${test_arr[$i]}" >/dev/null
 		done
@@ -76,6 +71,27 @@ test_get() {
   printf '\n'
 }
 
+test_mixed() {
+	if [ "$arr_type" = "i" ]; then
+		for j in $elements; do
+			set_i_arr_el test_arr "$((j*2))" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+			set_i_arr_el test_arr "$((j*2 -2))" ""
+			get_i_arr_indices test_arr testvar
+			# add_i_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+		done
+		# set_${arr_type}_arr_val test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+	else
+		for j in $elements; do
+			set_a_arr_el test_arr "$((j*2))=a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+			set_a_arr_el test_arr "$((j*2 -2))="
+			get_a_arr_keys test_arr testvar
+		done
+		# set_${arr_type}_arr_val test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+	fi
+}
+ 
 # Check the 'date' command output
 testdate="$(date +%N)"
 if [ -z "$testdate" ]; then
@@ -89,11 +105,11 @@ fi
 
 
 
-arr_type="i"
+arr_type="a"
 
 # Warmup
 f=1
-n=1
+n=100
 elements=$(seq $f $n)
 warmup
 
@@ -132,7 +148,12 @@ __start_unset=$(date +%s%N)
 test_unset
 __end_unset=$(date +%s%N)
 
- elements=$(seq $f $n)
+elements=$(seq $f $n)
+__start_mixed=$(date +%s%N)
+test_mixed
+__end_mixed=$(date +%s%N)
+ 
+elements=$(seq $f $n)
 __start_add=$(date +%s%N)
 test_add
 __end_add=$(date +%s%N)
@@ -145,6 +166,7 @@ echo "get time: $(( (__end_get - __start_get)/timefactor )) $timeunits"
 echo "get all vals time: $(( (__end_get_all - __start_get_all)/timefactor )) $timeunits"
 echo "get keys time: $(( (__end_get_keys - __start_get_keys)/timefactor )) $timeunits"
 echo "unset time: $(( (__end_unset - __start_unset)/timefactor )) $timeunits"
+echo "mixed time: $(( (__end_mixed - __start_mixed)/timefactor )) $timeunits"
 
 # echo "Resulting raw keys:"
 # if [ "$arr_type" = "i" ]; then

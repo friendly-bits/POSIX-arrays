@@ -168,7 +168,7 @@ newline="
 # To print errors returned by the functions under test, uncomment the following line
 # Some of the test units intentionally induce errors, so expect an error spam in the console
 
-print_stderr=true
+#print_stderr=true
 
 err_num=0
 
