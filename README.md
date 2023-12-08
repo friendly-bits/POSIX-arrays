@@ -17,7 +17,7 @@ Note that the last line in emulate-arrays.sh sets the delimiter variable. That v
 
 `set_i_arr_el <array_name> <index> [value]` - Assigns `[value]` to element with index `<index>`. Indices should always be nonnegative integer numbers. Indices don't have to be sequential. If `<value>` is an empty string, unsets the value.
 
-`get_i_arr_el <array_name> <index> <var>` - Assigns value for `<index>` from the indexed array to variable `<var>`.
+`get_i_arr_val <array_name> <index> <var>` - Assigns value for `<index>` from the indexed array to variable `<var>`.
 
 `get_i_arr_values <array_name> <var>` - Gets all values from an indexed array as a sorted (by index) whitespace-separated list and assigns the result to variable `<var>`.
 
@@ -29,7 +29,7 @@ Note that the last line in emulate-arrays.sh sets the delimiter variable. That v
 
 ```
 set_i_arr_el test_arr 10 some_val
-get_i_arr_el test_arr 10 test_var; echo "$test_var"
+get_i_arr_val test_arr 10 test_var; echo "$test_var"
 $ some_val
 ```
 
@@ -38,7 +38,7 @@ declare_i_arr test_arr val1 val2 "val3 123 etc"
 get_i_arr_values test_arr test_var; echo "$test_var"
 $ val1 val2 val3 123 etc
 
-get_i_arr_el test_arr 2 test_var; echo "$test_var"
+get_i_arr_val test_arr 2 test_var; echo "$test_var"
 $ val3 123 etc
 ```
 
@@ -50,7 +50,7 @@ $ val3 123 etc
 
 `set_a_arr_el <array_name> <key>=[value]` - Assigns `[value]` to element with key `<key>`. If `[value]` is an empty string, stores empty string as a value.
 
-`get_a_arr_el <array_name> <key> <var>` - Assigns value for `<key>` from the associative array to variable `<var>`.
+`get_a_arr_val <array_name> <key> <var>` - Assigns value for `<key>` from the associative array to variable `<var>`.
 
 `get_a_arr_values <array_name> <var>` - Gets all values as an alphabetically sorted (by key) whitespace-separated list and assigns the result to variable `<var>`.
 
@@ -62,7 +62,7 @@ $ val3 123 etc
 
 ```
 set_a_arr_el test_arr some_key="this is a test"
-get_a_arr_el test_arr some_key test_var; echo "$test_var"
+get_a_arr_val test_arr some_key test_var; echo "$test_var"
 
 $ this is a test
 ```
@@ -72,7 +72,7 @@ declare_a_arr test_arr "cars=Audi, Honda, Mercedes" "music_genres=jazz, classica
 get_a_arr_keys test_arr test_keys; echo "$test_keys"
 $ cars music_genres
 
-get_a_arr_el test_arr music_genres genres; echo "$genres"
+get_a_arr_val test_arr music_genres genres; echo "$genres"
 $ jazz, classical, rock
 ```
 </details>
