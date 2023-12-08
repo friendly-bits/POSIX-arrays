@@ -37,10 +37,10 @@ declare_i_arr() {
 		done
 	fi
 
-	eval "___i_${___arr_name}_high_index=\"$((___index - 1))\""
-	eval "___i_${___arr_name}_indices=\"$___indices\""
-	eval "___i_${___arr_name}_sorted=1"
-	eval  "___i_${___arr_name}_verified=1"
+	eval "___i_${___arr_name}_high_index=\"$((___index - 1))\";
+		___i_${___arr_name}_indices=\"$___indices\";
+		___i_${___arr_name}_sorted=1;
+		___i_${___arr_name}_verified=1"
 	unset ___val ___index ___indices
 	return 0
 }
@@ -61,8 +61,7 @@ read_i_arr() {
 	for ___index in $___indices; do
 		unset "___i_${___arr_name}_${___index}"
 	done
-	unset "___i_${___arr_name}_indices"
-	unset ___indices "___i_${___arr_name}_high_index"
+	unset "___i_${___arr_name}_indices" ___indices
 
 	___index=0
     IFS_OLD="$IFS"
@@ -74,10 +73,10 @@ read_i_arr() {
 	done
     IFS="$IFS_OLD"
 
-	eval "___i_${___arr_name}_high_index=\"$((___index - 1))\""
-	eval "___i_${___arr_name}_indices=\"$___indices\""
-	eval "___i_${___arr_name}_sorted=1"
-	eval  "___i_${___arr_name}_verified=1"
+	eval "___i_${___arr_name}_high_index=\"$((___index - 1))\";
+		___i_${___arr_name}_indices=\"$___indices\";
+		___i_${___arr_name}_sorted=1;
+		___i_${___arr_name}_verified=1"
 
 	unset ___line ___lines ___index ___indices ___input_file
 	return 0
@@ -94,8 +93,7 @@ clean_i_arr() {
 	for ___index in $___indices; do
 		unset "___i_${___arr_name}_${___index}"
 	done
-	unset ___indices ___index "___i_${___arr_name}_high_index" "___i_${___arr_name}_sorted"  "___i_${___arr_name}_verified" \
-		"___i_${___arr_name}_indices"
+	unset ___indices ___index "___i_${___arr_name}_high_index" "___i_${___arr_name}_indices"
 }
 
 # get all values from an indexed array (sorted by index)
@@ -109,19 +107,13 @@ get_i_arr_values() {
 	___arr_name="$1"; ___out_var="$2"; ___values=''
 	case "$___arr_name" in *[!A-Za-z0-9_]*) eval "$___wrongname" >&2; return 1; esac
 
-	eval "___sorted=\"\$___i_${___arr_name}_sorted\""
-	if [ -z "$___sorted" ]; then
-		___indices="$(eval "printf '%s\n' \"\$___i_${___arr_name}_indices\"" | sort -nu)$___newline"
-		eval "___i_${___arr_name}_indices=\"$___indices$___newline\""
-		eval "___i_${___arr_name}_sorted=1"
-	else
-		eval "___indices=\"\$___i_${___arr_name}_indices\""
-	fi
+	# populates $___indices variable and sets the 'sorted' and 'verified' flags
+	___sort_and_verify_i_arr
+	eval "___i_${___arr_name}_indices=\"$___indices\""
 
 	[ -n "$___indices" ] && ___values="$(
 	for ___index in $___indices; do
-		eval "___val=\"\$___i_${___arr_name}_${___index}\""
-		[ -n "$___val" ] && printf '%s ' "$___val"
+		eval "printf '%s ' \"\$___i_${___arr_name}_${___index}\""
 	done
 	)"
 
@@ -142,9 +134,8 @@ get_i_arr_indices() {
 	___arr_name="$1" ___out_var_name="$2"
 	case "$___arr_name" in *[!A-Za-z0-9_]*) eval "$___wrongname" >&2; return 1; esac
 
-	eval "___sorted=\"\$___i_${___arr_name}_sorted\""
 	# populates $___indices variable and sets the 'sorted' and 'verified' flags
-	___sort_and_verify
+	___sort_and_verify_i_arr
 	eval "___i_${___arr_name}_indices=\"$___indices\""
 
 	# shellcheck disable=SC2086
@@ -156,30 +147,36 @@ get_i_arr_indices() {
 	return 0
 }
 
-___sort_and_verify() {
-	eval "___indices=\"\$___i_${___arr_name}_indices\"; ___sorted=\"\$___i_${___arr_name}_sorted\"; \
-			___verified=\"\$___i_${___arr_name}_verified\""
-	if [ -n "$___indices" ] && [ -z "$___sorted" ] && [ -z "$___verified" ]; then
-		___indices="$(
-			for ___index in $___indices; do
-				eval "___val=\"\$___i_${___arr_name}_${___index}\""
-				[ -n "$___val" ] && printf '%s\n' "$___index"
-			done | sort -nu
-		)"
-		[ -n "$___indices" ] && ___indices="${___indices#"$___newline"}$___newline"
-		eval "___i_${___arr_name}_sorted=1; ___i_${___arr_name}_verified=1"
-	elif [ -n "$___indices" ] && [ -n "$___sorted" ] && [ -z "$___verified" ]; then
-		___indices="$(
-			for ___index in $___indices; do
-				eval "___val=\"\$___i_${___arr_name}_${___index}\""
-				[ -n "$___val" ] && printf '%s\n' "$___index"
-			done
-		)"
-		[ -n "$___indices" ] && ___indices="${___indices#"$___newline"}$___newline"
-		eval "___i_${___arr_name}_verified=1"
-	elif [ -n "$___indices" ] && [ -z "$___sorted" ] && [ -n "$___verified" ]; then
-		___indices="$(printf '%s\n' "$___indices" | sort -nu)$___newline"
-		eval "___i_${___arr_name}_sorted=1"
+# sorts and verifies indices of indexed array
+# assigns the resulting indices to $___indices
+# sets the 'sorted' and 'verified' flags
+___sort_and_verify_i_arr() {
+	eval "___indices=\"\$___i_${___arr_name}_indices\";
+		___sorted=\"\$___i_${___arr_name}_sorted\";
+		___verified=\"\$___i_${___arr_name}_verified\""
+	if [ -n "$___indices" ]; then
+		if [ -z "$___sorted" ] && [ -z "$___verified" ]; then
+			___indices="$(
+				for ___index in $___indices; do
+					eval "___val=\"\$___i_${___arr_name}_${___index}\""
+					[ -n "$___val" ] && printf '%s\n' "$___index"
+				done | sort -nu
+			)"
+			[ -n "$___indices" ] && ___indices="${___indices#"$___newline"}$___newline"
+			eval "___i_${___arr_name}_sorted=1; ___i_${___arr_name}_verified=1"
+		elif [ -n "$___sorted" ] && [ -z "$___verified" ]; then
+			___indices="$(
+				for ___index in $___indices; do
+					eval "___val=\"\$___i_${___arr_name}_${___index}\""
+					[ -n "$___val" ] && printf '%s\n' "$___index"
+				done
+			)"
+			[ -n "$___indices" ] && ___indices="${___indices#"$___newline"}$___newline"
+			eval "___i_${___arr_name}_verified=1"
+		elif [ -z "$___sorted" ] && [ -n "$___verified" ]; then
+			___indices="$(printf '%s\n' "$___indices" | sort -nu)$___newline"
+			eval "___i_${___arr_name}_sorted=1"
+		fi
 	fi
 }
 
@@ -196,7 +193,7 @@ add_i_arr_el() {
 	eval "___high_index=\"\$___i_${___arr_name}_high_index\""
 	if [ -z "$___high_index" ]; then
 		# populates $___indices variable and sets the 'sorted' and 'verified' flags
-		___sort_and_verify
+		___sort_and_verify_i_arr
 		[ -n "$___indices" ] && {
 			___high_index="${___indices%"$___newline"}"
 			___high_index="${___high_index##*"$___newline"}"
@@ -209,8 +206,8 @@ add_i_arr_el() {
 		eval "___i_${___arr_name}_indices=\"\${___i_${___arr_name}_indices}${___index}${___newline}\""
 	fi
 
-	eval "___i_${___arr_name}_high_index=\"$___index\""
-	eval "___i_${___arr_name}_${___index}=\"$___new_val\""
+	eval "___i_${___arr_name}_high_index=\"$___index\";
+		___i_${___arr_name}_${___index}=\"$___new_val\""
 
 	unset ___new_val ___val ___indices ___index ___high_index
 	return 0
@@ -230,16 +227,23 @@ set_i_arr_el() {
 
 	eval "___old_val=\"\$___i_${___arr_name}_${___index}\""
 	if [ -z "$___old_val" ] && [ -n "$___new_val" ]; then
-		eval "___i_${___arr_name}_indices=\"\${___i_${___arr_name}_indices}${___index}${___newline}\""
-		eval "___i_${___arr_name}_${___index}=\"$___new_val\""
-		unset "___i_${___arr_name}_sorted" "___i_${___arr_name}_high_index"
+		eval "___i_${___arr_name}_indices=\"\${___i_${___arr_name}_indices}${___index}${___newline}\";
+			___i_${___arr_name}_${___index}=\"$___new_val\";
+			___high_index=\"\$___i_${___arr_name}_high_index\""
+		if [ -n "$___high_index" ] && [ "$___index" -gt  "$___high_index" ]; then
+			eval "___i_${___arr_name}_high_index=$___index"
+		else
+			unset "___i_${___arr_name}_sorted"
+		fi
 	elif [ -n "$___old_val" ] && [ -z "$___new_val" ]; then
-		unset "___i_${___arr_name}_verified"  "___i_${___arr_name}_high_index" "___i_${___arr_name}_${___index}"
+		unset "___i_${___arr_name}_verified" "___i_${___arr_name}_${___index}"
+		eval "___high_index=\"\$___i_${___arr_name}_high_index\""
+		[ "$___index" =  "$___high_index" ] && unset "___i_${___arr_name}_high_index"
 	elif [ -n "$___old_val" ] && [ -n "$___new_val" ]; then
 		eval "___i_${___arr_name}_${___index}=\"$___new_val\""
 	fi
 
-	unset ___index ___new_val ___old_val
+	unset ___index ___new_val ___old_val ___high_index
 	return 0
 }
 
@@ -286,14 +290,12 @@ declare_a_arr() {
 			___val="$___delim${___pair#*=}"
 			case "$___key" in *[!A-Za-z0-9_]*) eval "$___wrongkey" >&2; return 1; esac
 			eval "___a_${___arr_name}_${___key}=\"$___val\""
-			eval "_${___arr_name}_${___key}_=1"
 			___keys="$___keys$___key$___newline"
 		done
 	fi
 
-	___keys="$(printf '%s\n' "$___keys" | sort -u)"
-	eval "___a_${___arr_name}_keys=\"$___keys\""
-	eval "___a_${___arr_name}_sorted=1"
+	[ -n "$___keys" ] && ___keys="$(printf '%s\n' "$___keys" | sort -u)$___newline"
+	eval "___a_${___arr_name}_keys=\"$___keys\"; ___a_${___arr_name}_sorted=1; ___a_${___arr_name}_verified=1"
 	unset ___val ___key ___keys
 	return 0
 }
@@ -309,27 +311,50 @@ get_a_arr_values() {
 	___arr_name="$1"; ___out_var_name="$2"; ___values=''
 	case "$___arr_name" in *[!A-Za-z0-9_]*) eval "$___wrongname" >&2; return 1; esac
 
-	eval "___sorted=\"\$___a_${___arr_name}_sorted\""
-	if [ -z "$___sorted" ]; then
-		___keys="$(eval "printf '%s\n' \"\$___a_${___arr_name}_keys\"" | sort -u)$___newline"
-		eval "___a_${___arr_name}_keys=\"$___keys\""
-		eval "___a_${___arr_name}_sorted=1"
-	else
-		eval "___keys=\"\$___a_${___arr_name}_keys\""
-	fi
-
+	___sort_and_verify_a_arr
 	___values="$(
 		for ___key in $___keys; do
-			eval "___val=\"\$___a_${___arr_name}_${___key}\""
-			# shellcheck disable=SC2030
-			___val="${___val#"${___delim}"}"
-			[ -n "$___val" ] && printf '%s ' "$___val"
+		eval "IFS=\"$___delim\"; printf '%s '\$___a_${___arr_name}_${___key}"
 		done
 	)"
 
 	eval "$___out_var_name=\"${___values% }\""
 	unset ___keys ___key ___sorted ___values
 	return 0
+}
+
+# sorts and verifies keys of an associative array
+# assigns the resulting keys to $___keys
+# sets the 'sorted' flag
+___sort_and_verify_a_arr() {
+	eval "___keys=\"\$___a_${___arr_name}_keys\";
+		___sorted=\"\$___a_${___arr_name}_sorted\";
+		___verified=\"\$___a_${___arr_name}_verified\""
+	if [ -n "$___keys" ]; then
+		if [ -z "$___sorted" ] && [ -z "$___verified" ]; then
+			___keys="$(
+				for ___key in $___keys; do
+					eval "___val=\"\$___a_${___arr_name}_${___key}\""
+					[ -n "$___val" ] && printf '%s\n' "$___key"
+				done | sort -u
+			)"
+			[ -n "$___keys" ] && ___keys="${___keys#"$___newline"}$___newline"
+			eval "___a_${___arr_name}_sorted=1; ___a_${___arr_name}_verified=1"
+		elif [ -n "$___sorted" ] && [ -z "$___verified" ]; then
+			___keys="$(
+				for ___key in $___keys; do
+					eval "___val=\"\$___a_${___arr_name}_${___key}\""
+					[ -n "$___val" ] && printf '%s\n' "$___key"
+				done
+			)"
+			[ -n "$___keys" ] && ___keys="${___keys#"$___newline"}$___newline"
+			eval "___a_${___arr_name}_verified=1"
+		elif [ -z "$___sorted" ] && [ -n "$___verified" ]; then
+			___keys="$(printf '%s\n' "$___keys" | sort -u)$___newline"
+			eval "___a_${___arr_name}_sorted=1"
+		fi
+		eval "___a_${___arr_name}_keys=\"$___keys\""
+	fi
 }
 
 # get all keys from an associative array (alphabetically sorted)
@@ -340,29 +365,15 @@ get_a_arr_values() {
 get_a_arr_keys() {
 	___me="get_a_arr_keys"
 	[ $# -ne 2 ] && { eval "$___wrongargs" >&2; return 1; }
-	___arr_name="$1"; ___out_var=$2; ___res_keys=''
+	___arr_name="$1"; ___out_var=$2
 	case "$___arr_name" in *[!A-Za-z0-9_]*) eval "$___wrongname" >&2; return 1; esac
 
-	eval "___sorted=\"\$___a_${___arr_name}_sorted\""
-	if [ -z "$___sorted" ]; then
-		___keys="$(eval "printf '%s\n' \"\$___a_${___arr_name}_keys\"" | sort -u)$___newline"
-		eval "___a_${___arr_name}_keys=\"$___keys\""
-		eval "___a_${___arr_name}_sorted=1"
-	else
-		eval "___keys=\"\$___a_${___arr_name}_keys\""
-	fi
+	___sort_and_verify_a_arr
+	# shellcheck disable=SC2086
+	___keys="$(printf '%s ' $___keys)"
+	eval "$___out_var=\"${___keys% }\""
 
-	___res_keys="$(
-		for ___key in $___keys; do
-			eval "___val=\"\$___a_${___arr_name}_${___key}\""
-			# shellcheck disable=SC2031
-			[ -n "$___val" ] && printf '%s ' "$___key"
-		done
-	)"
-
-	eval "$___out_var=\"${___res_keys% }\""
-
-	unset ___keys ___key ___res_keys ___sorted ___val
+	unset ___keys ___key ___keys ___sorted ___val
 	return 0
 }
 
@@ -404,7 +415,7 @@ unset_a_arr_el() {
 
 	eval "___old_val=\"\$___a_${___arr_name}_${___key}\""
 
-	[ -n "$___old_val" ] && unset "___a_${___arr_name}_${___key}" "___a_${___arr_name}_sorted"
+	[ -n "$___old_val" ] && unset "___a_${___arr_name}_${___key}" "___a_${___arr_name}_verified"
 
 	unset ___key ___new_val ___old_val
 	return 0
@@ -439,7 +450,7 @@ clean_a_arr() {
 	for ___key in $___keys; do
 		unset "___a_${___arr_name}_${___key}"
 	done
-	unset "___a_${___arr_name}_keys" "___a_${___arr_name}_sorted"
+	unset "___a_${___arr_name}_keys" "___a_${___arr_name}_sorted" "___a_${___arr_name}_verified"
 	unset ___keys ___key
 }
 
@@ -452,4 +463,3 @@ ___wrongname="echo \"\$___me: Error: invalid array name '\$___arr_name'.\""
 ___wrongkey="echo \"\$___me: Error: invalid key '\$___key'.\""
 ___wrongindex="echo \"\$___me: Error: no index specified or '\$___index' is not a nonnegative integer.\""
 ___wrongpair="echo \"\$___me: Error: '\$___pair' is not a 'key=value' pair.\""
-
