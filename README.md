@@ -23,7 +23,7 @@ Note that the last line in emulate-arrays.sh sets the delimiter variable. That v
 
 `get_i_arr_indices <array_name> <var>` - Gets all indices from an indexed array as a sorted whitespace-separated list and assigns the result to variable `<var>`.
 
-`clean_i_arr <array_name>` - Unsets all variables used to store the array in memory.
+`unset_i_arr <array_name>` - Unsets all variables used to store the array in memory.
 
 <details> <summary> Examples </summary>
 
@@ -56,7 +56,7 @@ $ val3 123 etc
 
 `get_a_arr_keys <array_name> <var>` - Gets all keys as an alphabetically sorted whitespace-separated list and assigns the result to variable `<var>`.
 
-`clean_a_arr <array_name>` - Unsets all variables used to store the array in memory.
+`unset_a_arr <array_name>` - Unsets all variables used to store the array in memory.
 
 <details> <summary> Examples </summary>
 
