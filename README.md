@@ -89,7 +89,7 @@ $ jazz, classical, rock
 - The reason why functions provide output via a variable is because this way the performance is better, in some cases much better.
 
 ## Translation of Bash code examples
-[translation-examples.md](translation-exampes.md)
+[translation-examples.md](/translation-exampes.md)
 
 ## Performance
 - The code went through multiple rounds of optimization. Currently for most use cases, the performance for small arrays (<= 200 elements) is comparable to Bash arrays. Functions perform reasonably well with arrays containing up to 2000 elements. Higher than that, the performance drops significanly.
