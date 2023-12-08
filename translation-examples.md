@@ -1,6 +1,6 @@
 # Indexed arrays
 
-## Declaring an array, assigning and adding values
+### Declaring an array, assigning and adding values
 Bash code:
 ```
 declare test_arr=(a b c)
@@ -16,7 +16,7 @@ add_i_arr_el test_arr "this is another test"
 set_i_arr_el test_arr 101 ""
 ```
 
-## Getting values and indices and working with loops
+### Getting values and indices and working with loops
 Bash code:
 ```
 declare test_arr=("no_whitespaces_value1" "no_whitespaces_value2")
@@ -66,7 +66,7 @@ done
 
 ## Associative arrays
 
-## Declaring an array, assigning and adding values
+### Declaring an array, assigning and adding values
 Bash code:
 ```
 declare -A test_arr
@@ -95,7 +95,7 @@ set_a_arr_el test_arr test_key2 "this is another test"
 unset_a_arr_el test_arr test_key2
 ```
 
-## Getting values and indices and working with loops
+### Getting values and indices and working with loops
 
 Bash code:
 ```
@@ -120,6 +120,7 @@ for key in ${!test_arr[@]}; do
 done
 ```
 POSIX-arrays code:
+```
 get_a_arr_keys test_arr keys
 for key in $keys; do
     echo "$key"
