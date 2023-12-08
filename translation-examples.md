@@ -31,6 +31,7 @@ get_i_arr_values test_arr values
 for value in $values; do
     echo "$value"
 done
+```
 
 Bash code:
 ```
@@ -44,6 +45,7 @@ get_i_arr_indices test_arr indices
 for index in $indices; do
     echo "$index"
 done
+```
 
 Bash code:
 ```
