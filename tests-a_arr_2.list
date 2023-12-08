@@ -160,7 +160,7 @@ get_a_arr_keys arr val@0 1 2 3 4@0
 test_9="
 [header]
 declare_a_arr arr 0=abc 1=abcd 2=\"abc def\"@0
-clean_a_arr arr@0
+unset_a_arr arr@0
 [/header]
 
 get_a_arr_values arr val@@0

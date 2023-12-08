@@ -115,7 +115,7 @@ run_test() {
 		arr_names="$(printf '%s\n' "$arr_names" | sort -u)"
 		for arr_name in $arr_names; do
 			# shellcheck disable=SC2086
-			clean_${arr_type}_arr "$arr_name"
+			unset_${arr_type}_arr "$arr_name"
 		done
 
 		unset test_command other_stuff expected_val expected_rv val arr_names
