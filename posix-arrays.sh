@@ -18,9 +18,9 @@
 # all other args - array values
 declare_i_arr() {
 	___me="declare_i_arr"
-	[ $# -lt 1 ] && { eval "$_wrongargs" >&2; return 1; }
+	[ $# -lt 1 ] && { eval "$_wrongargs"; return 1; }
 	_arr_name="$1"; shift
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
 
 	eval "_indices=\"\$_i_${_arr_name}_indices\""
 
@@ -54,9 +54,9 @@ declare_i_arr() {
 # no additional arguments are allowed
 read_i_arr() {
 	___me="read_i_arr"
-	[ $# -ne 2 ] && { eval "$_wrongargs" >&2; return 1; }
+	[ $# -ne 2 ] && { eval "$_wrongargs"; return 1; }
 	_arr_name="$1"; ___lines="$2"
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
 
 	eval "_indices=\"\$_i_${_arr_name}_indices\""
 
@@ -87,9 +87,9 @@ read_i_arr() {
 # unsets all variables used to store the array
 unset_i_arr() {
 	___me="unset_i_arr"
-	[ $# -ne 1 ] && { eval "$_wrongargs" >&2; return 1; }
+	[ $# -ne 1 ] && { eval "$_wrongargs"; return 1; }
 	_arr_name="$1"
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
 
 	eval "_indices=\"\$_i_${_arr_name}_indices\""
 
@@ -106,9 +106,9 @@ unset_i_arr() {
 # no additional arguments are allowed
 get_i_arr_values() {
 	___me="get_i_arr_values"
-	[ $# -ne 2 ] && { eval "$_wrongargs" >&2; return 1; }
+	[ $# -ne 2 ] && { eval "$_wrongargs"; return 1; }
 	_arr_name="$1"; _out_var="$2"; ___values=''
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
 
 	# populates $_indices variable and sets the 'sorted' and 'verified' flags
 	sort_and_verify_i_arr
@@ -133,26 +133,27 @@ get_i_arr_values() {
 # no additional arguments are allowed
 get_i_arr_indices() {
 	___me="get_i_arr_indices"
-	[ $# -ne 2 ] && { eval "$_wrongargs" >&2; return 1; }
+	[ $# -ne 2 ] && { eval "$_wrongargs"; return 1; }
 	_arr_name="$1" _out_var_name="$2"
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
 
 	# populates $_indices variable and sets the 'sorted' and 'verified' flags
 	sort_and_verify_i_arr
 	eval "_i_${_arr_name}_indices=\"$_indices\""
 
 	# shellcheck disable=SC2086
-	___res_indices="$(printf '%s ' $_indices)"
+	_res_indices="$(printf '%s ' $_indices)" # no quotes on purpose
 
-	eval "$_out_var_name=\"${___res_indices% }\""
+	eval "$_out_var_name=\"${_res_indices% }\""
 
-	unset _indices ___res_indices _index ___sorted _out_var_name ___val
+	unset _indices _res_indices _index ___sorted _out_var_name ___val
 	return 0
 }
 
 # sorts and verifies indices of indexed array
 # assigns the resulting indices to $_indices
 # sets the 'sorted' and 'verified' flags
+# caller should update the '$_i_${_arr_name}_indices' variable externally
 sort_and_verify_i_arr() {
 	eval "_indices=\"\$_i_${_arr_name}_indices\";
 		___sorted=\"\$_i_${_arr_name}___sorted\";
@@ -190,8 +191,8 @@ sort_and_verify_i_arr() {
 add_i_arr_el() {
 	___me="add_i_arr_el"
 	_arr_name="$1"; ___new_val="$2"
-	[ $# -ne 2 ] && { eval "$_wrongargs" >&2; return 1; }
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
+	[ $# -ne 2 ] && { eval "$_wrongargs"; return 1; }
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
 
 	eval "_h_index=\"\$_i_${_arr_name}_h_index\""
 	if [ -z "$_h_index" ]; then
@@ -216,6 +217,68 @@ add_i_arr_el() {
 	return 0
 }
 
+# get maximum index of an indexed array
+# 1 - array name
+# 2 - global variable name for output
+# no additional arguments are allowed
+get_i_arr_max_index() {
+	___me="get_i_arr_max_index"
+	_arr_name="$1"; _out_var_name="$2"
+	[ $# -ne 2 ] && { eval "$_wrongargs"; return 1; }
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
+
+	eval "_h_index=\"\$_i_${_arr_name}_h_index\""
+	if [ -z "$_h_index" ]; then
+		# populates the $_indices variable and sets the 'sorted' and 'verified' flags
+		sort_and_verify_i_arr
+		[ -n "$_indices" ] && {
+			_h_index="${_indices%"$___newline"}"
+			_h_index="${_h_index##*"$___newline"}"
+		} || _h_index="-1"
+
+		eval "_i_${_arr_name}_indices=\"${_indices}\""
+	fi
+
+	eval "_i_${_arr_name}_h_index=\"$_h_index\";
+		$_out_var_name=\"$_h_index\""
+
+	unset ___val _indices _index _h_index _out_var_name
+	return 0
+}
+
+# get value of the last element in an indexed array
+# 1 - array name
+# 2 - global variable name for output
+# no additional arguments are allowed
+get_i_arr_last_val() {
+	___me="get_i_arr_last_val"
+	_arr_name="$1"; _out_var_name="$2"; _last_el=''
+	[ $# -ne 2 ] && { eval "$_wrongargs"; return 1; }
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
+
+	eval "_h_index=\"\$_i_${_arr_name}_h_index\""
+	if [ -z "$_h_index" ]; then
+		# populates the $_indices variable and sets the 'sorted' and 'verified' flags
+		sort_and_verify_i_arr
+		[ -n "$_indices" ] && {
+			_h_index="${_indices%"$___newline"}"
+			_h_index="${_h_index##*"$___newline"}"
+		} || _h_index="-1"
+
+		eval "_i_${_arr_name}_indices=\"${_indices}\""
+	fi
+
+	eval "_i_${_arr_name}_h_index=\"$_h_index\""
+	if [ "$_h_index" != "-1" ]; then
+		eval "$_out_var_name=\"\$_i_${_arr_name}_${_h_index}\""
+	else
+		unset "$_out_var_name"; eval "$_badindex"; return 1
+	fi
+
+	unset ___val _indices _index _h_index _out_var_name
+	return 0
+}
+
 # set an element in an indexed array
 # 1 - array name
 # 2 - index
@@ -224,9 +287,9 @@ add_i_arr_el() {
 set_i_arr_el() {
 	___me="add_i_arr_el"
 	_arr_name="$1"; _index="$2"; ___new_val="$3"
-	if [ $# -lt 2 ] || [ $# -gt 3 ]; then eval "$_wrongargs" >&2; return 1; fi
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
-	case "$_index" in *[!0-9]*) eval "$_wrongindex" >&2; return 1 ; esac
+	if [ $# -lt 2 ] || [ $# -gt 3 ]; then eval "$_wrongargs"; return 1; fi
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
+	case "$_index" in *[!0-9]*) eval "$_wrongindex"; return 1 ; esac
 
 	eval "___old_val=\"\$_i_${_arr_name}_${_index}\""
 	if [ -z "$___old_val" ] && [ -n "$___new_val" ]; then
@@ -258,10 +321,10 @@ set_i_arr_el() {
 # no additional arguments are allowed
 get_i_arr_val() {
 	___me="get_i_arr_val"
-	[ $# -ne 3 ] && { eval "$_wrongargs" >&2; return 1; }
+	[ $# -ne 3 ] && { eval "$_wrongargs"; return 1; }
 	_arr_name="$1"; _index="$2"; _out_var_name="$3"
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
-	case "$_index" in *[!0-9]*) eval "$_wrongindex" >&2; return 1; esac
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
+	case "$_index" in *[!0-9]*) eval "$_wrongindex"; return 1; esac
 
 	eval "$_out_var_name=\"\$_i_${_arr_name}_${_index}\""
 	unset _index _out_var_name
@@ -275,9 +338,9 @@ get_i_arr_val() {
 # all other args - 'key=value' pairs
 declare_a_arr() {
 	___me="declare_a_arr"
-	[ $# -lt 1 ] && { eval "$_wrongargs" >&2; return 1; }
+	[ $# -lt 1 ] && { eval "$_wrongargs"; return 1; }
 	_arr_name="$1"; shift
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
 
 	eval "___keys=\"\$_a_${_arr_name}___keys\""
 
@@ -288,10 +351,10 @@ declare_a_arr() {
 
 	if [ -n "$*" ]; then
 		for ___pair in "$@"; do
-			case "$___pair" in *=*) ;; *) eval "$_wrongpair" >&2; return 1 ;; esac
+			case "$___pair" in *=*) ;; *) eval "$_wrongpair"; return 1 ;; esac
 			___key="${___pair%%=*}"
 			___val="$___delim${___pair#*=}"
-			case "$___key" in *[!A-Za-z0-9_]*) eval "$_wrongkey" >&2; return 1; esac
+			case "$___key" in *[!A-Za-z0-9_]*) eval "$_wrongkey"; return 1; esac
 			eval "_a_${_arr_name}_${___key}=\"$___val\""
 			___keys="$___keys$___key$___newline"
 		done
@@ -310,9 +373,9 @@ declare_a_arr() {
 # no additional arguments are allowed
 get_a_arr_values() {
 	___me="get_a_arr_values"
-	[ $# -ne 2 ] && { eval "$_wrongargs" >&2; return 1; }
+	[ $# -ne 2 ] && { eval "$_wrongargs"; return 1; }
 	_arr_name="$1"; _out_var_name="$2"; ___values=''
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
 
 	sort_and_verify_a_arr
 	___values="$(
@@ -328,7 +391,8 @@ get_a_arr_values() {
 
 # sorts and verifies keys of an associative array
 # assigns the resulting keys to $___keys
-# sets the 'sorted' flag
+# updates the '$_a_${_arr_name}____keys' variable
+# sets the 'sorted' and 'verified' flags
 sort_and_verify_a_arr() {
 	eval "___keys=\"\$_a_${_arr_name}___keys\";
 		___sorted=\"\$_a_${_arr_name}___sorted\";
@@ -367,9 +431,9 @@ sort_and_verify_a_arr() {
 # no additional arguments are allowed
 get_a_arr_keys() {
 	___me="get_a_arr_keys"
-	[ $# -ne 2 ] && { eval "$_wrongargs" >&2; return 1; }
+	[ $# -ne 2 ] && { eval "$_wrongargs"; return 1; }
 	_arr_name="$1"; _out_var=$2
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
 
 	sort_and_verify_a_arr
 	# shellcheck disable=SC2086
@@ -388,12 +452,12 @@ get_a_arr_keys() {
 set_a_arr_el() {
 	___me="set_a_arr_el"
 	_arr_name="$1"; ___pair="$2"
-	[ $# -ne 2 ] && { eval "$_wrongargs" >&2; return 1; }
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
-	case "$___pair" in *=*) ;; *) eval "$_wrongpair" >&2; return 1 ; esac
+	[ $# -ne 2 ] && { eval "$_wrongargs"; return 1; }
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
+	case "$___pair" in *=*) ;; *) eval "$_wrongpair"; return 1 ; esac
 	___key="${___pair%%=*}"
 	___new_val="${___pair#*=}"
-	case "$___key" in *[!A-Za-z0-9_]*) eval "$_wrongkey" >&2; return 1; esac
+	case "$___key" in *[!A-Za-z0-9_]*) eval "$_wrongkey"; return 1; esac
 
 	eval "___old_val=\"\$_a_${_arr_name}_${___key}\""
 	[ -z "$___old_val" ] && unset "_a_${_arr_name}___sorted"
@@ -412,9 +476,9 @@ set_a_arr_el() {
 unset_a_arr_el() {
 	___me="unset_a_arr_el"
 	_arr_name="$1"; ___key="$2"
-	[ $# -ne 2 ] && { eval "$_wrongargs" >&2; return 1; }
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
-	case "$___key" in *[!A-Za-z0-9_]*) eval "$_wrongkey" >&2; return 1; esac
+	[ $# -ne 2 ] && { eval "$_wrongargs"; return 1; }
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
+	case "$___key" in *[!A-Za-z0-9_]*) eval "$_wrongkey"; return 1; esac
 
 	eval "___old_val=\"\$_a_${_arr_name}_${___key}\""
 
@@ -432,10 +496,10 @@ unset_a_arr_el() {
 # no additional arguments are allowed
 get_a_arr_val() {
 	___me="get_a_arr_val"
-	[ $# -ne 3 ] && { eval "$_wrongargs" >&2; return 1; }
+	[ $# -ne 3 ] && { eval "$_wrongargs"; return 1; }
 	_arr_name="$1"; ___key="$2"; _out_var="$3"
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
-	case "$___key" in *[!A-Za-z0-9_]*) eval "$_wrongkey" >&2; return 1; esac
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
+	case "$___key" in *[!A-Za-z0-9_]*) eval "$_wrongkey"; return 1; esac
 
 	eval "___val=\"\$_a_${_arr_name}_${___key}\""
 	# shellcheck disable=SC2031
@@ -446,9 +510,9 @@ get_a_arr_val() {
 # unsets all variables used to store the array
 unset_a_arr() {
 	___me="get_a_arr_val"
-	[ $# -ne 1 ] && { eval "$_wrongargs" >&2; return 1; }
+	[ $# -ne 1 ] && { eval "$_wrongargs"; return 1; }
 	_arr_name="$1"
-	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname" >&2; return 1; esac
+	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
 
 	eval "___keys=\"\$_a_${_arr_name}___keys\""
 	for ___key in $___keys; do
@@ -461,9 +525,10 @@ unset_a_arr() {
 
 ___newline="
 "
-_wrongargs="echo \"\$___me: Error: '\$*': \$# - wrong number of arguments.\""
-_wrongname="echo \"\$___me: Error: invalid array name '\$_arr_name'.\""
-_wrongkey="echo \"\$___me: Error: invalid key '\$___key'.\""
-_wrongindex="echo \"\$___me: Error: no index specified or '\$_index' is not a nonnegative integer.\""
-_wrongpair="echo \"\$___me: Error: '\$___pair' is not a 'key=value' pair.\""
+_wrongargs="echo \"\$___me: Error: '\$*': \$# - wrong number of arguments.\" >&2"
+_wrongname="echo \"\$___me: Error: invalid array name '\$_arr_name'.\" >&2"
+_wrongkey="echo \"\$___me: Error: invalid key '\$___key'.\" >&2"
+_wrongindex="echo \"\$___me: Error: no index specified or '\$_index' is not a nonnegative integer.\" >&2"
+_wrongpair="echo \"\$___me: Error: '\$___pair' is not a 'key=value' pair.\" >&2"
+_badindex="echo \"\$___me: Error: array '\$_arr_name' has no elements.\" >&2"
 ___delim="$(printf '\35')"
