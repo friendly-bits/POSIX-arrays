@@ -459,9 +459,9 @@ clean_a_arr() {
 
 ___newline="
 "
-___delim="$(printf '\35')"
 ___wrongargs="echo \"\$___me: Error: '\$*': \$# - wrong number of arguments.\""
 ___wrongname="echo \"\$___me: Error: invalid array name '\$___arr_name'.\""
 ___wrongkey="echo \"\$___me: Error: invalid key '\$___key'.\""
 ___wrongindex="echo \"\$___me: Error: no index specified or '\$___index' is not a nonnegative integer.\""
 ___wrongpair="echo \"\$___me: Error: '\$___pair' is not a 'key=value' pair.\""
+___delim="$(printf '\35')"
