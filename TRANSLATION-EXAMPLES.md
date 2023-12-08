@@ -18,16 +18,20 @@ set_i_arr_el test_arr 101 ""
 
 ### Getting values and indices
 Bash code: `echo "value for index 100 is $test_arr[100]"`
+
 POSIX-arrays code: `get-i-arr-val test_arr 100 value; echo "value for index 100 is $value"`
 
 Bash code: `echo "all values of test_arr are '${test_arr[*]}'"`
+
 POSIX-arrays code: `get-i-arr-values test_arr values; echo "all values of test_arr are '$values'"`
 
 Bash code: `echo "all indices of test_arr are '${!test_arr[*]}'"`
+
 POSIX-arrays code: `get-i-arr-indices test_arr indices; echo "all indices of test_arr are '$indices'"`
 
 ### Unsetting arrays
 Bash code: `declare temp_arr=("this array will be destroyed"); unset temp_arr`
+
 POSIX-arrays code: `declare_i_arr temp_arr "this array will be destroyed"; unset_i_arr temp_arr`
 
 ### Working with loops
@@ -111,17 +115,21 @@ unset_a_arr_el test_arr test_key2
 
 ### Unsetting arrays
 Bash code: `declare temp_arr=("this array will be destroyed"); unset temp_arr`
+
 POSIX-arrays code: `declare_i_arr temp_arr "this array will be destroyed"; unset_i_arr temp_arr`
 
 ### Getting values and indices and working with loops
 
 Bash code: `echo "value for key 'test_key' is $test_arr[test_key]"`
+
 POSIX-arrays code: `get-a-arr-val test_arr test_key value; echo "value for key 'test_key' is $value"`
 
 Bash code: `echo "all values of test_arr are '${test_arr[*]}'"`
+
 POSIX-arrays code: `get-a-arr-values test_arr values; echo "all values of test_arr are '$values'"`
 
 Bash code: `echo "all keys of test_arr are '${!test_arr[*]}'"`
+
 POSIX-arrays code: `get-a-arr-keys test_arr keys; echo "all keys of test_arr are '$keys'"`
 
 ### Working with loops
