@@ -5,7 +5,8 @@ POSIX-compliant shell functions emulating functionality of arrays. The implement
 1) Source the script posix-arrays.sh in your script like so: `. [path]/posix-arrays.sh`
 2) Call any function from the sourced script in your script.
 
-Note that the last line in posix-arrays.sh sets the delimiter variable. That variable needs to be set for the functions to work. If you want to use the functions without sourcing the script, you'll need to set that variable in your own script.
+Alternatively, copy some functions which you need to your own scripts. Most functions do not depend on each other.
+Note that the last few lines in posix-arrays.sh set some variables. These variables need to be set for the functions to work correctly. If you want to use the functions without sourcing the script, you'll need to set them in your own script.
 
 **Indexed arrays**:
 
