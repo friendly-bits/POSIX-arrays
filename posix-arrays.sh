@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# emulate-arrays.sh
+# posix-arrays.sh
 
 # emulates arrays in POSIX shell
 
