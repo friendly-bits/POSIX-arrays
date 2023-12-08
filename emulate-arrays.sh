@@ -8,6 +8,8 @@
 # where [x] is either 'a' for associative array or 'i' for indexed array
 
 # keys/indices are stored in a variable named in the format '___[x]_[arr_name]_keys' or '___[x]_[arr_name]_indices'
+# array flags are stored in variables (true if variable is set): $___[x]_[arr_name]_sorted, $___[x]_[arr_name]_verified
+# for indexed arrays, $___i_[arr_name]_high_index variable holds the highest index in the array if it's known
 
 
 # declare an indexed array while populating first elements
@@ -45,8 +47,8 @@ declare_i_arr() {
 	return 0
 }
 
-# read lines from input string or from a file into an indexed array
-# resets all previous elements of the array if it already exists
+# read lines from input string into an indexed array
+# unsets all previous elements of the array if it already exists
 # 1 - array name
 # 2 - newline-separated string
 # no additional arguments are allowed
