@@ -105,7 +105,7 @@ fi
 
 
 
-arr_type="a"
+arr_type="i"
 
 # Warmup
 f=1
@@ -114,7 +114,7 @@ elements=$(seq $f $n)
 warmup
 
 # echo "Indices after warmup:"
-# echo "'$___i_test_arr_indices'"
+# echo "'$_i_test_arr_indices'"
 
 # Test
 f=1
@@ -170,9 +170,9 @@ echo "mixed time: $(( (__end_mixed - __start_mixed)/timefactor )) $timeunits"
 
 # echo "Resulting raw keys:"
 # if [ "$arr_type" = "i" ]; then
-# 	printf '%s\n' "'$___i_test_arr_indices'"
+# 	printf '%s\n' "'$_i_test_arr_indices'"
 # else
-# 	printf '%s\n' "'$___a_test_arr_keys'"
+# 	printf '%s\n' "'$_a_test_arr_keys'"
 # fi
 
 
