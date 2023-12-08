@@ -6,7 +6,7 @@ me=$(basename "$0")
 script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 # shellcheck disable=SC2015
 
-source_file="${1:-emulate-arrays.sh}"
+source_file="${1:-posix-arrays.sh}"
 # shellcheck disable=SC1090
 . "$script_dir/$source_file" || { echo "$me: Error: Can't source '$script_dir/$source_file'." >&2; exit 1; }
 

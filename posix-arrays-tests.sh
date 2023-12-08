@@ -1,7 +1,7 @@
 #!/bin/sh
 # shellcheck disable=SC2154,SC2034,SC2120
 
-# emulate-arrays-tests.sh
+# posix-arrays-tests.sh
 
 #### Initial setup
 export LC_ALL=C
@@ -10,7 +10,7 @@ me=$(basename "$0")
 script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 # shellcheck disable=SC2015
 
-. "$script_dir/emulate-arrays.sh" || { echo "$me: Error: Can't source '$script_dir/emulate-arrays.sh'." >&2; exit 1; }
+. "$script_dir/posix-arrays.sh" || { echo "$me: Error: Can't source '$script_dir/posix-arrays.sh'." >&2; exit 1; }
 
 
 #### Functions
