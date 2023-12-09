@@ -105,7 +105,7 @@ fi
 
 
 
-arr_type="i"
+arr_type="a"
 
 # Warmup
 f=1
@@ -153,15 +153,16 @@ __start_mixed=$(date +%s%N)
 test_mixed
 __end_mixed=$(date +%s%N)
  
-elements=$(seq $f $n)
-__start_add=$(date +%s%N)
-test_add
-__end_add=$(date +%s%N)
- 
+[ "$arr_type" = i ] && {
+	elements=$(seq $f $n)
+	__start_add=$(date +%s%N)
+	test_add
+	__end_add=$(date +%s%N)
+} 
 
 
 echo "set time: $(( (__end_set - __start_set)/timefactor )) $timeunits"
-echo "add time: $(( (__end_add - __start_add)/timefactor )) $timeunits"
+[ "$arr_type" = i ] && echo "add time: $(( (__end_add - __start_add)/timefactor )) $timeunits"
 echo "get time: $(( (__end_get - __start_get)/timefactor )) $timeunits"
 echo "get all vals time: $(( (__end_get_all - __start_get_all)/timefactor )) $timeunits"
 echo "get keys time: $(( (__end_get_keys - __start_get_keys)/timefactor )) $timeunits"

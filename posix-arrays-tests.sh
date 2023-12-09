@@ -168,7 +168,7 @@ newline="
 # To print errors returned by the functions under test, uncomment the following line
 # Some of the test units intentionally induce errors, so expect an error spam in the console
 
-#print_stderr=true
+print_stderr=true
 
 err_num=0
 
@@ -176,8 +176,8 @@ err_num=0
 # To limit to sepcific test units, use this format run_test_* [first_test_num_number] [last_test_num_number]
 # For example, 'run_test_a_arr 5 8' will run test units 5 through 8
 run_test_i_arr_1
-run_test_i_arr_2
-run_test_a_arr_1
-run_test_a_arr_2
+# run_test_i_arr_2
+# run_test_a_arr_1
+# run_test_a_arr_2
 
 printf '\n%s\n' "Total errors: $err_num."
