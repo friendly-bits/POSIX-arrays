@@ -122,7 +122,7 @@ get_i_arr_values() {
 
 	eval "$_out_var=\"${___values% }\""
 
-	unset ___values _indices _index ___val ___sorted _out_var
+	unset ___values _indices _index _out_var
 	return 0
 }
 
@@ -142,11 +142,11 @@ get_i_arr_indices() {
 	eval "_i_${_arr_name}_indices=\"$_indices\""
 
 	# shellcheck disable=SC2086
-	_res_indices="$(printf '%s ' $_indices)" # no quotes on purpose
+	_indices="$(printf '%s ' $_indices)" # no quotes on purpose
 
-	eval "$_out_var_name=\"${_res_indices% }\""
+	eval "$_out_var_name=\"${_indices% }\""
 
-	unset _indices _res_indices _index ___sorted _out_var_name ___val
+	unset _indices _out_var_name
 	return 0
 }
 
@@ -158,6 +158,7 @@ sort_and_verify_i_arr() {
 	eval "_indices=\"\$_i_${_arr_name}_indices\";
 		___sorted=\"\$_i_${_arr_name}___sorted\";
 		___verified=\"\$_i_${_arr_name}___verified\""
+
 	if [ -n "$_indices" ]; then
 		if [ -z "$___sorted" ] && [ -z "$___verified" ]; then
 			_indices="$(
@@ -182,6 +183,7 @@ sort_and_verify_i_arr() {
 			eval "_i_${_arr_name}___sorted=1"
 		fi
 	fi
+	unset ___val ___sorted ___verified _index
 }
 
 # add a new element to an indexed array and set its value
@@ -213,7 +215,7 @@ add_i_arr_el() {
 	eval "_i_${_arr_name}_h_index=\"$_index\";
 		_i_${_arr_name}_${_index}=\"$___new_val\""
 
-	unset ___new_val ___val _indices _index _h_index
+	unset ___new_val _indices _index _h_index
 	return 0
 }
 
@@ -235,14 +237,20 @@ get_i_arr_max_index() {
 			_h_index="${_indices%"$___newline"}"
 			_h_index="${_h_index##*"$___newline"}"
 		} || _h_index="-1"
-
-		eval "_i_${_arr_name}_indices=\"${_indices}\""
+	else
+		eval "_indices=\"\$_i_${_arr_name}_indices\""
 	fi
 
-	eval "_i_${_arr_name}_h_index=\"$_h_index\";
-		$_out_var_name=\"$_h_index\""
+	if [ "$_h_index" != "-1" ]; then
+		eval "_i_${_arr_name}_h_index=\"$_h_index\";
+			$_out_var_name=\"$_h_index\"
+			_i_${_arr_name}_indices=\"${_indices}\""
+	else
+		unset "$_out_var_name" "_i_${_arr_name}_indices" _indices _h_index _out_var_name
+		eval "$_badindex"; return 1
+	fi
 
-	unset ___val _indices _index _h_index _out_var_name
+	unset _indices _h_index _out_var_name
 	return 0
 }
 
@@ -252,7 +260,7 @@ get_i_arr_max_index() {
 # no additional arguments are allowed
 get_i_arr_last_val() {
 	___me="get_i_arr_last_val"
-	_arr_name="$1"; _out_var_name="$2"; _last_el=''
+	_arr_name="$1"; _out_var_name="$2"
 	[ $# -ne 2 ] && { eval "$_wrongargs"; return 1; }
 	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
 
@@ -260,22 +268,25 @@ get_i_arr_last_val() {
 	if [ -z "$_h_index" ]; then
 		# populates the $_indices variable and sets the 'sorted' and 'verified' flags
 		sort_and_verify_i_arr
-		[ -n "$_indices" ] && {
+		if [ -n "$_indices" ]; then
 			_h_index="${_indices%"$___newline"}"
 			_h_index="${_h_index##*"$___newline"}"
-		} || _h_index="-1"
-
-		eval "_i_${_arr_name}_indices=\"${_indices}\""
-	fi
-
-	eval "_i_${_arr_name}_h_index=\"$_h_index\""
-	if [ "$_h_index" != "-1" ]; then
-		eval "$_out_var_name=\"\$_i_${_arr_name}_${_h_index}\""
+		else _h_index="-1"
+		fi
 	else
-		unset "$_out_var_name"; eval "$_badindex"; return 1
+		eval "_indices=\"\$_i_${_arr_name}_indices\""
 	fi
 
-	unset ___val _indices _index _h_index _out_var_name
+	if [ "$_h_index" != "-1" ]; then
+		eval "_i_${_arr_name}_h_index=\"$_h_index\";
+			$_out_var_name=\"\$_i_${_arr_name}_${_h_index}\";
+			_i_${_arr_name}_indices=\"${_indices}\""
+	else
+		unset "$_out_var_name" "_i_${_arr_name}_indices" _indices _h_index _out_var_name
+		eval "$_badindex"; return 1
+	fi
+
+	unset _indices _h_index _out_var_name
 	return 0
 }
 
@@ -285,7 +296,7 @@ get_i_arr_last_val() {
 # 3 - value (if no value, unsets the element)
 # no additional arguments are allowed
 set_i_arr_el() {
-	___me="add_i_arr_el"
+	___me="set_i_arr_el"
 	_arr_name="$1"; _index="$2"; ___new_val="$3"
 	if [ $# -lt 2 ] || [ $# -gt 3 ]; then eval "$_wrongargs"; return 1; fi
 	case "$_arr_name" in *[!A-Za-z0-9_]*) eval "$_wrongname"; return 1; esac
@@ -385,7 +396,7 @@ get_a_arr_values() {
 	)"
 
 	eval "$_out_var_name=\"${___values% }\""
-	unset ___keys ___key ___sorted ___values
+	unset ___keys ___key ___values
 	return 0
 }
 
@@ -422,6 +433,7 @@ sort_and_verify_a_arr() {
 		fi
 		eval "_a_${_arr_name}___keys=\"$___keys\""
 	fi
+	unset ___val ___sorted ___verified ___key
 }
 
 # get all keys from an associative array (alphabetically sorted)
@@ -440,7 +452,7 @@ get_a_arr_keys() {
 	___keys="$(printf '%s ' $___keys)"
 	eval "$_out_var=\"${___keys% }\""
 
-	unset ___keys ___key ___keys ___sorted ___val
+	unset ___keys _out_var
 	return 0
 }
 
