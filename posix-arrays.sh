@@ -286,6 +286,30 @@ get_i_arr_last_val() {
 	return 0
 }
 
+# get the element count of an indexed array
+# 1 - array name
+# 2 - global variable name for output
+# no additional arguments are allowed
+get_i_arr_el_cnt() {
+	___me="get_i_arr_el_cnt"
+	_arr_name="$1"; _out_var_name="$2"
+	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	check_arr_name || return 1
+	check_var_name || return 1
+
+	# populates the $_indices variable and sets the 'sorted' and 'verified' flags
+	sort_verify_i_arr
+	eval "_i_${_arr_name}_indices"='${_indices}'
+
+	i=0
+	for _ind in $_indices; do i=$((i+1)); done
+
+	eval "$_out_var_name"='$i'
+
+	unset _indices _out_var_name i _ind
+	return 0
+}
+
 # set an element in an indexed array
 # 1 - array name
 # 2 - index
@@ -452,6 +476,29 @@ get_a_arr_keys() {
 	eval "$_out_var"='${___keys% }'
 
 	unset ___keys _out_var
+	return 0
+}
+
+# get the element count of an associative array
+# 1 - array name
+# 2 - global variable name for output
+# no additional arguments are allowed
+get_a_arr_el_cnt() {
+	___me="get_a_arr_el_cnt"
+	_arr_name="$1"; _out_var_name="$2"
+	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	check_arr_name || return 1
+	check_var_name || return 1
+
+	# populates the $___keys variable and sets the 'sorted' and 'verified' flags
+	sort_verify_a_arr
+
+	i=0
+	for ___key in $___keys; do i=$((i+1)); done
+
+	eval "$_out_var_name"='$i'
+
+	unset ___keys ___key _out_var_name i
 	return 0
 }
 
