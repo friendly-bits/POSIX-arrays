@@ -12,7 +12,7 @@ Note that the last few lines in posix-arrays.sh set some variables. These variab
 
 `declare_i_arr <array_name> [value] [value] ... [value]` - Resets the array and assigns values to sequential elements, starting from index 0.
 
-`read_i_arr <array_name> [string]` - Resets the array, then reads lines from from `[string]` and assigns each line as a value to sequential elements, starting from index 0.
+`read_i_arr <array_name> [string]` - Resets the array, then reads lines from `[string]` and assigns each line as a value to sequential elements, starting from index 0.
 
 `add_i_arr_el <array_name> <value>` - Adds a new element to the array and assigns a value to it. Index is set to previous highest index+1, or to 0 if no prior elements exist.
 
@@ -23,6 +23,12 @@ Note that the last few lines in posix-arrays.sh set some variables. These variab
 `get_i_arr_values <array_name> <var>` - Gets all values from an indexed array as a sorted (by index) whitespace-separated list and assigns the result to variable `<var>`.
 
 `get_i_arr_indices <array_name> <var>` - Gets all indices from an indexed array as a sorted whitespace-separated list and assigns the result to variable `<var>`.
+
+`get_i_arr_el_cnt <array_name> <var>` - Gets elements count of an indexed array and assigns the result to variable `<var>`.
+
+`get_i_arr_max_index <array_name> <var>` - Gets the currently highest index in the array. Returns an error if the array is empty or doesn't exist.
+
+`get_i_arr_last_val <array_name> <var>` - Gets the value assigned to highest index in the array. Returns an error if the array is empty or doesn't exist.
 
 `unset_i_arr <array_name>` - Unsets all variables used to store the array in memory.
 
@@ -56,6 +62,8 @@ $ val3 123 etc
 `get_a_arr_values <array_name> <var>` - Gets all values as an alphabetically sorted (by key) whitespace-separated list and assigns the result to variable `<var>`.
 
 `get_a_arr_keys <array_name> <var>` - Gets all keys as an alphabetically sorted whitespace-separated list and assigns the result to variable `<var>`.
+
+`get_a_arr_el_cnt <array_name> <var>` - Gets elements count of an associative array and assigns the result to variable `<var>`.
 
 `unset_a_arr <array_name>` - Unsets all variables used to store the array in memory.
 
