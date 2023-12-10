@@ -25,6 +25,8 @@ get_a_arr_val arr 1 a val@@1
 get_a_arr_val arr a 1 val@@1
 get_a_arr_values arr@@1
 get_a_arr_values arr val@@0
+
+get_a_arr_el_cnt arr val@0@0
 "
 
 test_2="
@@ -40,11 +42,13 @@ get_a_arr_val arr 0 val@@0
 get_a_arr_val arr 1 val@@0
 get_a_arr_values arr val@@0
 get_a_arr_keys arr val@@0
+get_a_arr_el_cnt arr val@0@0
 
 get_a_arr_val arr1 0 val@@0
 get_a_arr_val arr1 test val@abc@0
 get_a_arr_values arr1 val@abc@0
 get_a_arr_keys arr1 val@test@0
+get_a_arr_el_cnt arr1 val@1@0
 "
 
 test_3="
@@ -60,6 +64,8 @@ get_a_arr_val arr 2 val@@0
 get_a_arr_val arr a val@@0
 get_a_arr_values arr val@abc 123@0
 get_a_arr_keys arr val@0 1@0
+
+get_a_arr_el_cnt arr val@2@0
 "
 
 test_4="
@@ -77,6 +83,8 @@ get_a_arr_val arr T val@@0
 get_a_arr_val arr a val@@0
 get_a_arr_values arr val@abc 456 a 123 789@0
 get_a_arr_keys arr val@Test _test t_est test test_@0
+
+get_a_arr_el_cnt arr val@5@0
 "
 
 test_5="
@@ -94,6 +102,7 @@ get_a_arr_val arr test4 val@@0
 get_a_arr_val arr a val@@0
 get_a_arr_values arr val@abc 123 a bcd 123@0
 get_a_arr_keys arr val@test1 test2 test3@0
+get_a_arr_el_cnt arr val@3@0
 
 get_a_arr_val arr2 val@@1
 get_a_arr_val arr2 test7 val@def@0
@@ -104,6 +113,8 @@ get_a_arr_val arr2 test5 val@@0
 get_a_arr_val arr2 test6 val@@0
 get_a_arr_values arr2 val@def@0
 get_a_arr_keys arr2 val@test7@0
+
+get_a_arr_el_cnt arr2 val@1@0
 "
 
 
@@ -119,6 +130,8 @@ get_a_arr_val arr ____ val@=@0
 get_a_arr_val arr _____ val@@0
 get_a_arr_values arr val@abc 123 a bcd 123 =@0
 get_a_arr_keys arr val@_ __ ___ ____@0
+
+get_a_arr_el_cnt arr val@4@0
 "
 
 
@@ -134,6 +147,8 @@ get_a_arr_val arr 3 val@@0
 get_a_arr_val arr 123 val@@0
 get_a_arr_val arr abc val@@0
 get_a_arr_values arr val@abc= 123=1 =a@0
+
+get_a_arr_el_cnt arr val@3@0
 "
 
 
@@ -154,6 +169,7 @@ get_a_arr_val arr =a# val@@1
 get_a_arr_val arr # val@@1
 get_a_arr_values arr val@abc#= #123=1 =a# # ###@0
 get_a_arr_keys arr val@0 1 2 3 4@0
+get_a_arr_el_cnt arr val@5@0
 "
 
 
@@ -165,4 +181,5 @@ unset_a_arr arr@0
 
 get_a_arr_values arr val@@0
 get_a_arr_keys arr val@@0
+get_a_arr_el_cnt arr val@0@0
 "

@@ -27,6 +27,9 @@ get_a_arr_val arr a 1 val@@1
 get_a_arr_keys@@1
 get_a_arr_keys arr 1 val@@1
 get_a_arr_keys arr val@@0
+
+get_a_arr_el_cnt arr val@0@0
+get_a_arr_el_cnt arr1@@1
 "
 
 
@@ -42,6 +45,8 @@ get_a_arr_val arr 1 val@@0
 get_a_arr_val arr 1 2 val@@1
 get_a_arr_val arr a val@@0
 get_a_arr_val arr abc val@@0
+
+get_a_arr_el_cnt arr val@0@0
 "
 
 
@@ -57,6 +62,8 @@ get_a_arr_val arr 1 val@@0
 get_a_arr_val arr 1 2 val@@1
 get_a_arr_val arr a val@@0
 get_a_arr_val arr abc val@@0
+
+get_a_arr_el_cnt arr val@0@0
 "
 
 
@@ -72,6 +79,8 @@ get_a_arr_val arr 1 val@@0
 get_a_arr_val arr 1 2 val@@1
 get_a_arr_val arr a val@@0
 get_a_arr_val arr abc val@@0
+
+get_a_arr_el_cnt arr val@0@0
 "
 
 
@@ -87,6 +96,8 @@ get_a_arr_val arr 1 val@@0
 get_a_arr_val arr 1 2 val@@1
 get_a_arr_val arr a val@@0
 get_a_arr_val arr abc val@@0
+
+get_a_arr_el_cnt arr val@0@0
 "
 
 
@@ -102,6 +113,8 @@ get_a_arr_val arr 1 val@@0
 get_a_arr_val arr 1 2 val@@1
 get_a_arr_val arr a val@@0
 get_a_arr_val arr abc val@@0
+
+get_a_arr_el_cnt arr val@0@0
 "
 
 
@@ -121,6 +134,8 @@ get_a_arr_val arr 123 val@abcd@0
 
 get_a_arr_keys arr@@1
 get_a_arr_keys arr val@123@0
+
+get_a_arr_el_cnt arr val@1@0
 "
 
 
@@ -140,6 +155,7 @@ get_a_arr_val arr abcd val@123@0
 get_a_arr_val arr 123 val@abcd@0
 
 get_a_arr_keys arr val@123 abcd@0
+get_a_arr_el_cnt arr val@2@0
 "
 
 
@@ -165,6 +181,7 @@ get_a_arr_val arr 123 val@abcd@0
 get_a_arr_val arr abcd val@123@0
 
 get_a_arr_keys arr val@123 1ghk abcd aghk@0
+get_a_arr_el_cnt arr val@4@0
 "
 
 
@@ -187,6 +204,7 @@ get_a_arr_val arr abcd val@jjjj@0
 
 
 get_a_arr_keys arr val@123 abcd@0
+get_a_arr_el_cnt arr val@2@0
 "
 
 
@@ -208,6 +226,7 @@ get_a_arr_val arr 123 val@@0
 get_a_arr_val arr abcd val@@0
 
 get_a_arr_keys arr val@123 abcd@0
+get_a_arr_el_cnt arr val@2@0
 "
 
 
@@ -231,6 +250,7 @@ get_a_arr_val arr 123 val@abcd efgh 123@0
 get_a_arr_val arr abcd val@123@0
 
 get_a_arr_keys arr val@123 1ghk abcd aghk@0
+get_a_arr_el_cnt arr val@4@0
 "
 
 
@@ -300,6 +320,12 @@ get_a_arr_keys arr1 val@1 abc@0
 get_a_arr_keys arr3 val@abc@0
 get_a_arr_keys arr4 val@abc abcd@0
 get_a_arr_keys arr7 val@a b@0
+
+get_a_arr_el_cnt arr val@2@0
+get_a_arr_el_cnt arr1 val@2@0
+get_a_arr_el_cnt arr3 val@1@0
+get_a_arr_el_cnt arr4 val@2@0
+get_a_arr_el_cnt arr7 val@2@0
 "
 
 
@@ -311,4 +337,6 @@ set_a_arr_el arr abc=\"${newline}a\"@0
 get_a_arr_val arr abc val@${newline}a@0
 
 get_a_arr_keys arr val@abc@0
+
+get_a_arr_el_cnt arr val@1@0
 "

@@ -124,7 +124,12 @@ elements=$(seq $f $n)
 __start_set=$(date +%s%N)
 test_set
 __end_set=$(date +%s%N)
- 
+
+elements=$(seq $f $n)
+__start_cnt1=$(date +%s%N)
+get_${arr_type}_arr_el_cnt test_arr rescnt
+__end_cnt1=$(date +%s%N)
+
 __start_get_keys=$(date +%s%N)
 if [ "$arr_type" = "i" ]; then
 	get_i_arr_indices test_arr reskeys
@@ -160,6 +165,9 @@ __end_mixed=$(date +%s%N)
 	__end_add=$(date +%s%N)
 } 
 
+__start_cnt2=$(date +%s%N)
+get_${arr_type}_arr_el_cnt test_arr rescnt
+__end_cnt2=$(date +%s%N)
 
 echo "set time: $(( (__end_set - __start_set)/timefactor )) $timeunits"
 [ "$arr_type" = i ] && echo "add time: $(( (__end_add - __start_add)/timefactor )) $timeunits"
@@ -168,6 +176,8 @@ echo "get all vals time: $(( (__end_get_all - __start_get_all)/timefactor )) $ti
 echo "get keys time: $(( (__end_get_keys - __start_get_keys)/timefactor )) $timeunits"
 echo "unset time: $(( (__end_unset - __start_unset)/timefactor )) $timeunits"
 echo "mixed time: $(( (__end_mixed - __start_mixed)/timefactor )) $timeunits"
+echo "el count time 1: $(( (__end_cnt1 - __start_cnt1)/timefactor )) $timeunits"
+echo "el count time 2: $(( (__end_cnt2 - __start_cnt2)/timefactor )) $timeunits"
 
 # echo "Resulting raw keys:"
 # if [ "$arr_type" = "i" ]; then
