@@ -105,11 +105,11 @@ fi
 
 
 
-arr_type="a"
+arr_type="i"
 
 # Warmup
 f=1
-n=100
+n=1
 elements=$(seq $f $n)
 warmup
 

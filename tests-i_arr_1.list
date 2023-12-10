@@ -455,7 +455,7 @@ set_i_arr_el arr6 0@0
 set_i_arr_el arr7 0 a@0
 set_i_arr_el arr7 1 b@0
 set_i_arr_el arr7 2 c@0
-declare_i_arr arr7@0
+declare_i_arr arr7 @0
 
 set_i_arr_el arr8 0 a@0
 set_i_arr_el arr8 1 b@0

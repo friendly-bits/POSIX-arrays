@@ -15,6 +15,42 @@ script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 
 #### Functions
 
+# outputs first N lines from input
+# fast but may work incorrectly if too many lines provided as input
+fast_head() {
+	in_lines="$1"; lines_num="$2"
+	IFS_OLD="$IFS"; IFS="$newline"; set -f
+	# shellcheck disable=SC2086
+	set -- $in_lines
+	i=1
+	while [ "$i" -le "$lines_num" ] && [ "$i" -le $# ]; do
+		eval "printf '%s\n' \"\$$i\""
+		i=$((i+1))
+	done
+	IFS="$IFS_OLD"; set +f
+	unset in_lines lines_num i
+}
+
+
+# outputs lines from input, starting from line N
+# similar to 'tail -n+[N]' command, only fast
+# may work incorrectly if too many lines provided as input
+from_line() {
+	in_lines="$1"; line_ind="$(($2-1))"
+	IFS_OLD="$IFS"; IFS="$newline"; set -f
+	# shellcheck disable=SC2086
+	declare_i_arr temp_arr $in_lines
+	get_i_arr_max_index temp_arr maxindex
+	while [ "$line_ind" -le "$maxindex" ]; do
+		get_i_arr_val temp_arr "$line_ind" out_line
+		printf '%s\n' "$out_line"
+		line_ind=$((line_ind+1))
+	done
+	IFS="$IFS_OLD"; set +f
+	unset in_lines line_ind
+}
+
+
 run_test() {
 # Test sets use '@' as a column delimiter
 # 1st 1 or more lines format: 'declare' or 'set' function tests
@@ -51,11 +87,21 @@ run_test() {
 		# get the header lines
 		header_test_unit="$(printf '%s\n' "$test_unit" | \
 			sed -n -e /"\[header\]"/\{:1 -e n\;/"\[\/header\]"/q\;p\;b1 -e \})"
-		header_lines_cnt="$(printf '%s\n' "$header_test_unit" | wc -l)"
+		IFS_OLD="$IFS"; IFS="$newline"; set -f
+		# shellcheck disable=SC2086
+		set -- $header_test_unit
+		header_lines_cnt=$#
+		IFS="$IFS_OLD"; set +f
+
+		# tail1="$(from_line "$test_unit" $((header_lines_cnt+3)) )"; tail2="$(printf '%s' "$test_unit" | tail -n+"$((header_lines_cnt+3))")"
+		# if [ "$tail1" != "$tail2" ]; then echo "alert! alert! alert! alert! alert! alert! alert! alert! alert! alert! alert! "; fi
+		# echo "tail1: '$tail1'"
+		# echo
+		# echo "tail2: '$tail2'"
+		# echo
 
 		# get the main test lines
-		main_test_unit="$(printf '%s' "$test_unit" | tail -n+"$((header_lines_cnt+3))")"
-		main_lines_cnt="$(printf '%s\n' "$test_unit" | wc -l)"
+		main_test_unit="$(from_line "$test_unit" $((header_lines_cnt+3)))"
 
 		# execute 'declare' and 'set' commands
 		while [ -n "$header_test_unit" ]; do
@@ -70,7 +116,7 @@ run_test() {
 			echo "**header test_command: '$test_command'"
 
 			# gather array names from the test to reset the variables in the end
-			arr_name="$(printf '%s' "$test_command" | head -n1 | cut -d' ' -f2)"
+			arr_name="$(fast_head "$test_command" 1)"; arr_name="${arr_name#* }"; arr_name="${arr_name%% *}"
 			case "$arr_name" in *_arr_* ) ;; *) arr_names="${arr_name}${newline}${arr_names}"; esac
 
 			if [ -z "$print_stderr" ]; then eval "$test_command" 2>/dev/null; rv=$?
@@ -176,8 +222,8 @@ err_num=0
 # To limit to sepcific test units, use this format run_test_* [first_test_num_number] [last_test_num_number]
 # For example, 'run_test_a_arr 5 8' will run test units 5 through 8
 run_test_i_arr_1
-# run_test_i_arr_2
-# run_test_a_arr_1
-# run_test_a_arr_2
+run_test_i_arr_2
+run_test_a_arr_1
+run_test_a_arr_2
 
 printf '\n%s\n' "Total errors: $err_num."
