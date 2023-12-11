@@ -1,4 +1,6 @@
-# Indexed arrays
+# Examples of translation from Bash syntax to POSIX-arrays syntax
+
+## Indexed arrays
 
 ### Declaring an array, assigning and adding values, unsetting elements
 
