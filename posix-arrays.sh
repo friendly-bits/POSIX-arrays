@@ -12,6 +12,72 @@
 # for indexed arrays, $_i_[arr_name]_h_index variable holds the highest index in the array if it's known
 
 
+# unsets all variables used to store the array
+unset_i_arr() {
+	___me="unset_i_arr"
+	[ $# -ne 1 ] && { wrongargs "$@"; return 1; }
+	_arr_name="$1"
+	check_arr_name || return 1
+
+	do_unset_i_arr "${_arr_name}"
+	unset "_i_${_arr_name}_ver_flag" "_i_${_arr_name}_sorted_flag"
+}
+
+# unsets all variables of an indexed array
+# 1 - array name
+do_unset_i_arr() {
+	eval "_indices=\"\$_i_${1}_indices\""
+
+	for _index in $_indices; do
+		unset "_i_${1}_${_index}"
+	done
+	unset "_i_${1}_indices" "_i_${1}_h_index" _index _indices
+}
+
+# sorts and verifies indices of indexed array
+# assigns the resulting indices to $_indices
+# sets the 'sorted' and 'verified' flags in the array vars
+# finds the max index and assigns to '_h_index' and to the array var
+# caller should update the '_i_${_arr_name}_indices' variable externally
+sort_verify_i_arr() {
+	eval "_indices=\"\$_i_${_arr_name}_indices\"
+		_sorted_flag=\"\$_i_${_arr_name}_sorted_flag\"
+		_ver_flag=\"\$_i_${_arr_name}_ver_flag\""
+
+	if [ -n "$_indices" ]; then
+		if [ -z "$_sorted_flag" ] && [ -z "$_ver_flag" ]; then
+			_indices="$(
+				for _index in $_indices; do
+					eval "___val=\"\$_i_${_arr_name}_${_index}\""
+					[ -n "$___val" ] && printf '%s\n' "$_index"
+				done | sort -nu
+			)"
+			[ -n "$_indices" ] && _indices="${_indices}$___newline"
+			eval "_i_${_arr_name}_sorted_flag=1; _i_${_arr_name}_ver_flag=1"
+		elif [ -n "$_sorted_flag" ] && [ -z "$_ver_flag" ]; then
+			_indices="$(
+				for _index in $_indices; do
+					eval "___val=\"\$_i_${_arr_name}_${_index}\""
+					[ -n "$___val" ] && printf '%s\n' "$_index"
+				done
+			)"
+			[ -n "$_indices" ] && _indices="${_indices}$___newline"
+			eval "_i_${_arr_name}_ver_flag=1"
+		elif [ -z "$_sorted_flag" ] && [ -n "$_ver_flag" ]; then
+			_indices="$(printf '%s\n' "$_indices" | sort -nu)$___newline"
+			eval "_i_${_arr_name}_sorted_flag=1"
+		fi
+	fi
+
+	[ -n "$_indices" ] && {
+		_h_index="${_indices%"${___newline}"}"
+		_h_index="${_h_index##*"${___newline}"}"
+		eval "_i_${_arr_name}_h_index"='$_h_index'
+	} || { _h_index="-1"; unset "_i_${_arr_name}_h_index"; }
+
+	unset ___val _sorted_flag _ver_flag _index
+}
+
 # declare an indexed array while populating first elements
 # resets all previous elements of the array if it already exists
 # 1 - array name
@@ -21,15 +87,12 @@ declare_i_arr() {
 	[ $# -lt 1 ] && { wrongargs "$@"; return 1; }
 	_arr_name="$1"; shift
 	check_arr_name || return 1
-	eval "_indices=\"\$_i_${_arr_name}_indices\""
-	for _index in $_indices; do
-		unset "_i_${_arr_name}_${_index}"
-	done
-	unset "_i_${_arr_name}_indices" "_i_${_arr_name}_h_index" _indices
+
+	do_unset_i_arr "${_arr_name}"
 
 	_index=0
 	for ___val in "$@"; do
-		eval "_i_${_arr_name}_${_index}"='$___val'
+		eval "_i_${_arr_name}_${_index}"='$_el_set_flag$___val'
 		_indices="$_indices$_index$___newline"
 		_index=$((_index + 1))
 	done
@@ -56,18 +119,13 @@ read_i_arr() {
 	_arr_name="$1"; ___lines="$2"
 	check_arr_name || return 1
 
-	eval "_indices=\"\$_i_${_arr_name}_indices\""
-
-	for _index in $_indices; do
-		unset "_i_${_arr_name}_${_index}"
-	done
-	unset "_i_${_arr_name}_indices" "_i_${_arr_name}_h_index" _indices
+	do_unset_i_arr "${_arr_name}"
 
 	_index=0
     IFS_OLD="$IFS"
     IFS="$___newline"
 	for ___line in $___lines; do
-		eval "_i_${_arr_name}_${_index}"='$___line'
+		eval "_i_${_arr_name}_${_index}"='$_el_set_flag$___line'
 		_indices="$_indices$_index$___newline"
 		_index=$((_index + 1))
 	done
@@ -85,21 +143,6 @@ read_i_arr() {
 	return 0
 }
 
-# unsets all variables used to store the array
-unset_i_arr() {
-	___me="unset_i_arr"
-	[ $# -ne 1 ] && { wrongargs "$@"; return 1; }
-	_arr_name="$1"
-	check_arr_name || return 1
-
-	eval "_indices=\"\$_i_${_arr_name}_indices\""
-
-	for _index in $_indices; do
-		unset "_i_${_arr_name}_${_index}"
-	done
-	unset _indices _index "_i_${_arr_name}_h_index" "_i_${_arr_name}_indices"
-}
-
 # get all values from an indexed array (sorted by index)
 # whitespace-delimited output is set as a value of a global variable
 # 1 - array name
@@ -114,11 +157,11 @@ get_i_arr_values() {
 
 	# populates the $_indices variable and sets the 'sorted' and 'verified' flags
 	sort_verify_i_arr
-	eval "_i_${_arr_name}_indices=\"$_indices\""
+	eval "_i_${_arr_name}_indices"='$_indices'
 
 	[ -n "$_indices" ] && ___values="$(
 	for _index in $_indices; do
-		eval "printf '%s ' \"\$_i_${_arr_name}_${_index}\""
+		eval "printf '%s ' \"\${_i_${_arr_name}_${_index}#$_el_set_flag}\""
 	done
 	)"
 
@@ -153,42 +196,6 @@ get_i_arr_indices() {
 	return 0
 }
 
-# sorts and verifies indices of indexed array
-# assigns the resulting indices to $_indices
-# sets the 'sorted' and 'verified' flags
-# caller should update the '_i_${_arr_name}_indices' variable externally
-sort_verify_i_arr() {
-	eval "_indices=\"\$_i_${_arr_name}_indices\"
-		_sorted_flag=\"\$_i_${_arr_name}_sorted_flag\"
-		_ver_flag=\"\$_i_${_arr_name}_ver_flag\""
-
-	if [ -n "$_indices" ]; then
-		if [ -z "$_sorted_flag" ] && [ -z "$_ver_flag" ]; then
-			_indices="$(
-				for _index in $_indices; do
-					eval "___val=\"\$_i_${_arr_name}_${_index}\""
-					[ -n "$___val" ] && printf '%s\n' "$_index"
-				done | sort -nu
-			)"
-			[ -n "$_indices" ] && _indices="${_indices}$___newline"
-			eval "_i_${_arr_name}_sorted_flag=1; _i_${_arr_name}_ver_flag=1"
-		elif [ -n "$_sorted_flag" ] && [ -z "$_ver_flag" ]; then
-			_indices="$(
-				for _index in $_indices; do
-					eval "___val=\"\$_i_${_arr_name}_${_index}\""
-					[ -n "$___val" ] && printf '%s\n' "$_index"
-				done
-			)"
-			[ -n "$_indices" ] && _indices="${_indices}$___newline"
-			eval "_i_${_arr_name}_ver_flag=1"
-		elif [ -z "$_sorted_flag" ] && [ -n "$_ver_flag" ]; then
-			_indices="$(printf '%s\n' "$_indices" | sort -nu)$___newline"
-			eval "_i_${_arr_name}_sorted_flag=1"
-		fi
-	fi
-	unset ___val _sorted_flag _ver_flag _index
-}
-
 # add a new element to an indexed array and set its value
 # 1 - array name
 # 2 - value
@@ -201,13 +208,8 @@ add_i_arr_el() {
 
 	eval "_h_index=\"\$_i_${_arr_name}_h_index\""
 	if [ -z "$_h_index" ]; then
-		# populates $_indices variable and sets the 'sorted' and 'verified' flags
+		# populates the $_indices and $_h_index variables and sets the 'sorted' and 'verified' flags
 		sort_verify_i_arr
-		[ -n "$_indices" ] && {
-			_h_index="${_indices%"$___newline"}"
-			_h_index="${_h_index##*"$___newline"}"
-		} || _h_index="-1"
-
 		_index=$((_h_index + 1))
 		eval "_i_${_arr_name}_indices"='${_indices}${_index}${___newline}'
 	else
@@ -216,9 +218,40 @@ add_i_arr_el() {
 	fi
 
 	eval "_i_${_arr_name}_h_index"='$_index'"
-		_i_${_arr_name}_${_index}"='$___new_val'
+		_i_${_arr_name}_${_index}"='$_el_set_flag$___new_val'
 
 	unset ___new_val _indices _index _h_index
+	return 0
+}
+
+# unset an element of an indexed array
+# 1 - array name
+# 2 - index
+# no additional arguments are allowed
+unset_i_arr_el() {
+	___me="unset_i_arr_el"
+	_arr_name="$1"; _index="$2"
+	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	check_arr_name || return 1
+	check_index || return 1
+
+	eval "___old_val=\"\$_i_${_arr_name}_${_index}\"
+		_h_index=\"\$_i_${_arr_name}_h_index\"
+		_sorted_flag=\"\$_i_${_arr_name}_sorted_flag\""
+
+	if [ -n "$___old_val" ]; then
+		unset "_i_${_arr_name}_${_index}"
+		if [ "$_index" = "$_h_index" ] && [ -n "$_sorted_flag" ]; then
+			eval "_i_${_arr_name}_indices=\"\${_i_${_arr_name}_indices%${_index}${___newline}}\"
+				_i_${_arr_name}_h_index=\"\${_i_${_arr_name}_indices%${___newline}}\"
+				_i_${_arr_name}_h_index=\"\${_i_${_arr_name}_h_index##*${___newline}}\""
+		else
+			unset "_i_${_arr_name}_ver_flag"
+			[ "$_index" = "$_h_index" ] && unset "_i_${_arr_name}_h_index"
+		fi
+	fi
+
+	unset _index ___old_val _h_index _sorted_flag
 	return 0
 }
 
@@ -238,10 +271,7 @@ get_i_arr_max_index() {
 		# populates the $_indices variable and sets the 'sorted' and 'verified' flags
 		sort_verify_i_arr
 		eval "_i_${_arr_name}_indices"='${_indices}'
-		if [ -n "$_indices" ]; then
-			_h_index="${_indices%"$___newline"}"
-			_h_index="${_h_index##*"$___newline"}"
-		else
+		if [ -z "$_indices" ]; then
 			unset "$_out_var_name" "_i_${_arr_name}_indices" _indices _h_index _out_var_name
 			badindex; return 1
 		fi
@@ -267,20 +297,17 @@ get_i_arr_last_val() {
 
 	eval "_h_index=\"\$_i_${_arr_name}_h_index\""
 	if [ -z "$_h_index" ]; then
-		# populates the $_indices variable and sets the 'sorted' and 'verified' flags
+		# populates the $_indices and $_h_index variables and sets the 'sorted' and 'verified' flags
 		sort_verify_i_arr
 		eval "_i_${_arr_name}_indices"='${_indices}'
-		if [ -n "$_indices" ]; then
-			_h_index="${_indices%"$___newline"}"
-			_h_index="${_h_index##*"$___newline"}"
-		else
+		if [ -z "$_indices" ]; then
 			unset "$_out_var_name" "_i_${_arr_name}_indices" _indices _h_index _out_var_name
 			badindex; return 1
 		fi
 	fi
 
 	eval "_i_${_arr_name}_h_index"='$_h_index'"
-		$_out_var_name=\"\$_i_${_arr_name}_${_h_index}\""
+		$_out_var_name=\"\${_i_${_arr_name}_${_h_index}#$_el_set_flag}\""
 
 	unset _indices _h_index _out_var_name
 	return 0
@@ -323,21 +350,17 @@ set_i_arr_el() {
 	check_index || return 1
 
 	eval "___old_val=\"\$_i_${_arr_name}_${_index}\""
-	if [ -z "$___old_val" ] && [ -n "$___new_val" ]; then
+	if [ -z "$___old_val" ]; then
 		eval "_i_${_arr_name}_indices=\"\${_i_${_arr_name}_indices}${_index}${___newline}\"
-			_i_${_arr_name}_${_index}"='$___new_val'"
+			_i_${_arr_name}_${_index}"='$_el_set_flag$___new_val'"
 			_h_index=\"\$_i_${_arr_name}_h_index\""
 		if [ -n "$_h_index" ] && [ "$_index" -gt  "$_h_index" ]; then
 			eval "_i_${_arr_name}_h_index"='$_index'
 		else
 			unset "_i_${_arr_name}_sorted_flag"
 		fi
-	elif [ -n "$___old_val" ] && [ -z "$___new_val" ]; then
-		unset "_i_${_arr_name}_ver_flag" "_i_${_arr_name}_${_index}"
-		eval "_h_index=\"\$_i_${_arr_name}_h_index\""
-		[ "$_index" =  "$_h_index" ] && unset "_i_${_arr_name}_h_index"
-	elif [ -n "$___old_val" ] && [ -n "$___new_val" ]; then
-		eval "_i_${_arr_name}_${_index}"='$___new_val'
+	else
+		eval "_i_${_arr_name}_${_index}"='$_el_set_flag$___new_val'
 	fi
 
 	unset _index ___new_val ___old_val _h_index
@@ -358,68 +381,33 @@ get_i_arr_val() {
 	check_var_name || return 1
 	check_index || return 1
 
-	eval "$_out_var_name=\"\$_i_${_arr_name}_${_index}\""
+	eval "$_out_var_name=\"\${_i_${_arr_name}_${_index}#$_el_set_flag}\""
 	unset _index _out_var_name
 }
 
 
-
-# declare an associative array while populating elements
-# resets all previous elements of the array if it already exists
-# 1 - array name
-# all other args - 'key=value' pairs
-declare_a_arr() {
-	___me="declare_a_arr"
-	[ $# -lt 1 ] && { wrongargs "$@"; return 1; }
-	_arr_name="$1"; shift
+# unsets all variables used to store the array
+unset_a_arr() {
+	___me="get_a_arr_val"
+	[ $# -ne 1 ] && { wrongargs "$@"; return 1; }
+	_arr_name="$1"
 	check_arr_name || return 1
 
-	eval "___keys=\"\$_a_${_arr_name}___keys\""
+	do_unset_a_arr "${_arr_name}"
 
-	for ___key in $___keys; do
-		unset "_a_${_arr_name}_${___key}"
-	done
-	unset ___keys "_a_${_arr_name}___keys"
-
-	if [ -n "$*" ]; then
-		for ___pair in "$@"; do
-			check_pair || return 1
-			___key="${___pair%%=*}"
-			___val="$_el_set_flag${___pair#*=}"
-			check_key || return 1
-			eval "_a_${_arr_name}_${___key}"='$___val'
-			___keys="$___keys$___key$___newline"
-		done
-	fi
-
-	[ -n "$___keys" ] && ___keys="$(printf '%s\n' "$___keys" | sort -u)$___newline"
-	eval "_a_${_arr_name}___keys"='$___keys'"; _a_${_arr_name}_sorted_flag=1; _a_${_arr_name}_ver_flag=1"
-	unset ___val ___key ___keys
-	return 0
+	unset "_a_${_arr_name}_sorted_flag" "_a_${_arr_name}_ver_flag"
+	unset ___keys ___key
 }
 
-# get all values from an associative array (alphabetically sorted by key)
-# whitespace-delimited output is set as a value of a global variable
+# unsets all variables of an associative array
 # 1 - array name
-# 2 - global variable name for output
-# no additional arguments are allowed
-get_a_arr_values() {
-	___me="get_a_arr_values"
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
-	_arr_name="$1"; _out_var_name="$2"; ___values=''
-	check_arr_name || return 1
-	check_var_name || return 1
+do_unset_a_arr() {
+	eval "___keys=\"\$_a_${1}___keys\""
 
-	sort_verify_a_arr
-	___values="$(
-		for ___key in $___keys; do
-		eval IFS='$_el_set_flag'"; printf '%s '\$_a_${_arr_name}_${___key}" # todo
-		done
-	)"
-
-	eval "$_out_var_name"='${___values% }'
-	unset ___keys ___key ___values
-	return 0
+	for ___key in $___keys; do
+		unset "_a_${1}_${___key}"
+	done
+	unset "_a_${1}___keys" ___key ___keys
 }
 
 # sorts and verifies keys of an associative array
@@ -456,6 +444,59 @@ sort_verify_a_arr() {
 		eval "_a_${_arr_name}___keys"='$___keys'
 	fi
 	unset ___val _sorted_flag _ver_flag ___key
+}
+
+# declare an associative array while populating elements
+# resets all previous elements of the array if it already exists
+# 1 - array name
+# all other args - 'key=value' pairs
+declare_a_arr() {
+	___me="declare_a_arr"
+	[ $# -lt 1 ] && { wrongargs "$@"; return 1; }
+	_arr_name="$1"; shift
+	check_arr_name || return 1
+
+	do_unset_a_arr "${_arr_name}"
+
+	if [ -n "$*" ]; then
+		for ___pair in "$@"; do
+			check_pair || return 1
+			___key="${___pair%%=*}"
+			___val="$_el_set_flag${___pair#*=}"
+			check_key || return 1
+			eval "_a_${_arr_name}_${___key}"='$___val'
+			___keys="$___keys$___key$___newline"
+		done
+	fi
+
+	[ -n "$___keys" ] && ___keys="$(printf '%s\n' "$___keys" | sort -u)$___newline"
+	eval "_a_${_arr_name}___keys"='$___keys'"; _a_${_arr_name}_sorted_flag=1; _a_${_arr_name}_ver_flag=1"
+	unset ___val ___key ___keys
+	return 0
+}
+
+# get all values from an associative array (alphabetically sorted by key)
+# whitespace-delimited output is set as a value of a global variable
+# 1 - array name
+# 2 - global variable name for output
+# no additional arguments are allowed
+get_a_arr_values() {
+	___me="get_a_arr_values"
+	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	_arr_name="$1"; _out_var_name="$2"; ___values=''
+	check_arr_name || return 1
+	check_var_name || return 1
+
+	sort_verify_a_arr
+	___values="$(
+		for ___key in $___keys; do
+		eval IFS='$_el_set_flag'"; printf '%s '\$_a_${_arr_name}_${___key}" # no extra quotes on purpose
+		done
+	)"
+
+	eval "$_out_var_name"='${___values% }'
+	unset ___keys ___key ___values
+	return 0
 }
 
 # get all keys from an associative array (alphabetically sorted)
@@ -566,20 +607,6 @@ get_a_arr_val() {
 	unset ___key _out_var
 }
 
-# unsets all variables used to store the array
-unset_a_arr() {
-	___me="get_a_arr_val"
-	[ $# -ne 1 ] && { wrongargs "$@"; return 1; }
-	_arr_name="$1"
-	check_arr_name || return 1
-
-	eval "___keys=\"\$_a_${_arr_name}___keys\""
-	for ___key in $___keys; do
-		unset "_a_${_arr_name}_${___key}"
-	done
-	unset "_a_${_arr_name}___keys" "_a_${_arr_name}_sorted_flag" "_a_${_arr_name}_ver_flag"
-	unset ___keys ___key
-}
 
 badindex() { echo "$___me: Error: array '$_arr_name' has no elements." >&2; }
 check_arr_name() { case "$_arr_name" in *[!A-Za-z0-9_]* ) echo "$___me: Error: invalid array name '$_arr_name'." >&2; return 1; esac; }
