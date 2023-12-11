@@ -505,11 +505,11 @@ get_i_arr_el_cnt arr9 val@3@0
 "
 
 
-# test getting max index and last val after declaring/adding/setting and then unsetting
+# test getting max index and last val after declaring/adding/setting and then replacing with empty string or unsetting
 test_17="
 [header]
 add_i_arr_el arr1 a@0
-set_i_arr_el arr1 0@0
+unset_i_arr_el arr1 0@0
 
 add_i_arr_el arr2 b@0
 set_i_arr_el arr2 0 @0
@@ -517,12 +517,12 @@ set_i_arr_el arr2 0 @0
 add_i_arr_el arr3 c@0
 add_i_arr_el arr3 d@0
 set_i_arr_el arr3 0@0
-set_i_arr_el arr3 1@0
+unset_i_arr_el arr3 1@0
 
 add_i_arr_el arr4 c@0
 add_i_arr_el arr4 d@0
-set_i_arr_el arr4 1@0
-set_i_arr_el arr4 0@0
+unset_i_arr_el arr4 1@0
+unset_i_arr_el arr4 0@0
 
 declare_i_arr arr5 e f@0
 set_i_arr_el arr5 0@0
@@ -530,7 +530,7 @@ set_i_arr_el arr5 1@0
 
 declare_i_arr arr6 e f@0
 set_i_arr_el arr6 1@0
-set_i_arr_el arr6 0@0
+unset_i_arr_el arr6 0@0
 
 declare_i_arr arr6 e f@0
 set_i_arr_el arr6 0@0
@@ -545,36 +545,41 @@ set_i_arr_el arr8 0 a@0
 set_i_arr_el arr8 1 b@0
 set_i_arr_el arr8 2 c@0
 set_i_arr_el arr8 0 \"\"@0
-set_i_arr_el arr8 1 @0
+unset_i_arr_el arr8 1 @0
 set_i_arr_el arr8 2@0
 [/header]
 
 get_i_arr_last_val arr1 val@@1
-get_i_arr_last_val arr2 val@@1
-get_i_arr_last_val arr3 val@@1
-get_i_arr_last_val arr4 val@@1
-get_i_arr_last_val arr5 val@@1
-get_i_arr_last_val arr6 val@@1
-get_i_arr_last_val arr7 val@@1
-get_i_arr_last_val arr8 val@@1
-
 get_i_arr_el_cnt arr1 val@0@0
-get_i_arr_el_cnt arr2 val@0@0
-get_i_arr_el_cnt arr3 val@0@0
-get_i_arr_el_cnt arr4 val@0@0
-get_i_arr_el_cnt arr5 val@0@0
-get_i_arr_el_cnt arr6 val@0@0
-get_i_arr_el_cnt arr7 val@0@0
-get_i_arr_el_cnt arr8 val@0@0
-
 get_i_arr_max_index arr1 val@@1
-get_i_arr_max_index arr2 val@@1
-get_i_arr_max_index arr3 val@@1
+
+get_i_arr_last_val arr2 val@@0
+get_i_arr_el_cnt arr2 val@1@0
+get_i_arr_max_index arr2 val@0@0
+
+get_i_arr_last_val arr3 val@@0
+get_i_arr_el_cnt arr3 val@1@0
+get_i_arr_max_index arr3 val@0@0
+
+get_i_arr_last_val arr4 val@@1
+get_i_arr_el_cnt arr4 val@0@0
 get_i_arr_max_index arr4 val@@1
-get_i_arr_max_index arr5 val@@1
-get_i_arr_max_index arr6 val@@1
+
+get_i_arr_last_val arr5 val@@0
+get_i_arr_el_cnt arr5 val@2@0
+get_i_arr_max_index arr5 val@1@0
+
+get_i_arr_last_val arr6 val@@0
+get_i_arr_el_cnt arr6 val@2@0
+get_i_arr_max_index arr6 val@1@0
+
+get_i_arr_last_val arr7 val@@1
+get_i_arr_el_cnt arr7 val@0@0
 get_i_arr_max_index arr7 val@@1
-get_i_arr_max_index arr8 val@@1
+
+get_i_arr_last_val arr8 val@@0
+get_i_arr_el_cnt arr8 val@2@0
+get_i_arr_max_index arr8 val@2@0
 "
 
 
@@ -582,46 +587,46 @@ get_i_arr_max_index arr8 val@@1
 test_18="
 [header]
 declare_i_arr arr1 a b c@0
-set_i_arr_el arr1 0@0
+unset_i_arr_el arr1 0@0
 
 declare_i_arr arr2 a b c@0
-set_i_arr_el arr2 1@0
+unset_i_arr_el arr2 1@0
 
 declare_i_arr arr3 a b c@0
-set_i_arr_el arr3 2@0
+unset_i_arr_el arr3 2@0
 
 add_i_arr_el arr4 a@0
 add_i_arr_el arr4 b@0
 add_i_arr_el arr4 c@0
-set_i_arr_el arr4 1@0
+unset_i_arr_el arr4 1@0
 
 add_i_arr_el arr5 a@0
 add_i_arr_el arr5 b@0
 add_i_arr_el arr5 c@0
-set_i_arr_el arr5 2@0
+unset_i_arr_el arr5 2@0
 
 set_i_arr_el arr6 10 d@0
 set_i_arr_el arr6 11 e@0
 set_i_arr_el arr6 12 f@0
-set_i_arr_el arr6 12 @0
+unset_i_arr_el arr6 12 @0
 
 set_i_arr_el arr7 10 d@0
 set_i_arr_el arr7 11 e@0
 set_i_arr_el arr7 12 f@0
-set_i_arr_el arr7 10 \"\"@0
+unset_i_arr_el arr7 10 @0
 
 set_i_arr_el arr8 12 g@0
 set_i_arr_el arr8 11 h@0
 set_i_arr_el arr8 10 k@0
-set_i_arr_el arr8 10@0
+unset_i_arr_el arr8 10@0
 
 set_i_arr_el arr9 12 g@0
 set_i_arr_el arr9 0 h@0
 set_i_arr_el arr9 10 k@0
-set_i_arr_el arr9 12 \"\"@0
+unset_i_arr_el arr9 12@0
 
 declare_i_arr arr10 a b c \"d e\"@0
-set_i_arr_el arr10 4@0
+unset_i_arr_el arr10 4@0
 [/header]
 
 get_i_arr_max_index arr1 val@2@0
@@ -663,45 +668,45 @@ get_i_arr_el_cnt arr10 val@4@0
 test_19="
 [header]
 declare_i_arr arr1 a b c \"d e\"@0
-set_i_arr_el arr1 0@0
-set_i_arr_el arr1 1@0
+unset_i_arr_el arr1 0@0
+unset_i_arr_el arr1 1@0
 
 declare_i_arr arr2 a b c \"d e\"@0
-set_i_arr_el arr2 1@0
-set_i_arr_el arr2 0@0
+unset_i_arr_el arr2 1@0
+unset_i_arr_el arr2 0@0
 
 declare_i_arr arr3 a b c \"d e\"@0
-set_i_arr_el arr3 0@0
-set_i_arr_el arr3 3@0
+unset_i_arr_el arr3 0@0
+unset_i_arr_el arr3 3@0
 
 declare_i_arr arr4 a b c \"d e\"@0
-set_i_arr_el arr4 3@0
-set_i_arr_el arr4 0@0
+unset_i_arr_el arr4 3@0
+unset_i_arr_el arr4 0@0
 
 declare_i_arr arr5 a b c \"d e\"@0
-set_i_arr_el arr5 3@0
-set_i_arr_el arr5 2@0
+unset_i_arr_el arr5 3@0
+unset_i_arr_el arr5 2@0
 
 declare_i_arr arr6 a b c \"d e\"@0
-set_i_arr_el arr6 3@0
-set_i_arr_el arr6 1@0
+unset_i_arr_el arr6 3@0
+unset_i_arr_el arr6 1@0
 
 declare_i_arr arr7 a b c \"d e\"@0
-set_i_arr_el arr7 4@0
-set_i_arr_el arr7 3@0
+unset_i_arr_el arr7 4@0
+unset_i_arr_el arr7 3@0
 
 declare_i_arr arr8 a b c \"d e\"@0
-set_i_arr_el arr8 4@0
-set_i_arr_el arr8 2@0
+unset_i_arr_el arr8 4@0
+unset_i_arr_el arr8 2@0
 
 declare_i_arr arr9 a b c \"d e\"@0
-set_i_arr_el arr9 4@0
-set_i_arr_el arr9 5@0
+unset_i_arr_el arr9 4@0
+unset_i_arr_el arr9 5@0
 
 set_i_arr_el arr10 10 a@0
 set_i_arr_el arr10 11 a@0
-set_i_arr_el arr10 10@0
-set_i_arr_el arr10 11@0
+unset_i_arr_el arr10 10@0
+unset_i_arr_el arr10 11@0
 [/header]
 
 get_i_arr_last_val arr1 val@d e@0
@@ -797,7 +802,7 @@ declare_i_arr arr13 a b c d@0
 add_i_arr_el arr13 e@0
 set_i_arr_el arr13 1 f@0
 add_i_arr_el arr13 g@0
-set_i_arr_el arr13 4@0
+unset_i_arr_el arr13 4@0
 [/header]
 
 get_i_arr_el_cnt arr1 val@4@0

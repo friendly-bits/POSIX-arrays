@@ -45,7 +45,7 @@ test_set() {
 test_unset() {
 	if [ "$arr_type" = "i" ]; then
 		for i in $elements; do
-			set_${arr_type}_arr_el test_arr "$i" ""
+			unset_${arr_type}_arr_el test_arr "$i"
 		done
 	else
 		for i in $elements; do
@@ -74,10 +74,10 @@ test_get() {
 test_mixed() {
 	if [ "$arr_type" = "i" ]; then
 		for j in $elements; do
+			if [ $((j % 10)) = 0 ]; then get_i_arr_indices test_arr testvar; fi
 			set_i_arr_el test_arr "$((j*2))" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
-			set_i_arr_el test_arr "$((j*2 -2))" ""
-			get_i_arr_indices test_arr testvar
-			# add_i_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+			add_i_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
+			unset_i_arr_el test_arr "$((j+1))"
 		done
 		# set_${arr_type}_arr_val test_arr "$i" "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "
 		# add_${arr_type}_arr_el test_arr "a b;c%d^e#fh152uyuIJKlk/*-+UnapTg#@! %% "

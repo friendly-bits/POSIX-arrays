@@ -146,6 +146,7 @@ get_i_arr_val arr1 -1 val@@1
 get_i_arr_val arr1 -0 val@@1
 get_i_arr_val arr1 0 val@@0
 get_i_arr_val arr1 1 val@@0
+
 get_i_arr_el_cnt arr val@1@0
 "
 
@@ -229,7 +230,7 @@ set_i_arr_el arr 0@0
 
 get_i_arr_val arr 0 val@@0
 get_i_arr_val arr 1 val@@0
-get_i_arr_el_cnt arr val@0@0
+get_i_arr_el_cnt arr val@1@0
 
 get_i_arr_val arr1 0 val@@0
 get_i_arr_val arr1 1 val@@0
@@ -237,7 +238,6 @@ get_i_arr_el_cnt arr1 val@0@0
 
 get_i_arr_val  val@@1
 get_i_arr_val arr val@@1
-get_i_arr_el_cnt arr val@0@0
 "
 
 
@@ -251,7 +251,7 @@ set_i_arr_el arr 1@0
 get_i_arr_val arr 0 val@@0
 get_i_arr_val arr 1 val@@0
 get_i_arr_val arr 2 val@@0
-get_i_arr_el_cnt arr val@0@0
+get_i_arr_el_cnt arr val@1@0
 
 get_i_arr_val arr1 0 val@@0
 get_i_arr_val arr1 1 val@@0
@@ -334,23 +334,24 @@ get_i_arr_el_cnt arr val@2@0
 "
 
 
-# set indices 100,3
+# set indices 100,3, then unset index 3
 test_16="
 [header]
 set_i_arr_el arr 100 a@0
-set_i_arr_el arr 3 1000@0
+unset_i_arr_el arr 3@0
 [/header]
 
 get_i_arr_val arr 0 val@@0
 get_i_arr_val arr 2 val@@0
-get_i_arr_val arr 3 val@1000@0
+get_i_arr_val arr 3 val@@0
 get_i_arr_val arr 4 val@@0
 get_i_arr_val arr 10 val@@0
 get_i_arr_val arr 99 val@@0
 get_i_arr_val arr 100 val@a@0
 get_i_arr_val arr 101 val@@0
 get_i_arr_val arr 1000 val@@0
-get_i_arr_el_cnt arr val@2@0
+
+get_i_arr_el_cnt arr val@1@0
 "
 
 
@@ -382,7 +383,7 @@ get_i_arr_el_cnt arr val@4@0
 "
 
 
-# set 4 non-consecutive indices, then re-set them to empty string
+# set 4 non-consecutive indices, then re-set them to empty string or unset them
 test_18="
 [header]
 set_i_arr_el arr 10000 a@0
@@ -394,6 +395,16 @@ set_i_arr_el arr 10000@0
 set_i_arr_el arr 200@0
 set_i_arr_el arr 100@0
 set_i_arr_el arr 0@0
+
+set_i_arr_el arr2 10000 a@0
+set_i_arr_el arr2 0 b@0
+set_i_arr_el arr2 200 c@0
+set_i_arr_el arr2 100 d@0
+
+unset_i_arr_el arr2 10000@0
+unset_i_arr_el arr2 200@0
+unset_i_arr_el arr2 100@0
+unset_i_arr_el arr2 0@0
 [/header]
 
 get_i_arr_val arr 0 val@@0
@@ -408,7 +419,21 @@ get_i_arr_val arr 1000 val@@0
 get_i_arr_val arr 9999 val@@0
 get_i_arr_val arr 10001 val@@0
 
-get_i_arr_el_cnt arr val@0@0
+get_i_arr_el_cnt arr val@4@0
+
+get_i_arr_val arr2 0 val@@0
+get_i_arr_val arr2 10 val@@0
+get_i_arr_val arr2 100 val@@0
+get_i_arr_val arr2 200 val@@0
+get_i_arr_val arr2 10000 val@@0
+get_i_arr_val arr2 1 val@@0
+get_i_arr_val arr2 101 val@@0
+get_i_arr_val arr2 199 val@@0
+get_i_arr_val arr2 1000 val@@0
+get_i_arr_val arr2 9999 val@@0
+get_i_arr_val arr2 10001 val@@0
+
+get_i_arr_el_cnt arr2 val@0@0
 "
 
 
@@ -420,20 +445,23 @@ set_i_arr_el arr 0 \"#\"@0
 set_i_arr_el arr 12 \"*\"@0
 set_i_arr_el arr 101 \"/\"@0
 set_i_arr_el arr 105 \" \"@0
+set_i_arr_el arr 99 \"\"@0
 [/header]
 
-get_i_arr_el_cnt arr val@5@0
+get_i_arr_el_cnt arr val@6@0
 
 get_i_arr_val arr 0 val@#@0
 get_i_arr_val arr 10 val@=@0
 get_i_arr_val arr 12 val@*@0
 get_i_arr_val arr 101 val@/@0
+get_i_arr_val arr 104 val@@0
 get_i_arr_val arr 105 val@ @0
 
 get_i_arr_val arr 1 val@@0
 get_i_arr_val arr 9 val@@0
 get_i_arr_val arr 11 val@@0
 get_i_arr_val arr 13 val@@0
+get_i_arr_val arr 99 val@@0
 get_i_arr_val arr 100 val@@0
 get_i_arr_val arr 104 val@@0
 get_i_arr_val arr 106 val@@0
@@ -501,6 +529,9 @@ set_i_arr_el arr_1 15 \"a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ##
 
 set_i_arr_el arr_2 155 \"a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =\"@0
 set_i_arr_el arr_2 155 @0
+
+set_i_arr_el arr_2 165 \"a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =\"@0
+unset_i_arr_el arr_2 165@0
 [/header]
 
 get_i_arr_val arr 1 val@abc#=@0
@@ -516,8 +547,9 @@ get_i_arr_values arr_1 val@a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .?
 get_i_arr_el_cnt arr_1 val@1@0
 
 get_i_arr_val arr_2 155 val@@0
+get_i_arr_val arr_2 165 val@@0
 get_i_arr_values arr_2 val@@0
-get_i_arr_el_cnt arr_2 val@0@0
+get_i_arr_el_cnt arr_2 val@1@0
 "
 
 
@@ -583,16 +615,28 @@ get_i_arr_values arr val@b d c a@0
 get_i_arr_el_cnt arr val@4@0
 "
 
-# test for get_i_arr_values with empty array
+# test for get_i_arr_values with an empty array or array containing a empty string
 test_24="
 [header]
 set_i_arr_el arr1 0@0
+unset_i_arr_el arr1 0@0
+
+set_i_arr_el arr2 0@0
+
+set_i_arr_el arr3 1@0
 [/header]
 
-get_i_arr_values arr1 val@@0
 get_i_arr_values arr val@@0
 get_i_arr_el_cnt arr val@0@0
+
+get_i_arr_values arr1 val@@0
 get_i_arr_el_cnt arr1 val@0@0
+
+get_i_arr_values arr2 val@@0
+get_i_arr_el_cnt arr2 val@1@0
+
+get_i_arr_values arr3 val@@0
+get_i_arr_el_cnt arr3 val@1@0
 "
 
 
@@ -660,7 +704,7 @@ set_i_arr_el arr2 90 ABCD1234@0
 set_i_arr_el arr2 90 \"'\"@0
 
 set_i_arr_el arr3 0 \"'\"@0
-set_i_arr_el arr3 0@0
+unset_i_arr_el arr3 0@0
 add_i_arr_el arr3 a@0
 set_i_arr_el arr3 1 \"'\"@0
 
@@ -668,7 +712,7 @@ set_i_arr_el arr4 11 \"a; bcd/efg / # ^ & ( == ) [] '  . = < > b * 123 .* .? ## 
 add_i_arr_el arr4 \"a; bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =\"@0
 
 declare_i_arr arr5 \"'\"@0
-set_i_arr_el arr5 0 @0
+unset_i_arr_el arr5 0 @0
 
 declare_i_arr arr6 \"'\"@0
 set_i_arr_el arr6 10 \"a b; c\"@0
