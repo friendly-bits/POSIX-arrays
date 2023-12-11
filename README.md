@@ -97,8 +97,8 @@ $ jazz, classical, rock
 - For associative arrays, assigning an empty string as a value doesn't unset the array element. This mimics the behavior of Bash arrays. To unset an element of an associative array, use the `unset_a_arr_el()` function.
 - The reason why functions provide output via a variable is because this way the performance is better, in some cases much better.
 
-## Translation of Bash code examples
-[TRANSLATION-EXAMPLES.md](/TRANSLATION-EXAMPLES.md)
+## Examples of translation from Bash syntax to POSIX-arrays syntax
+[BASH-TRANSLATION-EXAMPLES.md](/BASH-TRANSLATION-EXAMPLES.md)
 
 ## Performance
 - The code went through multiple rounds of optimization. Currently for most use cases, the performance for small arrays (<= 200 elements) is comparable to Bash arrays. Functions perform reasonably well with arrays containing up to 2000 elements. Higher than that, the performance drops at an accelerating rate, mainly because the system takes longer to look up variables in memory.
