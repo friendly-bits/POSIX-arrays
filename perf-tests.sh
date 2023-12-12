@@ -181,7 +181,7 @@ elements=$(seq $f $l)
 
 # Execute tests
 
-echo "Running tests from element $f to element $l."
+echo "Testing arrays with elements $f through $l."
 
 measure_time test_set
 
