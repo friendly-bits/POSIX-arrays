@@ -83,22 +83,6 @@ done
 
 Bash:
 ```
-for index in ${!test_arr[@]}; do
-    echo "$index"
-done
-```
-POSIX-arrays:
-```
-get_i_arr_indices test_arr indices
-for index in $indices; do
-    echo "$index"
-done
-```
-
-##
-
-Bash:
-```
 declare test_arr=("i_don't_have_whitespaces" "i have whitespaces")
 for value in ${test_arr[@]}; do
     echo "$value"
@@ -113,6 +97,23 @@ for index in $indices; do
     echo "$value"
 done
 ```
+
+##
+
+Bash:
+```
+for index in ${!test_arr[@]}; do
+    echo "$index"
+done
+```
+POSIX-arrays:
+```
+get_i_arr_indices test_arr indices
+for index in $indices; do
+    echo "$index"
+done
+```
+
 
 ## Associative arrays
 
