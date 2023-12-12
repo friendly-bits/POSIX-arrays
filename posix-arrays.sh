@@ -90,7 +90,7 @@ declare_i_arr() {
 
 	do_unset_i_arr "${_arr_name}"
 
-	_index=0
+	_index=0; _indices=''
 	for ___val in "$@"; do
 		eval "_i_${_arr_name}_${_index}"='$_el_set_flag$___val'
 		_indices="$_indices$_index$___newline"
@@ -108,36 +108,38 @@ declare_i_arr() {
 	return 0
 }
 
-# initialize an indexed array while assigning empty strings to N first indices (1-based)
+# initialize an indexed array while assigning the same string to N first indices (1-based)
 # the point is to speed up setting elements at a later time
 # resets all previous elements of the array if it already exists
 # 1 - array name
 # 2 - number of elements to initialize
+# 3 - string to assign (if not specified, assigns an empty string)
 init_i_arr() {
 	___me="init_i_arr"
-	[ $# -ne 2 ] && { wrongargs "$@"; return 1; }
-	_arr_name="$1"; _el_num="$2"
+	[ $# -lt 2 ] || [ $# -gt 3 ] && { wrongargs "$@"; return 1; }
+	_arr_name="$1"; _el_num="$2"; _val="$3"
 	check_arr_name || return 1
 	_index="$_el_num"; check_index || return 1
 	_last_index=$((_el_num-1))
 
 	do_unset_i_arr "${_arr_name}"
 
-	_index=0
-	while [ $_index -le "$_last_index" ]; do
-		eval "_i_${_arr_name}_${_index}"='$_el_set_flag'
-		_indices="$_indices$_index$___newline"
-		_index=$((_index + 1))
-	done
-	_index=$((_index - 1))
+	if [ $_last_index != "-1" ]; then
+		_index=0; _indices=''
+		while [ $_index -le "$_last_index" ]; do
+			eval "_i_${_arr_name}_${_index}"='$_el_set_flag$_val'
+			_indices="$_indices$_index$___newline"
+			_index=$((_index + 1))
+		done
+		_index=$((_index - 1))
+		eval "_i_${_arr_name}_h_index"='$_index'"
+			_i_${_arr_name}_indices"='$_indices'"
+			_i_${_arr_name}_sorted_flag=1;
+			_i_${_arr_name}_ver_flag=1"
+		unset _index _indices
+	fi
 
-	[ "$_index" = "-1" ] || [ $_last_index = "-1" ] && _index=''
-
-	eval "_i_${_arr_name}_h_index"='$_index'"
-		_i_${_arr_name}_indices"='$_indices'"
-		_i_${_arr_name}_sorted_flag=1;
-		_i_${_arr_name}_ver_flag=1"
-	unset ___val _index _indices
+	unset _last_index
 	return 0
 }
 
