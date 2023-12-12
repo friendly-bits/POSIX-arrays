@@ -13,7 +13,7 @@ source_file="${1:-posix-arrays.sh}"
 . "$script_dir/$source_file" || { echo "$me: Error: Can't source '$script_dir/$source_file'." >&2; exit 1; }
 
 
-## Test function
+## Test functions
 
 warmup() {
 	if [ "$arr_type" = "i" ]; then
