@@ -203,6 +203,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Associative  | get all keys                 | 2ms   |
 
 \* cold - elements are set without prior initialization
+
 ** hot - elements are set after prior initialization
 
 </details>
