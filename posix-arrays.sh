@@ -4,11 +4,11 @@
 
 # emulates arrays in POSIX shell
 
-# each array element is stored in a variable named in the format '___[x]_[arr_name]_[key/index]'
+# each array element is stored in a variable named in the format '_[x]_[arr_name]_[key/index]'
 # where [x] is either 'a' for associative array or 'i' for indexed array
 
-# keys/indices are stored in a variable named in the format '___[x]_[arr_name]_keys' or '___[x]_[arr_name]_indices'
-# array flags are stored in variables (true if variable is set): $___[x]_[arr_name]_sorted, $___[x]_[arr_name]_verified
+# keys/indices are stored in a variable named in the format '_[x]_[arr_name]_keys' or '_[x]_[arr_name]_indices'
+# array flags are stored in variables (true if variable is set): $_[x]_[arr_name]_sorted, $_[x]_[arr_name]_verified
 # for indexed arrays, $_i_[arr_name]_h_index variable holds the highest index in the array if it's known
 
 
