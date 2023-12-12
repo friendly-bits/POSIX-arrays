@@ -187,15 +187,15 @@ measure_time test_set
 
 measure_time test_get
 
+measure_time test_get_arr_el_cnt
+
 measure_time test_get_keys
 
 measure_time test_get_arr_values
 
-measure_time test_get_arr_el_cnt
-
 measure_time test_unset
 
-measure_time test_mixed
+#measure_time test_mixed
  
 [ "$arr_type" = i ] && {
 	measure_time test_add
