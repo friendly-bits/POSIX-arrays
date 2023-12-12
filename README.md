@@ -33,9 +33,9 @@ Alternatively, copy functions which you need (and their dependencies) to your ow
 
 `get_i_arr_el_cnt <array_name> <var>` - Gets elements count of an indexed array and assigns the result to variable `<var>`.
 
-`get_i_arr_max_index <array_name> <var>` - Gets the currently highest index in the array. Returns an error if the array is empty or doesn't exist.
+`get_i_arr_max_index <array_name> <var>` - Gets the currently highest index in the array and assigns it to variable `<var>`. Returns an error if the array is empty or doesn't exist.
 
-`get_i_arr_last_val <array_name> <var>` - Gets the value assigned to highest index in the array. Returns an error if the array is empty or doesn't exist.
+`get_i_arr_last_val <array_name> <var>` - Gets the value assigned to highest index in the array and assigns it to variable `<var>`. Returns an error if the array is empty or doesn't exist.
 
 #### Unsetting an array
 
