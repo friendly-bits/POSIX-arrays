@@ -131,27 +131,16 @@ POSIX-arrays: `set_a_arr_el test_arr key="test value"`
 
 ##
 
-Bash: `echo "value for 'key': '${test_arr[key]}'"`
-
-POSIX-arrays: `get_a_arr_val test_arr value; echo "value for 'key': '$value'"`
-
-##
-
 Bash: `unset test_arr[key]`
 
 POSIX-arrays: `unset_a_arr_el test_arr key`
 ##
 
-Bash: `echo "test_arr has '${#test_arr[@]}' elements"`
+### Getting values, keys and parameters
 
-POSIX-arrays: `get_a_arr_el_cnt test_arr el_cnt; echo "test_arr has '$el_cnt' elements"`
+Bash: `echo "value for 'key': '${test_arr[key]}'"`
 
-##
-
-### Unsetting arrays
-Bash: `unset temp_arr`
-
-POSIX-arrays: `unset_i_arr temp_arr`
+POSIX-arrays: `get_a_arr_val test_arr value; echo "value for 'key': '$value'"`
 
 ##
 
@@ -170,6 +159,11 @@ POSIX-arrays: `get_a_arr_keys test_arr keys; echo "all keys of test_arr are '$ke
 Bash: `echo "test_arr has '${#test_arr[@]}' elements"`
 
 POSIX-arrays: `get_a_arr_el_cnt test_arr el_cnt; echo "test_arr has '$el_cnt' elements"`
+
+### Unsetting arrays
+Bash: `unset temp_arr`
+
+POSIX-arrays: `unset_i_arr temp_arr`
 
 ### Working with loops
 
