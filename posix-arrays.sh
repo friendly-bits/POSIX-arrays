@@ -108,6 +108,39 @@ declare_i_arr() {
 	return 0
 }
 
+# initialize an indexed array while assigning empty strings to N first indices (1-based)
+# the point is to speed up setting elements at a later time
+# resets all previous elements of the array if it already exists
+# 1 - array name
+# 2 - number of elements to initialize
+init_i_arr() {
+	___me="init_i_arr"
+	[ $# -ne 2 ] && { wrongargs "$@"; return 1; }
+	_arr_name="$1"; _el_num="$2"
+	check_arr_name || return 1
+	_index="$_el_num"; check_index || return 1
+	_last_index=$((_el_num-1))
+
+	do_unset_i_arr "${_arr_name}"
+
+	_index=0
+	while [ $_index -le "$_last_index" ]; do
+		eval "_i_${_arr_name}_${_index}"='$_el_set_flag'
+		_indices="$_indices$_index$___newline"
+		_index=$((_index + 1))
+	done
+	_index=$((_index - 1))
+
+	[ "$_index" = "-1" ] || [ $_last_index = "-1" ] && _index=''
+
+	eval "_i_${_arr_name}_h_index"='$_index'"
+		_i_${_arr_name}_indices"='$_indices'"
+		_i_${_arr_name}_sorted_flag=1;
+		_i_${_arr_name}_ver_flag=1"
+	unset ___val _index _indices
+	return 0
+}
+
 # read lines from input string into an indexed array
 # unsets all previous elements of the array if it already exists
 # 1 - array name
@@ -273,7 +306,7 @@ get_i_arr_max_index() {
 		eval "_i_${_arr_name}_indices"='${_indices}'
 		if [ -z "$_indices" ]; then
 			unset "$_out_var_name" "_i_${_arr_name}_indices" _indices _h_index _out_var_name
-			badindex; return 1
+			no_elements; return 1
 		fi
 	fi
 
@@ -302,7 +335,7 @@ get_i_arr_last_val() {
 		eval "_i_${_arr_name}_indices"='${_indices}'
 		if [ -z "$_indices" ]; then
 			unset "$_out_var_name" "_i_${_arr_name}_indices" _indices _h_index _out_var_name
-			badindex; return 1
+			no_elements; return 1
 		fi
 	fi
 
@@ -608,11 +641,11 @@ get_a_arr_val() {
 }
 
 
-badindex() { echo "$___me: Error: array '$_arr_name' has no elements." >&2; }
+no_elements() { echo "$___me: Error: array '$_arr_name' has no elements." >&2; }
 check_arr_name() { case "$_arr_name" in *[!A-Za-z0-9_]* ) echo "$___me: Error: invalid array name '$_arr_name'." >&2; return 1; esac; }
 check_var_name() { case "$_out_var" in *[!A-Za-z0-9_]* ) echo "$___me: Error: invalid output variable name '$_out_var'." >&2; return 1; esac; }
 check_key() { case "$___key" in *[!A-Za-z0-9_]* ) echo "$___me: Error: invalid key '$___key'." >&2; return 1; esac; }
-check_index() { case "$_index" in *[!0-9]* ) echo "$___me: Error: no index specified or '$_index' is not a nonnegative integer." >&2; return 1; esac; }
+check_index() {	case "$_index" in *[!0-9]* ) echo "$___me: Error: '$_index' is not a nonnegative integer." >&2; return 1; esac; }
 check_pair() { case "$___pair" in *=* ) ;; * ) echo "$___me: Error: '$___pair' is not a 'key=value' pair." >&2; return 1; esac; }
 wrongargs() { echo "$___me: Error: '$*': wrong number of arguments '$#'." >&2; }
 
