@@ -218,7 +218,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 ## Optimized usage
 - For associative arrays, to avoid performance degradation caused by repeated sorting, group calls to the `set_a_arr_el()` function separately from calls to `get_a_arr_values()` and `get_a_arr_keys()` functions.
 - For both types of arrays, to avoid performance degradation caused by repeated verification, group calls to `unset_[x]_arr_el()` functions separately from calls to `get_[x]_arr_values()` and `get_[x]_arr_[keys/indices]()` functions.
-- For indexed arrays, if you know the number of elements you want to work with in advance, initialize the array with that number of elements before assigning values. This will remove the overhead of creating a new element individually.
+- For indexed arrays, if you know the number of elements you want to work with in advance, initialize the array with that number of elements before assigning values. This will remove the overhead of creating each new element individually.
 - For small arrays, the functions should be fast enough regardless.
 
 ## Some more details
