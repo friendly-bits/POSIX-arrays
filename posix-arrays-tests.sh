@@ -52,12 +52,13 @@ from_line() {
 
 
 run_test() {
-# Test sets use '@' as a column delimiter
-# 1st 1 or more lines format: 'declare' or 'set' function tests
+# Test units use '@' as a column delimiter
+# test_init lines format:
 # 1st col: function call with input args, 2nd col: expected return code
 
-# further lines format is for 'get' function tests
-# 1st col: 'get' function call with input args, 2nd col: expected value, 3rd col: expected return code
+# Further lines format:
+# 1st col: function call with input args, 2nd col: expected value, 3rd col: expected return code
+
 
 	arr_type="$1"
 	test_file="$2"
@@ -83,17 +84,17 @@ run_test() {
 		# remove extra whitespaces, tabs and newlines
 		test_unit="$(printf "%s" "$test_unit" | awk '$0=="" {next} {$1=$1};1')"
 
-		## separate 'declare' lines (header) from 'get' commands
-		# get the header lines
-		header_test_unit="$(printf '%s\n' "$test_unit" | \
-			sed -n -e /"\[header\]"/\{:1 -e n\;/"\[\/header\]"/q\;p\;b1 -e \})"
+		## separate 'declare' lines (test_init) from 'get' commands
+		# get the init lines
+		init_test_unit="$(printf '%s\n' "$test_unit" | \
+			sed -n -e /"\[test_init\]"/\{:1 -e n\;/"\[\/test_init\]"/q\;p\;b1 -e \})"
 		IFS_OLD="$IFS"; IFS="$newline"; set -f
 		# shellcheck disable=SC2086
-		set -- $header_test_unit
-		header_lines_cnt=$#
+		set -- $init_test_unit
+		init_lines_cnt=$#
 		IFS="$IFS_OLD"; set +f
 
-		# tail1="$(from_line "$test_unit" $((header_lines_cnt+3)) )"; tail2="$(printf '%s' "$test_unit" | tail -n+"$((header_lines_cnt+3))")"
+		# tail1="$(from_line "$test_unit" $((init_lines_cnt+3)) )"; tail2="$(printf '%s' "$test_unit" | tail -n+"$((init_lines_cnt+3))")"
 		# if [ "$tail1" != "$tail2" ]; then echo "alert! alert! alert! alert! alert! alert! alert! alert! alert! alert! alert! "; fi
 		# echo "tail1: '$tail1'"
 		# echo
@@ -101,19 +102,19 @@ run_test() {
 		# echo
 
 		# get the main test lines
-		main_test_unit="$(from_line "$test_unit" $((header_lines_cnt+3)))"
+		main_test_unit="$(from_line "$test_unit" $((init_lines_cnt+3)))"
 
 		# execute 'declare' and 'set' commands
-		while [ -n "$header_test_unit" ]; do
+		while [ -n "$init_test_unit" ]; do
 			# get line/s for the next command
-			header_line="$(printf '%s\n' "$header_test_unit" | \
+			init_line="$(printf '%s\n' "$init_test_unit" | \
 				sed -n -e /"_${arr_type}_arr"/\{:1 -e p\;n\;/"_${arr_type}_arr"/q\;b1 -e \})"
 			# remove next command line/s from the list
-			header_test_unit="${header_test_unit#"$header_line"}"; header_test_unit="${header_test_unit#?}"
+			init_test_unit="${init_test_unit#"$init_line"}"; init_test_unit="${init_test_unit#?}"
 			# extract test unit specifics
-			test_command="${header_line%@*}"
-			expected_rv="${header_line#*@}"
-			echo "**header test_command: '$test_command'"
+			test_command="${init_line%@*}"
+			expected_rv="${init_line#*@}"
+			echo "**init test_command: '$test_command'"
 
 			# gather array names from the test to reset the variables in the end
 			arr_name="$(fast_head "$test_command" 1)"; arr_name="${arr_name#* }"; arr_name="${arr_name%% *}"
@@ -124,7 +125,7 @@ run_test() {
 			fi
 			
 			[ "$rv" != "$expected_rv" ] && {
-				printf '\n%s\n' "Error: test '$test_id', header line: '$header_line', expected rv: '$expected_rv', got rv: '$rv'" >&2
+				printf '\n%s\n' "Error: test '$test_id', init line: '$init_line', expected rv: '$expected_rv', got rv: '$rv'" >&2
 				err_num=$((err_num+1)); }
 		done
 
@@ -180,28 +181,35 @@ run_test() {
 run_test_i_arr_1() {
 	first_test_num=$1; last_test_num=$2; arr_type="i"
 	test_file="$script_dir/tests-i_arr_1.list"
-	echo; echo "*** Testing 'declare_i_arr' and 'get_i_arr_val'... ***"
+	echo; echo "*** Indexed arrays tests set 1... ***"
 	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
 }
 
 run_test_i_arr_2() {
 	first_test_num=$1; last_test_num=$2; arr_type="i"
 	test_file="$script_dir/tests-i_arr_2.list"
-	echo; echo "*** Testing 'set_i_arr_el' and 'get_i_arr_val'... ***"
+	echo; echo "*** Indexed arrays tests set 2... ***"
+	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
+}
+
+run_test_i_arr_3() {
+	first_test_num=$1; last_test_num=$2; arr_type="i"
+	test_file="$script_dir/tests-i_arr_3.list"
+	echo; echo "*** Indexed arrays tests set 3... ***"
 	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
 }
 
 run_test_a_arr_1() {
 	first_test_num=$1; last_test_num=$2; arr_type="a"
 	test_file="$script_dir/tests-a_arr_1.list"
-	echo; echo "*** Testing 'set_a_arr_el' and 'get_a_arr_val'... ***"
+	echo; echo "*** Associative arrays tests set 1... ***"
 	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
 }
 
 run_test_a_arr_2() {
 	first_test_num=$1; last_test_num=$2; arr_type="a"
 	test_file="$script_dir/tests-a_arr_2.list"
-	echo; echo "*** Testing 'declare_a_arr'... ***"
+	echo; echo "*** Associative arrays tests set 2... ***"
 	run_test "$arr_type" "$test_file" "$first_test_num" "$last_test_num"
 }
 
@@ -223,6 +231,7 @@ err_num=0
 # For example, 'run_test_a_arr 5 8' will run test units 5 through 8
 run_test_i_arr_1
 run_test_i_arr_2
+run_test_i_arr_3
 run_test_a_arr_1
 run_test_a_arr_2
 

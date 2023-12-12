@@ -1,18 +1,16 @@
-# Test sets use '@' as a column delimiter
-# Header lines format: 'declare' or 'set' function tests
+# Test units use '@' as a column delimiter
+# test_init lines format:
 # 1st col: function call with input args, 2nd col: expected return code
 
-# Further lines format is for 'get' function tests
-# 1st col: 'get' function call with input args, 2nd col: expected value, 3rd col: expected return code
-
-# this one is fairly chaotic but i tried to cover things that might be fragile
+# Further lines format:
+# 1st col: function call with input args, 2nd col: expected value, 3rd col: expected return code
 
 
 test_1="
-[header]
+[test_init]
 declare_i_arr@1
 declare_i_arr arr@0
-[/header]
+[/test_init]
 
 get_i_arr_val @@1
 get_i_arr_val arr@@1
@@ -33,9 +31,9 @@ get_i_arr_el_cnt arr val@0@0
 "
 
 test_2="
-[header]
+[test_init]
 declare_i_arr arr abc@0
-[/header]
+[/test_init]
 
 get_i_arr_val@@1
 get_i_arr_val arr@@1
@@ -60,9 +58,9 @@ get_i_arr_el_cnt arr1 val@0@0
 "
 
 test_3="
-[header]
+[test_init]
 declare_i_arr arr abc 123@0
-[/header]
+[/test_init]
 
 get_i_arr_val @@1
 get_i_arr_val arr@@1
@@ -81,9 +79,9 @@ get_i_arr_el_cnt arr1 val@0@0
 "
 
 test_4="
-[header]
+[test_init]
 declare_i_arr arr abc 123 a@0
-[/header]
+[/test_init]
 
 get_i_arr_val @@1
 get_i_arr_val arr@@1
@@ -99,12 +97,12 @@ get_i_arr_el_cnt arr val@3@0
 "
 
 test_5="
-[header]
+[test_init]
 declare_i_arr arr abc 123 \"a bcd 123\"@0
 
 declare_i_arr arr2 abc 123 \"a bcd 123\"@0
 declare_i_arr arr2 def@0
-[/header]
+[/test_init]
 
 get_i_arr_val@@1
 get_i_arr_val arr@@1
@@ -128,9 +126,9 @@ get_i_arr_el_cnt arr2 val@1@0
 
 
 test_6="
-[header]
+[test_init]
 declare_i_arr arr abc 123 \"a bcd 123\" =@0
-[/header]
+[/test_init]
 
 get_i_arr_val @@1
 get_i_arr_val arr@@1
@@ -147,9 +145,9 @@ get_i_arr_el_cnt arr val@4@0
 
 
 test_7="
-[header]
+[test_init]
 declare_i_arr arr abc= 123=1 =a@0
-[/header]
+[/test_init]
 
 get_i_arr_val @@1
 get_i_arr_val arr@@1
@@ -165,9 +163,9 @@ get_i_arr_el_cnt arr val@3@0
 
 
 test_8="
-[header]
+[test_init]
 declare_i_arr arr abc#= \"#123=1\" \"=a#\" \"#\" \"###\"@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 0 val@abc#=@0
 get_i_arr_val arr 1 val@#123=1@0
@@ -181,10 +179,10 @@ get_i_arr_el_cnt arr val@5@0
 
 
 test_9="
-[header]
+[test_init]
 add_i_arr_el@1
 add_i_arr_el arr@1
-[/header]
+[/test_init]
 
 get_i_arr_values arr val@@0
 get_i_arr_indices arr val@@0
@@ -194,7 +192,7 @@ get_i_arr_el_cnt arr2 val@0@0
 
 
 test_10="
-[header]
+[test_init]
 declare_i_arr arr1@0
 add_i_arr_el arr1 a@0
 
@@ -217,7 +215,7 @@ add_i_arr_el arr7 1@0
 add_i_arr_el arr7 2@0
 add_i_arr_el arr7 3@0
 declare_i_arr arr7 ddd eee@0
-[/header]
+[/test_init]
 
 get_i_arr_values arr1 val@a@0
 get_i_arr_indices arr1 val@0@0
@@ -250,7 +248,7 @@ get_i_arr_el_cnt arr7 val@2@0
 
 
 test_11="
-[header]
+[test_init]
 add_i_arr_el arr1 c@0
 set_i_arr_el arr1 3 b@0
 
@@ -268,7 +266,7 @@ add_i_arr_el arr4 c@0
 add_i_arr_el arr4 a@0
 set_i_arr_el arr4 4 d@0
 add_i_arr_el arr4 e@0
-[/header]
+[/test_init]
 
 get_i_arr_values arr1 val@c b@0
 get_i_arr_indices arr1 val@0 3@0
@@ -289,7 +287,7 @@ get_i_arr_el_cnt arr4 val@4@0
 
 
 test_12="
-[header]
+[test_init]
 declare_i_arr arr1 a b@0
 add_i_arr_el arr1 c@0
 set_i_arr_el arr1 3 d@0
@@ -309,7 +307,7 @@ add_i_arr_el arr4 e@0
 declare_i_arr arr5 a b c@0
 set_i_arr_el arr5 1 d@0
 add_i_arr_el arr5 e@0
-[/header]
+[/test_init]
 
 get_i_arr_values arr1 val@a b c d@0
 get_i_arr_indices arr1 val@0 1 2 3@0
@@ -341,8 +339,8 @@ get_i_arr_el_cnt arr5 val@4@0
 
 # test getting max index and last val with error conditions
 test_13="
-[header]
-[/header]
+[test_init]
+[/test_init]
 
 get_i_arr_max_index@@1
 get_i_arr_max_index test@@1
@@ -356,12 +354,12 @@ get_i_arr_last_val test val@@1
 
 # test getting max index and last val after correct declaration
 test_14="
-[header]
+[test_init]
 declare_i_arr arr1 a@0
 declare_i_arr arr2 a b@0
 declare_i_arr arr3 a b \"c and d\"@0
 declare_i_arr arr4 a b \"c and d\" e@0
-[/header]
+[/test_init]
 
 get_i_arr_max_index arr1@@1
 get_i_arr_max_index arr1 val@0@0
@@ -396,7 +394,7 @@ get_i_arr_el_cnt arr val@0@0
 
 # test getting max index and last val after adding elements
 test_15="
-[header]
+[test_init]
 add_i_arr_el arr1 a@0
 add_i_arr_el arr2 a b@1
 add_i_arr_el arr3 c@0
@@ -412,7 +410,7 @@ add_i_arr_el arr8 \"d${newline}e${newline}f\"@0
 add_i_arr_el arr8 \"h i\"@0
 add_i_arr_el arr9 \"f g\"@0
 add_i_arr_el arr9 \"h${newline}i${newline}j\"@0
-[/header]
+[/test_init]
 
 get_i_arr_el_cnt arr1 val@1@0
 get_i_arr_el_cnt arr2 val@0@0
@@ -449,7 +447,7 @@ get_i_arr_max_index arr9 val@1@0
 
 # test getting max index and last val after setting elements
 test_16="
-[header]
+[test_init]
 set_i_arr_el arr1 0 a@0
 set_i_arr_el arr2 a b@1
 set_i_arr_el arr3 1 c@0
@@ -467,7 +465,7 @@ set_i_arr_el arr9 10 \"f g\"@0
 set_i_arr_el arr9 20 \"h${newline}i${newline}j\"@0
 set_i_arr_el arr9 0 \"h${newline}i ${newline}j\"@0
 set_i_arr_el arr9 10 t@0
-[/header]
+[/test_init]
 
 get_i_arr_el_cnt arr1 val@1@0
 get_i_arr_el_cnt arr9 val@3@0
@@ -507,7 +505,7 @@ get_i_arr_el_cnt arr9 val@3@0
 
 # test getting max index and last val after declaring/adding/setting and then replacing with empty string or unsetting
 test_17="
-[header]
+[test_init]
 add_i_arr_el arr1 a@0
 unset_i_arr_el arr1 0@0
 
@@ -547,7 +545,7 @@ set_i_arr_el arr8 2 c@0
 set_i_arr_el arr8 0 \"\"@0
 unset_i_arr_el arr8 1 @0
 set_i_arr_el arr8 2@0
-[/header]
+[/test_init]
 
 get_i_arr_last_val arr1 val@@1
 get_i_arr_el_cnt arr1 val@0@0
@@ -585,7 +583,7 @@ get_i_arr_max_index arr8 val@2@0
 
 # set a few elements, then unset 1, then get max index and last val
 test_18="
-[header]
+[test_init]
 declare_i_arr arr1 a b c@0
 unset_i_arr_el arr1 0@0
 
@@ -627,7 +625,7 @@ unset_i_arr_el arr9 12@0
 
 declare_i_arr arr10 a b c \"d e\"@0
 unset_i_arr_el arr10 4@0
-[/header]
+[/test_init]
 
 get_i_arr_max_index arr1 val@2@0
 get_i_arr_max_index arr2 val@2@0
@@ -666,7 +664,7 @@ get_i_arr_el_cnt arr10 val@4@0
 
 # set a few elements, then unset 2, then get max index and last val
 test_19="
-[header]
+[test_init]
 declare_i_arr arr1 a b c \"d e\"@0
 unset_i_arr_el arr1 0@0
 unset_i_arr_el arr1 1@0
@@ -707,7 +705,7 @@ set_i_arr_el arr10 10 a@0
 set_i_arr_el arr10 11 a@0
 unset_i_arr_el arr10 10@0
 unset_i_arr_el arr10 11@0
-[/header]
+[/test_init]
 
 get_i_arr_last_val arr1 val@d e@0
 get_i_arr_last_val arr2 val@d e@0
@@ -746,7 +744,7 @@ get_i_arr_max_index arr10 val@@1
 
 # call functions in some random order, then check for correct output of max index and last val
 test_20="
-[header]
+[test_init]
 declare_i_arr arr1 a b c d@0
 get_i_arr_val arr1 3 val@0
 get_i_arr_last_val arr1 val@0
@@ -803,7 +801,7 @@ add_i_arr_el arr13 e@0
 set_i_arr_el arr13 1 f@0
 add_i_arr_el arr13 g@0
 unset_i_arr_el arr13 4@0
-[/header]
+[/test_init]
 
 get_i_arr_el_cnt arr1 val@4@0
 get_i_arr_el_cnt arr2 val@5@0

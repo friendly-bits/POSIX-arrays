@@ -1,18 +1,18 @@
-# Test sets use '@' as a column delimiter
-# Header lines format: 'declare' or 'set' function tests
+# Test units use '@' as a column delimiter
+# test_init lines format:
 # 1st col: function call with input args, 2nd col: expected return code
 
-# Further lines format is for 'get' function tests
-# 1st col: 'get' function call with input args, 2nd col: expected value, 3rd col: expected return code
+# Further lines format:
+# 1st col: function call with input args, 2nd col: expected value, 3rd col: expected return code
 
 
 # call 'set' with not enough arguments
 test_1="
-[header]
+[test_init]
 set_i_arr_el@1
 set_i_arr_el 0@1
 set_i_arr_el arr@1
-[/header]
+[/test_init]
 
 get_i_arr_val @@1
 get_i_arr_val 0@@1
@@ -24,9 +24,9 @@ get_i_arr_el_cnt arr val@0@0
 
 # call 'get' with not enough arguments
 test_2="
-[header]
+[test_init]
 set_i_arr_el arr 1 a@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr@@1
 get_i_arr_val a val@@1
@@ -38,12 +38,12 @@ get_i_arr_el_cnt arr val@1@0
 
 # call 'set' with too many arguments
 test_3="
-[header]
+[test_init]
 set_i_arr_el arr 1 2 3@1
 set_i_arr_el arr a 2 3@1
 set_i_arr_el 0 1 2 3@1
 set_i_arr_el 1 2 3 4@1
-[/header]
+[/test_init]
 
 get_i_arr_val @@1
 get_i_arr_val 0 val@@1
@@ -58,9 +58,9 @@ get_i_arr_el_cnt arr val@0@0
 
 # call 'get' with too many arguments
 test_4="
-[header]
+[test_init]
 set_i_arr_el arr 1 a@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 1 a val@@1
 get_i_arr_val arr 1 2 val@@1
@@ -74,7 +74,7 @@ get_i_arr_el_cnt arr val@1@0
 
 # call 'set' with invalid index
 test_5="
-[header]
+[test_init]
 set_i_arr_el arr a 1@1
 set_i_arr_el arr 0a 1@1
 set_i_arr_el arr a0 1@1
@@ -101,7 +101,7 @@ set_i_arr_el arr \"#1\" 1@1
 set_i_arr_el arr \"1#\" 1@1
 set_i_arr_el arr \"1 \" 1@1
 set_i_arr_el arr \" 1\" 1@1
-[/header]
+[/test_init]
 
 get_i_arr_val @@1
 get_i_arr_val 0@@1
@@ -119,9 +119,9 @@ get_i_arr_el_cnt arr val@0@0
 
 # call 'get' with invalid index
 test_6="
-[header]
+[test_init]
 set_i_arr_el arr 1 a@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr -1 val@@1
 get_i_arr_val arr -0 val@@1
@@ -138,9 +138,9 @@ get_i_arr_el_cnt arr val@1@0
 
 # get value from non-existing array
 test_7="
-[header]
+[test_init]
 set_i_arr_el arr 1 a@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr1 -1 val@@1
 get_i_arr_val arr1 -0 val@@1
@@ -153,12 +153,12 @@ get_i_arr_el_cnt arr val@1@0
 
 # set only the index 0
 test_8="
-[header]
+[test_init]
 set_i_arr_el arr 0 1@0
 set_i_arr_el arr1 0 a@0
 set_i_arr_el arr2 0 abc@0
 set_i_arr_el arr3 0 123@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 0 val@1@0
 get_i_arr_val arr 1 val@@0
@@ -186,12 +186,12 @@ get_i_arr_el_cnt arr4 val@0@0
 
 # set only the index 1
 test_9="
-[header]
+[test_init]
 set_i_arr_el arr 1 1@0
 set_i_arr_el arr1 1 a@0
 set_i_arr_el arr2 1 abc@0
 set_i_arr_el arr3 1 123@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 0 val@@0
 get_i_arr_val arr 1 val@1@0
@@ -223,10 +223,10 @@ get_i_arr_el_cnt arr4 val@0@0
 
 # set index 0, then re-set it to empty value
 test_10="
-[header]
+[test_init]
 set_i_arr_el arr 0 1@0
 set_i_arr_el arr 0@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 0 val@@0
 get_i_arr_val arr 1 val@@0
@@ -243,10 +243,10 @@ get_i_arr_val arr val@@1
 
 # set index 1, then re-set it to empty value
 test_11="
-[header]
+[test_init]
 set_i_arr_el arr 1 a@0
 set_i_arr_el arr 1@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 0 val@@0
 get_i_arr_val arr 1 val@@0
@@ -264,10 +264,10 @@ get_i_arr_val arr val@@1
 
 # set indices 0,1
 test_12="
-[header]
+[test_init]
 set_i_arr_el arr 0 a@0
 set_i_arr_el arr 1 1@0
-[/header]
+[/test_init]
 
 get_i_arr_el_cnt arr val@2@0
 get_i_arr_val arr 0 val@a@0
@@ -287,10 +287,10 @@ get_i_arr_el_cnt arr val@2@0
 
 # set indices 0,2
 test_13="
-[header]
+[test_init]
 set_i_arr_el arr 0 a@0
 set_i_arr_el arr 2 1@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 0 val@a@0
 get_i_arr_val arr 1 val@@0
@@ -303,10 +303,10 @@ get_i_arr_el_cnt arr val@2@0
 
 # set indices 1,2
 test_14="
-[header]
+[test_init]
 set_i_arr_el arr 1 a@0
 set_i_arr_el arr 2 1@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 0 val@@0
 get_i_arr_val arr 1 val@a@0
@@ -319,10 +319,10 @@ get_i_arr_el_cnt arr val@2@0
 
 # set indices 1,3
 test_15="
-[header]
+[test_init]
 set_i_arr_el arr 1 a@0
 set_i_arr_el arr 3 1@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 0 val@@0
 get_i_arr_val arr 1 val@a@0
@@ -336,10 +336,10 @@ get_i_arr_el_cnt arr val@2@0
 
 # set indices 100,3, then unset index 3
 test_16="
-[header]
+[test_init]
 set_i_arr_el arr 100 a@0
 unset_i_arr_el arr 3@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 0 val@@0
 get_i_arr_val arr 2 val@@0
@@ -357,12 +357,12 @@ get_i_arr_el_cnt arr val@1@0
 
 # set 4 non-consecutive indices in semi-random order
 test_17="
-[header]
+[test_init]
 set_i_arr_el arr 10000 a@0
 set_i_arr_el arr 0 b@0
 set_i_arr_el arr 200 c@0
 set_i_arr_el arr 100 d@0
-[/header]
+[/test_init]
 
 get_i_arr_el_cnt arr val@4@0
 
@@ -385,7 +385,7 @@ get_i_arr_el_cnt arr val@4@0
 
 # set 4 non-consecutive indices, then re-set them to empty string or unset them
 test_18="
-[header]
+[test_init]
 set_i_arr_el arr 10000 a@0
 set_i_arr_el arr 0 b@0
 set_i_arr_el arr 200 c@0
@@ -405,7 +405,7 @@ unset_i_arr_el arr2 10000@0
 unset_i_arr_el arr2 200@0
 unset_i_arr_el arr2 100@0
 unset_i_arr_el arr2 0@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 0 val@@0
 get_i_arr_val arr 10 val@@0
@@ -439,14 +439,14 @@ get_i_arr_el_cnt arr2 val@0@0
 
 # assign a string containing a special symbol
 test_19="
-[header]
+[test_init]
 set_i_arr_el arr 10 \"=\"@0
 set_i_arr_el arr 0 \"#\"@0
 set_i_arr_el arr 12 \"*\"@0
 set_i_arr_el arr 101 \"/\"@0
 set_i_arr_el arr 105 \" \"@0
 set_i_arr_el arr 99 \"\"@0
-[/header]
+[/test_init]
 
 get_i_arr_el_cnt arr val@6@0
 
@@ -470,7 +470,7 @@ get_i_arr_val arr 106 val@@0
 
 # assign a string containing special symbols, and assign some normal strings
 test_20="
-[header]
+[test_init]
 set_i_arr_el arr 30 \"a bcd 123\"@0
 set_i_arr_el arr 11 A@0
 set_i_arr_el arr 0 ABCD123@0
@@ -481,7 +481,7 @@ set_i_arr_el arr2 90 ABCD1234@0
 
 set_i_arr_el arr3 11 \"a bcd/efg / # ^ & ( == ) [] '  . = < > b * 123 .* .? ## =\"@0
 set_i_arr_el arr3 15 \"a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =\"@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 0 val@ABCD123@0
 get_i_arr_val arr 11 val@A@0
@@ -518,7 +518,7 @@ get_i_arr_el_cnt arr3 val@2@0
 
 # some more special symbols tests
 test_21="
-[header]
+[test_init]
 set_i_arr_el arr 1 abc#=@0
 set_i_arr_el arr 2 \"#123=1\"@0
 set_i_arr_el arr 3 \"=a#\"@0
@@ -532,7 +532,7 @@ set_i_arr_el arr_2 155 @0
 
 set_i_arr_el arr_2 165 \"a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =\"@0
 unset_i_arr_el arr_2 165@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 1 val@abc#=@0
 get_i_arr_val arr 2 val@#123=1@0
@@ -555,7 +555,7 @@ get_i_arr_el_cnt arr_2 val@1@0
 
 # set 4 non-consecutive indices, then re-set them to empty string using the declare function
 test_22="
-[header]
+[test_init]
 set_i_arr_el arr 10000 a@0
 set_i_arr_el arr 0 b@0
 set_i_arr_el arr 200 c@0
@@ -570,7 +570,7 @@ set_i_arr_el arr1 100 d@0
 
 declare_i_arr arr1@0
 set_i_arr_el arr1 111 eee@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 0 val@@0
 get_i_arr_val arr 10 val@@0
@@ -604,12 +604,12 @@ get_i_arr_val arr1 10001 val@@0
 
 # set 4 non-consecutive indices, then print them using the get_i_arr_values function
 test_23="
-[header]
+[test_init]
 set_i_arr_el arr 10000 a@0
 set_i_arr_el arr 0 b@0
 set_i_arr_el arr 200 c@0
 set_i_arr_el arr 100 d@0
-[/header]
+[/test_init]
 
 get_i_arr_values arr val@b d c a@0
 get_i_arr_el_cnt arr val@4@0
@@ -617,14 +617,14 @@ get_i_arr_el_cnt arr val@4@0
 
 # test for get_i_arr_values with an empty array or array containing a empty string
 test_24="
-[header]
+[test_init]
 set_i_arr_el arr1 0@0
 unset_i_arr_el arr1 0@0
 
 set_i_arr_el arr2 0@0
 
 set_i_arr_el arr3 1@0
-[/header]
+[/test_init]
 
 get_i_arr_values arr val@@0
 get_i_arr_el_cnt arr val@0@0
@@ -642,11 +642,11 @@ get_i_arr_el_cnt arr3 val@1@0
 
 # test for get_i_arr_values with 1-element array
 test_25="
-[header]
+[test_init]
 set_i_arr_el arr1 0 a@0
 set_i_arr_el arr2 1 b@0
 set_i_arr_el arr3 2 c@0
-[/header]
+[/test_init]
 
 get_i_arr_values arr1 val@a@0
 get_i_arr_values arr2 val@b@0
@@ -660,14 +660,14 @@ get_i_arr_el_cnt arr3 val@1@0
 
 # test for get_i_arr_values with 2-element array
 test_26="
-[header]
+[test_init]
 set_i_arr_el arr1 1 a@0
 set_i_arr_el arr1 0 b@0
 set_i_arr_el arr2 0 a@0
 set_i_arr_el arr2 1 b@0
 set_i_arr_el arr3 0 c@0
 set_i_arr_el arr3 2 a@0
-[/header]
+[/test_init]
 
 get_i_arr_values arr1 val@b a@0
 get_i_arr_values arr2 val@a b@0
@@ -681,12 +681,12 @@ get_i_arr_el_cnt arr3 val@2@0
 
 # test for get_i_arr_values with 4-element array
 test_27="
-[header]
+[test_init]
 set_i_arr_el arr 1000 aaa@0
 set_i_arr_el arr 100 bbb@0
 set_i_arr_el arr 10000 ccc@0
 set_i_arr_el arr 1 ddd@0
-[/header]
+[/test_init]
 
 get_i_arr_el_cnt arr val@4@0
 get_i_arr_values arr val@ddd bbb aaa ccc@0
@@ -695,7 +695,7 @@ get_i_arr_values arr val@ddd bbb aaa ccc@0
 
 # yet more special characters tests
 test_28="
-[header]
+[test_init]
 add_i_arr_el arr1 \"'a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =\"@0
 
 add_i_arr_el arr2 \"a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =\"@0
@@ -747,7 +747,7 @@ declare_i_arr arr16 \" ;\\\\\\\"echo bruh\" \"\\\\\\\"\"@0
 declare_i_arr arr17 \" ;\\\\\\\"echo bruh\" \"\\\\\\\"\"@0
 add_i_arr_el arr17 \" ;\\\\\\\"echo bruh;\"@0
 set_i_arr_el arr17 0 \" ;\\\\\\\"echo bruh\"@0
-[/header]
+[/test_init]
 
 get_i_arr_val arr 0 val@@0
 get_i_arr_val arr 11 val@@0

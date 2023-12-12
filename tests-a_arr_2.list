@@ -1,18 +1,18 @@
-# Test sets use '@' as a column delimiter
-# Header lines format: 'declare' or 'set' function tests
+# Test units use '@' as a column delimiter
+# test_init lines format:
 # 1st col: function call with input args, 2nd col: expected return code
 
-# Further lines format is for 'get' function tests
-# 1st col: 'get' function call with input args, 2nd col: expected value, 3rd col: expected return code
+# Further lines format:
+# 1st col: function call with input args, 2nd col: expected value, 3rd col: expected return code
 
 # this one is fairly chaotic but i tried to cover things that might be fragile
 
 
 test_1="
-[header]
+[test_init]
 declare_a_arr@1
 declare_a_arr arr@0
-[/header]
+[/test_init]
 
 get_a_arr_val @@1
 get_a_arr_val arr@@1
@@ -30,10 +30,10 @@ get_a_arr_el_cnt arr val@0@0
 "
 
 test_2="
-[header]
+[test_init]
 declare_a_arr arr abc@1
 declare_a_arr arr1 test=abc@0
-[/header]
+[/test_init]
 
 get_a_arr_val@@1
 
@@ -52,9 +52,9 @@ get_a_arr_el_cnt arr1 val@1@0
 "
 
 test_3="
-[header]
+[test_init]
 declare_a_arr arr 0=abc 1=123@0
-[/header]
+[/test_init]
 
 get_a_arr_val @@1
 get_a_arr_val arr@@1
@@ -69,9 +69,9 @@ get_a_arr_el_cnt arr val@2@0
 "
 
 test_4="
-[header]
+[test_init]
 declare_a_arr arr Test=abc test=123 _test=456 test_=789 t_est=a@0
-[/header]
+[/test_init]
 
 get_a_arr_val arr Test val@abc@0
 get_a_arr_val arr test val@123@0
@@ -88,12 +88,12 @@ get_a_arr_el_cnt arr val@5@0
 "
 
 test_5="
-[header]
+[test_init]
 declare_a_arr arr test1=abc test2=123 test3=\"a bcd 123\"@0
 
 declare_a_arr arr2 test4=abc test5=123 test6=\"a bcd 123\"@0
 declare_a_arr arr2 test7=def@0
-[/header]
+[/test_init]
 
 get_a_arr_val arr test1 val@abc@0
 get_a_arr_val arr test2 val@123@0
@@ -119,9 +119,9 @@ get_a_arr_el_cnt arr2 val@1@0
 
 
 test_6="
-[header]
+[test_init]
 declare_a_arr arr _=abc __=123 ___=\"a bcd 123\" ____=\"=\"@0
-[/header]
+[/test_init]
 
 get_a_arr_val arr _ val@abc@0
 get_a_arr_val arr __ val@123@0
@@ -136,9 +136,9 @@ get_a_arr_el_cnt arr val@4@0
 
 
 test_7="
-[header]
+[test_init]
 declare_a_arr arr 0=abc= 1=123=1 2==a@0
-[/header]
+[/test_init]
 
 get_a_arr_val arr 0 val@abc=@0
 get_a_arr_val arr 1 val@123=1@0
@@ -153,9 +153,9 @@ get_a_arr_el_cnt arr val@3@0
 
 
 test_8="
-[header]
+[test_init]
 declare_a_arr arr 0=abc#= 1=\"#123=1\" 2=\"=a#\" 3=\"#\" 4=\"###\"@0
-[/header]
+[/test_init]
 
 get_a_arr_val arr 0 val@abc#=@0
 get_a_arr_val arr 1 val@#123=1@0
@@ -174,10 +174,10 @@ get_a_arr_el_cnt arr val@5@0
 
 
 test_9="
-[header]
+[test_init]
 declare_a_arr arr 0=abc 1=abcd 2=\"abc def\"@0
 unset_a_arr arr@0
-[/header]
+[/test_init]
 
 get_a_arr_values arr val@@0
 get_a_arr_keys arr val@@0

@@ -1,17 +1,17 @@
-# Test sets use '@' as a column delimiter
-# Header lines format: 'set' function tests
+# Test units use '@' as a column delimiter
+# test_init lines format:
 # 1st col: function call with input args, 2nd col: expected return code
 
-# Further lines format is for 'get' function tests
-# 1st col: 'get' function call with input args, 2nd col: expected value, 3rd col: expected return code
+# Further lines format:
+# 1st col: function call with input args, 2nd col: expected value, 3rd col: expected return code
 
 # this one is fairly chaotic but i tried to cover things that might be fragile
 
 test_1="
-[header]
+[test_init]
 set_a_arr_el@1
 set_a_arr_el arr@1
-[/header]
+[/test_init]
 
 get_a_arr_val@@1
 get_a_arr_val arr@@1
@@ -34,9 +34,9 @@ get_a_arr_el_cnt arr1@@1
 
 
 test_2="
-[header]
+[test_init]
 set_a_arr_el arr abc@1
-[/header]
+[/test_init]
 
 get_a_arr_val @@1
 get_a_arr_val arr@@1
@@ -51,9 +51,9 @@ get_a_arr_el_cnt arr val@0@0
 
 
 test_3="
-[header]
+[test_init]
 set_a_arr_el arr abc 123@1
-[/header]
+[/test_init]
 
 get_a_arr_val @@1
 get_a_arr_val arr@@1
@@ -68,9 +68,9 @@ get_a_arr_el_cnt arr val@0@0
 
 
 test_4="
-[header]
+[test_init]
 set_a_arr_el arr abc 123=a@1
-[/header]
+[/test_init]
 
 get_a_arr_val @@1
 get_a_arr_val arr@@1
@@ -85,9 +85,9 @@ get_a_arr_el_cnt arr val@0@0
 
 
 test_5="
-[header]
+[test_init]
 set_a_arr_el arr 123=a abc@1
-[/header]
+[/test_init]
 
 get_a_arr_val@@1
 get_a_arr_val arr@@1
@@ -102,9 +102,9 @@ get_a_arr_el_cnt arr val@0@0
 
 
 test_6="
-[header]
+[test_init]
 set_a_arr_el arr 123=a abc=d@1
-[/header]
+[/test_init]
 
 get_a_arr_val @@1
 get_a_arr_val arr@@1
@@ -119,9 +119,9 @@ get_a_arr_el_cnt arr val@0@0
 
 
 test_7="
-[header]
+[test_init]
 set_a_arr_el arr 123=abcd@0
-[/header]
+[/test_init]
 
 get_a_arr_val@@1
 get_a_arr_val arr@@1
@@ -140,10 +140,10 @@ get_a_arr_el_cnt arr val@1@0
 
 
 test_8="
-[header]
+[test_init]
 set_a_arr_el arr 123=abcd@0
 set_a_arr_el arr abcd=123@0
-[/header]
+[/test_init]
 
 get_a_arr_val @@1
 get_a_arr_val arr@@1
@@ -160,12 +160,12 @@ get_a_arr_el_cnt arr val@2@0
 
 
 test_9="
-[header]
+[test_init]
 set_a_arr_el arr 123=abcd@0
 set_a_arr_el arr abcd=123@0
 set_a_arr_el arr aghk=a123@0
 set_a_arr_el arr 1ghk=b123@0
-[/header]
+[/test_init]
 
 get_a_arr_val @@1
 get_a_arr_val arr@@1
@@ -186,12 +186,12 @@ get_a_arr_el_cnt arr val@4@0
 
 
 test_10="
-[header]
+[test_init]
 set_a_arr_el arr 123=abcd@0
 set_a_arr_el arr abcd=123@0
 set_a_arr_el arr abcd=jjjj@0
 set_a_arr_el arr 123=@0
-[/header]
+[/test_init]
 
 get_a_arr_val @@1
 get_a_arr_val arr@@1
@@ -209,13 +209,13 @@ get_a_arr_el_cnt arr val@2@0
 
 
 test_11="
-[header]
+[test_init]
 set_a_arr_el arr 123=abcd@0
 set_a_arr_el arr abcd=123@0
 set_a_arr_el arr abcd=jjjj@0
 set_a_arr_el arr 123=@0
 set_a_arr_el arr abcd=@0
-[/header]
+[/test_init]
 
 get_a_arr_val @@1
 get_a_arr_val arr@@1
@@ -231,12 +231,12 @@ get_a_arr_el_cnt arr val@2@0
 
 
 test_12="
-[header]
+[test_init]
 set_a_arr_el arr 123=\"abcd efgh 123\"@0
 set_a_arr_el arr abcd=123@0
 set_a_arr_el arr aghk=a123@0
 set_a_arr_el arr 1ghk=b123@0
-[/header]
+[/test_init]
 
 get_a_arr_val @@1
 get_a_arr_val arr 1ghk val@b123@0
@@ -255,7 +255,7 @@ get_a_arr_el_cnt arr val@4@0
 
 
 test_13="
-[header]
+[test_init]
 set_a_arr_el arr abc==a@0
 set_a_arr_el arr 1==2@0
 
@@ -282,7 +282,7 @@ set_a_arr_el arr7 a=\"e=3\"@0
 set_a_arr_el arr7 a=\"2=\"@0
 set_a_arr_el arr7 b=\"2=\"@0
 set_a_arr_el arr7 a=\"=f\"@0
-[/header]
+[/test_init]
 
 get_a_arr_val @@1
 
@@ -330,9 +330,9 @@ get_a_arr_el_cnt arr7 val@2@0
 
 
 test_14="
-[header]
+[test_init]
 set_a_arr_el arr abc=\"${newline}a\"@0
-[/header]
+[/test_init]
 
 get_a_arr_val arr abc val@${newline}a@0
 
