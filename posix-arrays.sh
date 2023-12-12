@@ -37,7 +37,7 @@ do_unset_i_arr() {
 # sorts and verifies indices of indexed array
 # assigns the resulting indices to $_indices
 # sets the 'sorted' and 'verified' flags in the array vars
-# finds the max index and assigns to '_h_index' and to the array var
+# finds the max index and assigns to variables '_h_index' and '_i_${arr_name}_h_index'
 # caller should update the '_i_${_arr_name}_indices' variable externally
 sort_verify_i_arr() {
 	eval "_indices=\"\$_i_${_arr_name}_indices\"
