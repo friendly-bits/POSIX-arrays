@@ -16,7 +16,7 @@ POSIX-arrays:`set_i_arr_el test_arr 100 "this is a test"`
 
 ##
 
-Bash: `test_arr+=("this is another test")
+Bash: `test_arr+=("this is another test")`
 
 POSIX-arrays:`add_i_arr_el test_arr "this is another test"`
 
