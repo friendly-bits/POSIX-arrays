@@ -11,7 +11,7 @@ Alternatively, copy functions which you need (and their dependencies) to your ow
 
 #### Initializing an array and setting elements:
 
-`init_i_arr <array_name> [N]` - Resets the array and assigns empty strings to N first elements, starting with index 0
+`init_i_arr <array_name> <N> <val>` - Resets the array and assigns value `<val>` to `<N>` first elements, starting with index 0. If `<val>` is an empty string, assigns empty strings.
 
 `declare_i_arr <array_name> [value] [value] ... [value]` - Resets the array and assigns values to sequential elements, starting from index 0.
 
@@ -212,13 +212,12 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 - Optimization heuristics are implemented which identify cases where removal of the flags can be avoided. These heuristics cover most practical use cases of indexed arrays, and some use cases of associative arrays.
 - Use cases of indexed arrays which are not covered by optimizations: 1) setting a previously unset element which has a lower index than the current max index of the array will remove the 'sorted' flag and trigger sorting next time when needed. 2) unsetting a previously set element which has a lower index than the max index of the array via the `unset_i_arr_el()` function will remove the 'verified' flag and trigger array verification next time when needed. If both flags are removed, verification and sorting will occur in one go.
 - Use cases of associative arrays which are not covered by optimizations: 1) setting a previously unset element via the `set_a_arr_el()` function will remove the 'sorted' flag and trigger sorting next time when needed. 2) unsetting a previously set element via the `unset_i_arr_el()` function will remove the 'verified' flag and trigger array verification next time when needed. If both flags are removed, verification and sorting will occur in one go.
+- For small arrays, the functions should be fast enough regardless.
 - Array names and (for associative arrays) keys are limited to alphanumeric characters and underlines - `_`.
 
 ## Optimized usage
 - For associative arrays, to avoid performance degradation caused by repeated sorting, group calls to the `set_a_arr_el()` function separately from calls to `get_a_arr_values()` and `get_a_arr_keys()` functions.
 - For both types of arrays, to avoid performance degradation caused by repeated verification, group calls to `unset_[x]_arr_el()` functions separately from calls to `get_[x]_arr_values()` and `get_[x]_arr_[keys/indices]()` functions.
-- For indexed arrays, if you know the number of elements you want to work with in advance, initialize the array with that number of elements before assigning values. This will remove the overhead of creating each new element individually.
-- For small arrays, the functions should be fast enough regardless.
 
 ## Some more details
 - The values are stored in dynamically created variables. The name of such variable is in the format `___emu_[x]_[arr_name]_[key/index]`, where `[x]` stands for the type of the array: `a` for associative array, `i` for indexed array.
