@@ -8,7 +8,11 @@ POSIX-compliant shell functions emulating functionality of arrays. The implement
 Alternatively, copy some functions which you need to your own scripts. Most functions do not depend on each other.
 Note that the last few lines in posix-arrays.sh set some variables. These variables need to be set for the functions to work correctly. If you want to use the functions without sourcing the script, you'll need to set them in your own script.
 
-**Indexed arrays**:
+### **Indexed arrays**:
+
+#### Initializing an array and setting elements:
+
+`init_i_arr <array_name> [N]` - Resets the array and assigns empty strings to N first elements, starting with index 0
 
 `declare_i_arr <array_name> [value] [value] ... [value]` - Resets the array and assigns values to sequential elements, starting from index 0.
 
@@ -19,6 +23,8 @@ Note that the last few lines in posix-arrays.sh set some variables. These variab
 `set_i_arr_el <array_name> <index> [value]` - Assigns `[value]` to element with index `<index>`. Indices should always be nonnegative integer numbers. Indices don't have to be sequential. If `<value>` is an empty string, stores empty string as a value.
 
 `unset_i_arr_el <array_name> <index>` - Unsets the element with index `<index>`.
+
+#### Getting array values, indices and parameters:
 
 `get_i_arr_val <array_name> <index> <var>` - Assigns value for `<index>` to variable `<var>`.
 
@@ -31,6 +37,8 @@ Note that the last few lines in posix-arrays.sh set some variables. These variab
 `get_i_arr_max_index <array_name> <var>` - Gets the currently highest index in the array. Returns an error if the array is empty or doesn't exist.
 
 `get_i_arr_last_val <array_name> <var>` - Gets the value assigned to highest index in the array. Returns an error if the array is empty or doesn't exist.
+
+#### Unsetting an array
 
 `unset_i_arr <array_name>` - Unsets all variables used to store the array in memory.
 
@@ -53,13 +61,17 @@ $ val3 123 etc
 
 </details>
 
-**Associative arrays**:
+### **Associative arrays**:
+
+#### Declaring an array and setting elements:
 
 `declare_a_arr <array_name> [key=value] [key=value] ... [key=value]` - Resets the array and assigns values to keys.
 
 `set_a_arr_el <array_name> <key>=[value]` - Assigns `[value]` to element with key `<key>`. If `[value]` is an empty string, stores empty string as a value.
 
 `unset_a_arr_el <array_name> <key>` - Unsets the element with key `<key>`.
+
+#### Getting array keys, values and parameters
 
 `get_a_arr_val <array_name> <key> <var>` - Assigns value for `<key>` from the associative array to variable `<var>`.
 
@@ -68,6 +80,8 @@ $ val3 123 etc
 `get_a_arr_keys <array_name> <var>` - Gets all keys as an alphabetically sorted whitespace-separated list and assigns the result to variable `<var>`.
 
 `get_a_arr_el_cnt <array_name> <var>` - Gets elements count of an associative array and assigns the result to variable `<var>`.
+
+#### Unsetting an array
 
 `unset_a_arr <array_name>` - Unsets all variables used to store the array in memory.
 
@@ -93,11 +107,10 @@ $ jazz, classical, rock
 ## Details
 - The arrays can hold strings that have any characters in them, including whitespaces and newlines.
 - For indexed arrays, indices start at 0.
-- As is default for shells, if you request a value corresponding to an index or to a key that has not been set previously, the functions will output an empty string and not return an error.
-- Similarly, if you request a value from an array that has not been created, the functions output an empty string and not return an error.
+- As is default for shells, if you request a value corresponding to an index or to a key that has not been set previously, the functions output an empty string and do not return an error.
+- Similarly, if you request a value from an array that has not been created, the functions output an empty string and do not return an error.
 - The indexed array effectively works as a sparse array, so indices do not have to be sequential.
-- The declare functions are not necessary to create an array. It's just a way to set N elements in one command. You can create an array by calling any function that stores a value in the array.
-- For indexed arrays, assigning en empty string as a value of an element unsets the element.
+- The initialize and declare functions are not necessary to create an array. It's just a way to set N elements in one command. You can create an array by calling any function that stores a value in the array.
 - Assigning an empty string as a value doesn't unset the array element. This mimics the behavior of Bash arrays. To unset an element, use the `unset_[x]_arr_el()` functions.
 - Functions provide output via a variable because this way the performance is better, in some cases much better.
 
@@ -107,7 +120,7 @@ $ jazz, classical, rock
 ## Performance
 - The code went through multiple rounds of optimization. Currently for most use cases, the performance for small arrays (<= 200 elements) is comparable to Bash arrays. Functions perform reasonably well with arrays containing up to 2000 elements. Higher than that, the performance drops at an accelerating rate, mainly because the system takes longer to look up variables in memory.
 - Performance is affected by the length of the strings stored in the array, and for associative arrays, by the length of the strings used as keys.
-- Performance is also affected by the workload - more on that in the Limitations section.
+- Performance is also affected by the workload - more on that in the [Limitations](#limitations) and [Optimized Usage](#optimized-usage) sections.
 
 <details> <summary> Benchmarks: </summary>
 
@@ -197,9 +210,10 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 - Use cases of associative arrays which are not covered by optimizations: 1) setting a previously unset element via the `set_a_arr_el()` function will remove the 'sorted' flag and trigger sorting next time when needed. 2) unsetting a previously set element via the `unset_i_arr_el()` function will remove the 'verified' flag and trigger array verification next time when needed. If both flags are removed, verification and sorting will occur in one go.
 - Array names and (for associative arrays) keys are limited to alphanumeric characters and underlines - `_`.
 
-## How to avoid performance degradation
+## Optimized usage
 - For associative arrays, to avoid performance degradation caused by repeated sorting, group calls to the `set_a_arr_el()` function separately from calls to `get_a_arr_values()` and `get_a_arr_keys()` functions.
 - For both types of arrays, to avoid performance degradation caused by repeated verification, group calls to `unset_[x]_arr_el()` functions separately from calls to `get_[x]_arr_values()` and `get_[x]_arr_[keys/indices]()` functions.
+- For indexed arrays, if you know the number of elements you want to work with in advance, initialize the array with that number of elements before assigning values. This will remove the overhead of creating a new element individually.
 - For small arrays, the functions should be fast enough regardless.
 
 ## Some more details
