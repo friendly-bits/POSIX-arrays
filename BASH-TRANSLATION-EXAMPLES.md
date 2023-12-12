@@ -117,46 +117,40 @@ done
 ## Associative arrays
 
 ### Declaring an array, assigning and adding values, unsetting elements
-Bash:
-```
-declare -A test_arr
-test_arr[key]="test value"
-echo "value for 'key': '${test_arr[key]}'"
-unset test_arr[key]
-```
-POSIX-arrays:
-```
-set_a_arr_el test_arr key="test value"
-get_a_arr_val test_arr value
-echo "value for 'key': '$value'"
-unset_a_arr_el test_arr key
-```
+
+Bash: `declare -A test_arr=([key1]=val1 [key2]=val2)`
+
+POSIX-arrays: `declare-a-arr test_arr key1=val1 key2=val2`
 
 ##
 
-Bash:
-```
-test_arr[test_key]="this is a test"
-test_arr+=([test_key2]="this is another test")
-unset test_arr[test_key2]
-```
-POSIX-arrays:
-```
-set_a_arr_el test_arr test_key "this is a test"
-set_a_arr_el test_arr test_key2 "this is another test"
-unset_a_arr_el test_arr test_key2
-```
+Bash: `test_arr[key]="test value"`
+
+POSIX-arrays: `set_a_arr_el test_arr key="test value"`
+
+##
+
+Bash: `echo "value for 'key': '${test_arr[key]}'"`
+
+POSIX-arrays: `get_a_arr_val test_arr value; echo "value for 'key': '$value'"`
+
+##
+
+Bash: `unset test_arr[key]`
+
+POSIX-arrays: `unset_a_arr_el test_arr key`
+##
+
+Bash: `echo "test_arr has '${#test_arr[@]}' elements"`
+
+POSIX-arrays: `get_a_arr_el_cnt test_arr el_cnt; echo "test_arr has '$el_cnt' elements"`
+
+##
 
 ### Unsetting arrays
-Bash: `declare temp_arr=("this array will be destroyed"); unset temp_arr`
+Bash: `unset temp_arr`
 
-POSIX-arrays: `declare_i_arr temp_arr "this array will be destroyed"; unset_i_arr temp_arr`
-
-### Getting values and indices
-
-Bash: `echo "value for key 'test_key' is $test_arr[test_key]"`
-
-POSIX-arrays: `get_a_arr_val test_arr test_key value; echo "value for key 'test_key' is $value"`
+POSIX-arrays: `unset_i_arr temp_arr`
 
 ##
 
