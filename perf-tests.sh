@@ -88,7 +88,7 @@ test_mixed() {
 	else
 		for j in $elements; do
 			set_a_arr_el test_arr "$((j*2))=$test_str"
-			set_a_arr_el test_arr "$((j*2 -2))="
+			unset_a_arr_el test_arr "$((j*2 -2))"
 			get_a_arr_keys test_arr testvar
 		done
 		# set_${arr_type}_arr_val test_arr "$i" "$test_str"
@@ -195,7 +195,7 @@ measure_time test_get_arr_values
 
 measure_time test_unset
 
-#measure_time test_mixed
+measure_time test_mixed
  
 [ "$arr_type" = i ] && {
 	measure_time test_add
