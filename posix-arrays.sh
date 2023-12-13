@@ -31,7 +31,7 @@ do_unset_i_arr() {
 	for _index in $_indices; do
 		unset "_i_${1}_${_index}"
 	done
-	unset "_i_${1}_indices" "_i_${1}_h_index" _index _indices
+	unset "_i_${1}_indices" "_i_${1}_h_index"
 }
 
 # sorts and verifies indices of indexed array
@@ -75,7 +75,6 @@ sort_verify_i_arr() {
 		eval "_i_${_arr_name}_h_index"='$_h_index'
 	} || { _h_index="-1"; unset "_i_${_arr_name}_h_index"; }
 
-	unset ___val _sorted_flag _ver_flag _index
 }
 
 # declare an indexed array while populating first elements
@@ -104,7 +103,6 @@ declare_i_arr() {
 		_i_${_arr_name}_indices"='$_indices'"
 		_i_${_arr_name}_sorted_flag=1;
 		_i_${_arr_name}_ver_flag=1"
-	unset ___val _index _indices
 	return 0
 }
 
@@ -136,10 +134,8 @@ init_i_arr() {
 			_i_${_arr_name}_indices"='$_indices'"
 			_i_${_arr_name}_sorted_flag=1;
 			_i_${_arr_name}_ver_flag=1"
-		unset _index _indices
 	fi
 
-	unset _last_index
 	return 0
 }
 
@@ -156,7 +152,7 @@ read_i_arr() {
 
 	do_unset_i_arr "${_arr_name}"
 
-	_index=0
+	_index=0; _indices=''
     IFS_OLD="$IFS"
     IFS="$___newline"
 	for ___line in $___lines; do
@@ -174,7 +170,6 @@ read_i_arr() {
 		_i_${_arr_name}_sorted_flag=1
 		_i_${_arr_name}_ver_flag=1"
 
-	unset ___line ___lines _index _indices _input_file
 	return 0
 }
 
@@ -202,7 +197,6 @@ get_i_arr_values() {
 
 	eval "$_out_var"='${___values% }'
 
-	unset ___values _indices _index _out_var
 	return 0
 }
 
@@ -227,7 +221,6 @@ get_i_arr_indices() {
 
 	eval "$_out_var_name"='${_indices% }'
 
-	unset _indices _out_var_name
 	return 0
 }
 
@@ -255,7 +248,6 @@ add_i_arr_el() {
 	eval "_i_${_arr_name}_h_index"='$_index'"
 		_i_${_arr_name}_${_index}"='$_el_set_flag$___new_val'
 
-	unset ___new_val _indices _index _h_index
 	return 0
 }
 
@@ -286,7 +278,6 @@ unset_i_arr_el() {
 		fi
 	fi
 
-	unset _index ___old_val _h_index _sorted_flag
 	return 0
 }
 
@@ -315,7 +306,6 @@ get_i_arr_max_index() {
 	eval "_i_${_arr_name}_h_index"='$_h_index'"
 		$_out_var_name"='$_h_index'
 
-	unset _indices _h_index _out_var_name
 	return 0
 }
 
@@ -336,7 +326,7 @@ get_i_arr_last_val() {
 		sort_verify_i_arr
 		eval "_i_${_arr_name}_indices"='${_indices}'
 		if [ -z "$_indices" ]; then
-			unset "$_out_var_name" "_i_${_arr_name}_indices" _indices _h_index _out_var_name
+			unset "$_out_var_name" "_i_${_arr_name}_indices" _h_index
 			no_elements; return 1
 		fi
 	fi
@@ -344,7 +334,6 @@ get_i_arr_last_val() {
 	eval "_i_${_arr_name}_h_index"='$_h_index'"
 		$_out_var_name=\"\${_i_${_arr_name}_${_h_index}#$_el_set_flag}\""
 
-	unset _indices _h_index _out_var_name
 	return 0
 }
 
@@ -368,7 +357,6 @@ get_i_arr_el_cnt() {
 
 	eval "$_out_var_name"='$i'
 
-	unset _indices _out_var_name i _ind
 	return 0
 }
 
@@ -384,21 +372,18 @@ set_i_arr_el() {
 	check_arr_name || return 1
 	check_index || return 1
 
-	eval "___old_val=\"\$_i_${_arr_name}_${_index}\""
+	eval "___old_val=\"\$_i_${_arr_name}_${_index}\"
+		_i_${_arr_name}_${_index}"='$_el_set_flag$___new_val'
 	if [ -z "$___old_val" ]; then
 		eval "_i_${_arr_name}_indices=\"\${_i_${_arr_name}_indices}${_index}${___newline}\"
-			_i_${_arr_name}_${_index}"='$_el_set_flag$___new_val'"
 			_h_index=\"\$_i_${_arr_name}_h_index\""
 		if [ -n "$_h_index" ] && [ "$_index" -gt  "$_h_index" ]; then
 			eval "_i_${_arr_name}_h_index"='$_index'
 		else
 			unset "_i_${_arr_name}_sorted_flag"
 		fi
-	else
-		eval "_i_${_arr_name}_${_index}"='$_el_set_flag$___new_val'
 	fi
 
-	unset _index ___new_val ___old_val _h_index
 	return 0
 }
 
@@ -417,7 +402,6 @@ get_i_arr_val() {
 	check_index || return 1
 
 	eval "$_out_var_name=\"\${_i_${_arr_name}_${_index}#$_el_set_flag}\""
-	unset _index _out_var_name
 }
 
 
@@ -431,7 +415,6 @@ unset_a_arr() {
 	do_unset_a_arr "${_arr_name}"
 
 	unset "_a_${_arr_name}_sorted_flag" "_a_${_arr_name}_ver_flag"
-	unset ___keys ___key
 }
 
 # unsets all variables of an associative array
@@ -442,7 +425,7 @@ do_unset_a_arr() {
 	for ___key in $___keys; do
 		unset "_a_${1}_${___key}"
 	done
-	unset "_a_${1}___keys" ___key ___keys
+	unset "_a_${1}___keys" ___keys
 }
 
 # sorts and verifies keys of an associative array
@@ -478,7 +461,6 @@ sort_verify_a_arr() {
 		fi
 		eval "_a_${_arr_name}___keys"='$___keys'
 	fi
-	unset ___val _sorted_flag _ver_flag ___key
 }
 
 # declare an associative array while populating elements
@@ -493,6 +475,7 @@ declare_a_arr() {
 
 	do_unset_a_arr "${_arr_name}"
 
+	___keys=''
 	if [ -n "$*" ]; then
 		for ___pair in "$@"; do
 			check_pair || return 1
@@ -506,7 +489,6 @@ declare_a_arr() {
 
 	[ -n "$___keys" ] && ___keys="$(printf '%s\n' "$___keys" | sort -u)$___newline"
 	eval "_a_${_arr_name}___keys"='$___keys'"; _a_${_arr_name}_sorted_flag=1; _a_${_arr_name}_ver_flag=1"
-	unset ___val ___key ___keys
 	return 0
 }
 
@@ -530,7 +512,6 @@ get_a_arr_values() {
 	)"
 
 	eval "$_out_var_name"='${___values% }'
-	unset ___keys ___key ___values
 	return 0
 }
 
@@ -551,7 +532,6 @@ get_a_arr_keys() {
 	___keys="$(printf '%s ' $___keys)"
 	eval "$_out_var"='${___keys% }'
 
-	unset ___keys _out_var
 	return 0
 }
 
@@ -574,7 +554,6 @@ get_a_arr_el_cnt() {
 
 	eval "$_out_var_name"='$i'
 
-	unset ___keys ___key _out_var_name i
 	return 0
 }
 
@@ -593,13 +572,12 @@ set_a_arr_el() {
 	___new_val="${___pair#*=}"
 	check_key || return 1
 
-	eval "___old_val=\"\$_a_${_arr_name}_${___key}\""
-	[ -z "$___old_val" ] && unset "_a_${_arr_name}_sorted_flag"
-
-	eval "_a_${_arr_name}___keys=\"\${_a_${_arr_name}___keys}${___key}${___newline}\""
-	eval "_a_${_arr_name}_${___key}"='${_el_set_flag}${___new_val}'
-
-	unset ___key ___new_val ___old_val
+	eval "___old_val=\"\$_a_${_arr_name}_${___key}\"
+		_a_${_arr_name}_${___key}"='${_el_set_flag}${___new_val}'
+	[ -z "$___old_val" ] && {
+		unset "_a_${_arr_name}_sorted_flag"
+		eval "_a_${_arr_name}___keys=\"\${_a_${_arr_name}___keys}${___key}${___newline}\""
+	}
 	return 0
 }
 
@@ -618,7 +596,6 @@ unset_a_arr_el() {
 
 	[ -n "$___old_val" ] && unset "_a_${_arr_name}_${___key}" "_a_${_arr_name}_ver_flag"
 
-	unset ___key ___new_val ___old_val
 	return 0
 }
 
@@ -639,7 +616,6 @@ get_a_arr_val() {
 	eval "___val=\"\$_a_${_arr_name}_${___key}\""
 	# shellcheck disable=SC2031
 	eval "$_out_var"='${___val#"${_el_set_flag}"}'
-	unset ___key _out_var
 }
 
 
