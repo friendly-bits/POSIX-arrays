@@ -27,15 +27,18 @@ Alternatively, copy functions which you need (and their dependencies) to your ow
 
 `get_i_arr_val <array_name> <index> <var>` - Assigns value for `<index>` to variable `<var>`.
 
-`get_i_arr_values <array_name> <var>` - Gets all values from an indexed array as a sorted (by index) whitespace-separated list and assigns the result to variable `<var>`.
+`get_i_arr_values [-s] <array_name> <var>` - Gets all values from an indexed array as a whitespace-separated list and assigns the result to variable `<var>`. When called with the `[-s]` option, sorts the indices and outputs a numerically sorted (by index) list of values.
 
-`get_i_arr_indices <array_name> <var>` - Gets all indices from an indexed array as a sorted whitespace-separated list and assigns the result to variable `<var>`.
+`get_i_arr_indices [-s] <array_name> <var>` - Gets all indices from an indexed array as a whitespace-separated list and assigns the result to variable `<var>`. When called with the `[-s]` option, sorts the indices and outputs a numerically sorted list.
 
 `get_i_arr_el_cnt <array_name> <var>` - Gets elements count of an indexed array and assigns the result to variable `<var>`.
 
 `get_i_arr_max_index <array_name> <var>` - Gets the currently highest index in the array and assigns it to variable `<var>`. Returns an error if the array is empty or doesn't exist.
 
 `get_i_arr_last_val <array_name> <var>` - Gets the value assigned to highest index in the array and assigns it to variable `<var>`. Returns an error if the array is empty or doesn't exist.
+
+#### Sorting an array
+`sort_i_arr <array_name>` - Sorts indices stored in the array. Sorting is a relatively slow operation. Functions keep track of sorted/unsorted state of the array and will only perform sorting if current state is unsorted. For indexed arrays, optimizations are implemented which allow the array to keep the sorted state in most (but not all) cases when setting elements. Unsetting elements doesn't affect the sorted/unsorted state of the array.
 
 #### Unsetting an array
 
@@ -74,11 +77,14 @@ $ val3 123 etc
 
 `get_a_arr_val <array_name> <key> <var>` - Assigns value for `<key>` from the associative array to variable `<var>`.
 
-`get_a_arr_values <array_name> <var>` - Gets all values as an alphabetically sorted (by key) whitespace-separated list and assigns the result to variable `<var>`.
+`get_a_arr_values [-s] <array_name> <var>` - Gets all values as a whitespace-separated list and assigns the result to variable `<var>`. When called with the `[-s]` option, sorts the keys and outputs an alphabetically sorted (by key) list of values.
 
-`get_a_arr_keys <array_name> <var>` - Gets all keys as an alphabetically sorted whitespace-separated list and assigns the result to variable `<var>`.
+`get_a_arr_keys [-s] <array_name> <var>` - Gets all keys as a whitespace-separated list and assigns the result to variable `<var>`. When called with the `[-s]` option, sorts the keys and outputs an alphabetically sorted list.
 
 `get_a_arr_el_cnt <array_name> <var>` - Gets elements count of an associative array and assigns the result to variable `<var>`.
+
+#### Sorting an array
+`sort_a_arr <array_name>` - Sorts keys stored in the array. Sorting is a relatively slow operation. Functions keep track of sorted/unsorted state of the array and will only perform sorting if current state is unsorted. For associative arrays, optimizations are implemented which allow the array to keep the sorted state in some (but not all) cases when setting elements. Specifically, when changing a value of a previously set element keeps the sorted state of the array if it was sorted before. Setting a new element removes the flag which marks the array as sorted. Unsetting elements doesn't affect the sorted/unsorted state of the array.
 
 #### Unsetting an array
 
@@ -119,7 +125,7 @@ $ jazz, classical, rock
 ## Performance
 - The code went through multiple rounds of optimization. Currently for most use cases, on x86 CPU the performance for small arrays (<= 200 elements) is comparable to Bash arrays. Functions perform reasonably well with arrays containing up to 2000 elements. Higher than that, the performance drops at an accelerating rate, mainly because the system takes longer to look up variables in memory.
 - Performance is affected by the length of the strings stored in the array, and for associative arrays, by the length of the strings used as keys.
-- Performance is also affected by the workload - more on that in the [Limitations](#limitations) and [Optimized Usage](#optimized-usage) sections.
+- Performance is also affected by the workload - more on that in the [Limitations](#limitations) section.
 
 <details> <summary> Benchmarks: </summary>
 
@@ -127,79 +133,79 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 
 **10 elements**:
 
-| Array type   |      Test                    | Time  |
-| -------------|------------------------------|-------|
-| Indexed      | set elements one by one (cold*)      | 2ms   |
+| Array type   |      Test                            | Time  |
+| -------------|--------------------------------------|-------|
+| Indexed      | set elements one by one (cold*)      | 1ms   |
 | Indexed      | set elements one by one (hot**)      | 1ms   |
-| Indexed      | add elements one by one      | 1ms   |
-| Indexed      | get values one by one        | 1ms   |
-| Indexed      | get all values               | 1ms   |
-| Indexed      | get all indices              | 1ms   |
-| -------------|------------------------------|-------|
-| Associative  | set elements one by one      | 2ms   |
-| Associative  | get values one by one        | 1ms   |
-| Associative  | get all values               | 1ms   |
-| Associative  | get all keys                 | 1ms   |
+| Indexed      | add elements one by one              | 2ms   |
+| Indexed      | get values one by one                | 1ms   |
+| Indexed      | get all values                       | 2ms   |
+| Indexed      | get all indices                      | 1ms   |
+| Indexed      | unset elements one by one            | 1ms   |
+| -------------|--------------------------------------|-------|
+| Associative  | set elements one by one (cold*)      | 1ms   |
+| Associative  | set elements one by one (hot**)      | 1ms   |
+| Associative  | get values one by one                | 1ms   |
+| Associative  | get all values                       | 1ms   |
+| Associative  | get all keys                         | 1ms   |
+| Associative  | unset elements one by one            | 1ms   |
 
 **100 elements**:
 
-| Array type   |      Test                    | Time  |
-| -------------|------------------------------|-------|
-| Indexed      | set elements one by one (cold*)      | 4ms   |
+| Array type   |      Test                            | Time  |
+| -------------|--------------------------------------|-------|
+| Indexed      | set elements one by one (cold*)      | 3ms   |
 | Indexed      | set elements one by one (hot**)      | 2ms   |
-| Indexed      | get values one by one        | 2ms   |
-| Indexed      | get all values               | 1ms   |
-| Indexed      | get all indices              | 1ms   |
-| -------------|------------------------------|-------|
-| Associative  | set elements one by one      | 3ms   |
-| Associative  | get values one by one        | 2ms   |
-| Associative  | get all values               | 2ms   |
-| Associative  | get all keys                 | 1ms   |
-
-**500 elements**:
-
-| Array type   |      Test                    | Time  |
-| -------------|------------------------------|-------|
-| Indexed      | set elements one by one (cold*)      | 11ms   |
-| Indexed      | set elements one by one (hot**)      | 7ms    |
-| Indexed      | get values one by one        | 4ms   |
-| Indexed      | get all values               | 3ms   |
-| Indexed      | get all indices              | 3ms   |
-| -------------|------------------------------|-------|
-| Associative  | set elements one by one      | 12ms  |
-| Associative  | get values one by one        | 4ms  |
-| Associative  | get all values               | 4ms   |
-| Associative  | get all keys                 | 2ms   |
+| Indexed      | add elements one by one              | 2ms   |
+| Indexed      | get values one by one                | 2ms   |
+| Indexed      | get all values                       | 2ms   |
+| Indexed      | get all indices                      | 1ms   |
+| Indexed      | unset elements one by one            | 3ms   |
+| -------------|--------------------------------------|-------|
+| Associative  | set elements one by one (cold*)      | 3ms   |
+| Associative  | set elements one by one (hot**)      | 2ms   |
+| Associative  | get values one by one                | 2ms   |
+| Associative  | get all values                       | 2ms   |
+| Associative  | get all keys                         | 1ms   |
+| Associative  | unset elements one by one            | 4ms   |
 
 **1000 elements**:
 
-| Array type   |      Test                    | Time  |
-| -------------|------------------------------|-------|
-| Indexed      | set elements one by one (cold*)      | 21ms   |
-| Indexed      | set elements one by one (hot**)      | 14ms   |
-| Indexed      | get values one by one        | 8ms   |
-| Indexed      | get all values               | 6ms   |
-| Indexed      | get all indices              | 6ms   |
-| -------------|------------------------------|-------|
-| Associative  | set elements one by one      | 24ms  |
-| Associative  | get values one by one        | 9ms  |
-| Associative  | get all values               | 9ms   |
-| Associative  | get all keys                 | 2ms   |
+| Array type   |      Test                            | Time  |
+| -------------|--------------------------------------|-------|
+| Indexed      | set elements one by one (cold*)      | 18ms  |
+| Indexed      | set elements one by one (hot**)      | 10ms  |
+| Indexed      | add elements one by one              | 18ms  |
+| Indexed      | get values one by one                | 6ms   |
+| Indexed      | get all values                       | 6ms   |
+| Indexed      | get all indices                      | 1ms   |
+| Indexed      | unset elements one by one            | 21ms  |
+| -------------|--------------------------------------|-------|
+| Associative  | set elements one by one (cold*)      | 23ms  |
+| Associative  | set elements one by one (hot**)      | 12ms  |
+| Associative  | get values one by one                | 8ms   |
+| Associative  | get all values                       | 7ms   |
+| Associative  | get all keys                         | 1ms   |
+| Associative  | unset elements one by one            | 1ms   |
 
 **2000 elements**:
 
-| Array type   |      Test                    | Time  |
-| -------------|------------------------------|-------|
-| Indexed      | set elements one by one (cold*)      | 41ms   |
-| Indexed      | set elements one by one (hot**)      | 28ms   |
-| Indexed      | get values one by one        | 18ms  |
-| Indexed      | get all values               | 9ms   |
-| Indexed      | get all indices              | 9ms   |
-| -------------|------------------------------|-------|
-| Associative  | set elements one by one      | 57ms  |
-| Associative  | get values one by one        | 24ms  |
-| Associative  | get all values               | 15ms  |
-| Associative  | get all keys                 | 2ms   |
+| Array type   |      Test                            | Time  |
+| -------------|--------------------------------------|-------|
+| Indexed      | set elements one by one (cold*)      | 35ms  |
+| Indexed      | set elements one by one (hot**)      | 18ms  |
+| Indexed      | add elements one by one              | 46ms  |
+| Indexed      | get values one by one                | 15ms  |
+| Indexed      | get all values                       | 14ms  |
+| Indexed      | get all indices                      | 1ms   |
+| Indexed      | unset elements one by one            | 42ms  |
+| -------------|--------------------------------------|-------|
+| Associative  | set elements one by one (cold*)      | 53ms  |
+| Associative  | set elements one by one (hot**)      | 29ms  |
+| Associative  | get values one by one                | 20ms  |
+| Associative  | get all values                       | 15ms  |
+| Associative  | get all keys                         | 1ms   |
+| Associative  | unset elements one by one            | 74ms  |
 
 \* cold - elements are set without prior initialization
 
@@ -208,16 +214,9 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 </details>
 
 ## Limitations
-- Functions which output all keys/indices or all values require a sorted list of keys/indices, and/or having all elements "verified", aka not having any registered keys/indices without an assigned value (which may happen after unsetting an array element). However keeping a permanently verified and sorted array would be very slow if implemented in shell code. Therefore, sorting and verification of the array occurs when needed. These operations take some time, which may cause a temporary slowdown. Once the array is sorted, a flag is set so further queries are fast. Same applies to verification. The following actions may trigger the removal of one or both flags: setting a new index-value (or key-value) pair via the `set_[x]_arr_el` functions, unsetting a previously set element via the `unset_[x]_arr_el()` functions.
-- Optimization heuristics are implemented which identify cases where removal of the flags can be avoided. These heuristics cover most practical use cases of indexed arrays, and some use cases of associative arrays.
-- Use cases of indexed arrays which are not covered by optimizations: 1) setting a previously unset element which has a lower index than the current max index of the array will remove the 'sorted' flag and trigger sorting next time when needed. 2) unsetting a previously set element which has a lower index than the max index of the array via the `unset_i_arr_el()` function will remove the 'verified' flag and trigger array verification next time when needed. If both flags are removed, verification and sorting will occur in one go.
-- Use cases of associative arrays which are not covered by optimizations: 1) setting a previously unset element via the `set_a_arr_el()` function will remove the 'sorted' flag and trigger sorting next time when needed. 2) unsetting a previously set element via the `unset_i_arr_el()` function will remove the 'verified' flag and trigger array verification next time when needed. If both flags are removed, verification and sorting will occur in one go.
-- For small arrays, the functions should be fast enough regardless.
+- Unsetting elements is relatively slow because it requires processing all current indices/keys in the array as a string. To work around this, when possible, assign an empty string as a value to the element instead of unsetting the element. Alternatively, if you want to free up the memory used by the array, use the the `unset_[x]_arr()` functions which work hundreds of times faster than unsetting individual elements.
+- By default, functions that output all indices/keys/values do not sort the output. This is different from Bash arrays behavior which sorts the output. The reason for this is that sorting is relatively slow and in most cases not required. When sorted output is required, use the functions with the -s option to get a sorted (by index/key) output. Once sorting occurs, the array will stay sorted until some changes have been applied to it (in some cases, the functions are able to maintain the sorted state when adding/removing elements and in other cases not).
 - Array names and (for associative arrays) keys are limited to alphanumeric characters and underlines - `_`.
-
-## Optimized usage
-- For associative arrays, to avoid performance degradation caused by repeated sorting, group calls to the `set_a_arr_el()` function separately from calls to `get_a_arr_values()` and `get_a_arr_keys()` functions.
-- For both types of arrays, to avoid performance degradation caused by repeated verification, group calls to `unset_[x]_arr_el()` functions separately from calls to `get_[x]_arr_values()` and `get_[x]_arr_[keys/indices]()` functions.
 
 ## Some more details
 - The values are stored in dynamically created variables. The name of such variable is in the format `_[x]_[arr_name]_[key/index]`, where `[x]` stands for the type of the array: `a` for associative array, `i` for indexed array.
