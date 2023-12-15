@@ -8,7 +8,7 @@
 # where [x] is either 'a' for associative array or 'i' for indexed array
 
 # keys/indices are stored in a variable named in the format '_[x]_[arr_name]_keys' or '_[x]_[arr_name]_indices'
-# array flags are stored in variables (1=true, 0=false): $_[x]_[arr_name]_sorted_flag
+# array 'sorted' flag (1=true, 0=false) is stored in variable: $_[x]_[arr_name]_sorted_flag
 # for indexed arrays, $_i_[arr_name]_h_index variable holds the highest index in the array if it's known
 
 
