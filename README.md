@@ -215,7 +215,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 
 ## Limitations
 - Unsetting elements is relatively slow because it requires processing all current indices/keys in the array as a string. To work around this, when possible, assign an empty string as a value to the element instead of unsetting the element. Alternatively, if you want to free up the memory used by the array, use the `unset_[x]_arr()` functions which work hundreds of times faster than unsetting individual elements.
-- By default, functions that output all indices/keys/values do not sort the output. This is different from Bash arrays behavior which sorts the output. The reason for this is that sorting is relatively slow and in most cases not required. When sorted output is required, use the functions with the -s option to get a sorted (by index/key) output. Once sorting occurs, the array will stay sorted until some changes have been applied to it (in some cases, the functions are able to maintain the sorted state when adding/removing elements and in other cases not).
+- By default, functions that output all indices/keys/values do not sort the output. This is different from Bash arrays behavior which sorts the output. The reason for this is that sorting is relatively slow and in most cases not required. When sorted output is required, use the functions with the `-s` option to get a sorted (by index/key) output. Once sorting occurs, the array will stay sorted until some changes have been applied to it (in some cases, the functions are able to maintain the sorted state when adding elements and in other cases not).
 - Array names and (for associative arrays) keys are limited to alphanumeric characters and underlines - `_`.
 
 ## Some more details
