@@ -31,11 +31,15 @@ Bash: `echo "all values of test_arr are '${test_arr[*]}'"`
 
 POSIX-arrays: `get_i_arr_values test_arr values; echo "all values of test_arr are '$values'"`
 
+POSIX-arrays (to get a sorted list): `get_i_arr_values -s test_arr values; echo "sorted values of test_arr are '$values'"`
+
 ##
 
 Bash: `echo "all indices of test_arr are '${!test_arr[*]}'"`
 
 POSIX-arrays: `get_i_arr_indices test_arr indices; echo "all indices of test_arr are '$indices'"`
+
+POSIX-arrays (to get a sorted list): `get_i_arr_indices -s test_arr indices; echo "sorted indices of test_arr are '$indices'"`
 
 ##
 
@@ -88,9 +92,9 @@ for value in ${test_arr[@]}; do
     echo "$value"
 done
 ```
-POSIX-arrays (here we need to loop through indices rather than through values, to avoid whitespace issues):
+POSIX-arrays (here we need to loop over indices rather than over values, to avoid whitespace issues):
 ```
-declare_i_arr test_arr 1 10 100
+declare_i_arr test_arr "i_don't_have_whitespaces" "i have whitespaces"
 get_i_arr_indices test_arr indices
 for index in $indices; do
     get_i_arr_val "$index" value
@@ -148,11 +152,15 @@ Bash: `echo "all values of test_arr are '${test_arr[*]}'"`
 
 POSIX-arrays: `get_a_arr_values test_arr values; echo "all values of test_arr are '$values'"`
 
+POSIX-arrays (to get a sorted by key list): `get_a_arr_values -s test_arr values; echo "sorted by key values of test_arr are '$values'"`
+
 ##
 
 Bash: `echo "all keys of test_arr are '${!test_arr[*]}'"`
 
 POSIX-arrays: `get_a_arr_keys test_arr keys; echo "all keys of test_arr are '$keys'"`
+
+POSIX-arrays (to get a sorted list): `get_a_arr_keys -s test_arr keys; echo "sorted keys of test_arr are '$keys'"`
 
 ##
 
