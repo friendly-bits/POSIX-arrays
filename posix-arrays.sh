@@ -12,7 +12,7 @@
 # for indexed arrays, $_i_[arr_name]_h_index variable holds the highest index in the array if it's known
 
 
-# unsets all variables used to store the array
+# unsets all variables used to store an indexed array
 # 1 - array name
 unset_i_arr() {
 	___me="unset_i_arr"
@@ -24,6 +24,7 @@ unset_i_arr() {
 	eval "_i_${_arr_name}_sorted_flag=0"
 }
 
+# backend function
 # unsets all variables of an indexed array
 # 1 - array name
 do_unset_i_arr() {
@@ -310,8 +311,7 @@ get_i_arr_max_index() {
 		fi
 	fi
 
-	eval "_i_${_arr_name}_h_index"='$_h_index'"
-		$_out_var"='$_h_index'
+	eval "_i_${_arr_name}_h_index"='$_h_index' "$_out_var"='$_h_index'
 
 	return 0
 }
@@ -404,7 +404,7 @@ get_i_arr_val() {
 }
 
 
-# unsets all variables used to store the array
+# unsets all variables used to store an associative array
 # 1 - array name
 unset_a_arr() {
 	___me="get_a_arr_val"
@@ -417,6 +417,7 @@ unset_a_arr() {
 	eval "_a_${_arr_name}_sorted_flag=0"
 }
 
+# backend function
 # unsets all variables of an associative array
 # 1 - array name
 do_unset_a_arr() {
@@ -613,6 +614,7 @@ get_a_arr_val() {
 	eval "$_out_var"='${___val#"${_el_set_flag}"}'
 }
 
+## Backend functions
 
 check_strings() {
 	case "$1$2$3" in *[!A-Za-z0-9_]* )
@@ -627,6 +629,7 @@ check_index() {	case "$_index" in *[!0-9]* ) echo "$___me: Error: '$_index' is n
 check_pair() { case "$___pair" in *=* ) ;; * ) echo "$___me: Error: '$___pair' is not a 'key=value' pair." >&2; return 1; esac; }
 wrongargs() { echo "$___me: Error: '$*': wrong number of arguments '$#'." >&2; }
 
+## Constants
 
 ___newline="
 "
