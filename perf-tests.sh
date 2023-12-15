@@ -168,7 +168,7 @@ fi
 
 
 
-arr_type="a" # i for indexed array, a for associative array
+arr_type="i" # i for indexed array, a for associative array
 case $arr_type in
 	i) type="indexed" ;;
 	a) type="associative"
@@ -187,7 +187,7 @@ warmup
 
 # Test variables
 f=1 # first element
-l=10000 # last element
+l=1000 # last element
 elements=$(seq $f $l)
 
 # Execute tests
@@ -215,10 +215,11 @@ test_unset_all
 } || { echo "setting..."; test_set; }
 
 
-unset_${arr_type}_arr_el test_arr "bcdefghijklmn$((l-3))"
 if [ "$arr_type" = "i" ]; then
+	unset_${arr_type}_arr_el test_arr "$((l-3))"
 		set_i_arr_el test_arr "$((l-3))" ""
 else
+	unset_${arr_type}_arr_el test_arr "bcdefghijklmn$((l-3))"
 		set_a_arr_el test_arr "bcdefghijklmn$((l-3))="
 fi
 
