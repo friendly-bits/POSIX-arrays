@@ -631,6 +631,7 @@ wrongargs() { echo "$___me: Error: '$*': wrong number of arguments '$#'." >&2; }
 
 ## Constants
 
+export LC_ALL=C
 ___newline="
 "
 _el_set_flag="$(printf '\35')"
