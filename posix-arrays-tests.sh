@@ -94,13 +94,6 @@ run_test() {
 		init_lines_cnt=$#
 		IFS="$IFS_OLD"; set +f
 
-		# tail1="$(from_line "$test_unit" $((init_lines_cnt+3)) )"; tail2="$(printf '%s' "$test_unit" | tail -n+"$((init_lines_cnt+3))")"
-		# if [ "$tail1" != "$tail2" ]; then echo "alert! alert! alert! alert! alert! alert! alert! alert! alert! alert! alert! "; fi
-		# echo "tail1: '$tail1'"
-		# echo
-		# echo "tail2: '$tail2'"
-		# echo
-
 		# get the main test lines
 		main_test_unit="$(from_line "$test_unit" $((init_lines_cnt+3)))"
 
