@@ -486,7 +486,7 @@ set_i_arr_el arr3 15 \"a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## 
 get_i_arr_val arr 0 val@ABCD123@0
 get_i_arr_val arr 11 val@A@0
 get_i_arr_val arr 30 val@a bcd 123@0
-get_i_arr_values arr val@ABCD123 A a bcd 123@0
+get_i_arr_values -s arr val@ABCD123 A a bcd 123@0
 get_i_arr_el_cnt arr val@3@0
 
 get_i_arr_val arr2 0 val@a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
@@ -496,7 +496,7 @@ get_i_arr_el_cnt arr2 val@3@0
 
 get_i_arr_val arr3 11 val@a bcd/efg / # ^ & ( == ) [] '  . = < > b * 123 .* .? ## =@0
 get_i_arr_val arr3 15 val@a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
-get_i_arr_values arr3 val@a bcd/efg / # ^ & ( == ) [] '  . = < > b * 123 .* .? ## = a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
+get_i_arr_values -s arr3 val@a bcd/efg / # ^ & ( == ) [] '  . = < > b * 123 .* .? ## = a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
 get_i_arr_el_cnt arr3 val@2@0
 
 get_i_arr_val arr2 2 val@@0
@@ -539,16 +539,16 @@ get_i_arr_val arr 2 val@#123=1@0
 get_i_arr_val arr 3 val@=a#@0
 get_i_arr_val arr 4 val@#@0
 get_i_arr_val arr 5 val@###@0
-get_i_arr_values arr val@abc#= #123=1 =a# # ###@0
+get_i_arr_values -s arr val@abc#= #123=1 =a# # ###@0
 get_i_arr_el_cnt arr val@5@0
 
 get_i_arr_val arr_1 15 val@a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
-get_i_arr_values arr_1 val@a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
+get_i_arr_values -s arr_1 val@a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0
 get_i_arr_el_cnt arr_1 val@1@0
 
 get_i_arr_val arr_2 155 val@@0
 get_i_arr_val arr_2 165 val@@0
-get_i_arr_values arr_2 val@@0
+get_i_arr_values -s arr_2 val@@0
 get_i_arr_el_cnt arr_2 val@1@0
 "
 
@@ -602,7 +602,7 @@ get_i_arr_val arr1 10001 val@@0
 "
 
 
-# set 4 non-consecutive indices, then print them using the get_i_arr_values function
+# set 4 non-consecutive indices, then print them using the get_i_arr_values -s function
 test_23="
 [test_init]
 set_i_arr_el arr 10000 a@0
@@ -611,11 +611,11 @@ set_i_arr_el arr 200 c@0
 set_i_arr_el arr 100 d@0
 [/test_init]
 
-get_i_arr_values arr val@b d c a@0
+get_i_arr_values -s arr val@b d c a@0
 get_i_arr_el_cnt arr val@4@0
 "
 
-# test for get_i_arr_values with an empty array or array containing a empty string
+# test for get_i_arr_values -s with an empty array or array containing a empty string
 test_24="
 [test_init]
 set_i_arr_el arr1 0@0
@@ -626,21 +626,21 @@ set_i_arr_el arr2 0@0
 set_i_arr_el arr3 1@0
 [/test_init]
 
-get_i_arr_values arr val@@0
+get_i_arr_values -s arr val@@0
 get_i_arr_el_cnt arr val@0@0
 
-get_i_arr_values arr1 val@@0
+get_i_arr_values -s arr1 val@@0
 get_i_arr_el_cnt arr1 val@0@0
 
-get_i_arr_values arr2 val@@0
+get_i_arr_values -s arr2 val@@0
 get_i_arr_el_cnt arr2 val@1@0
 
-get_i_arr_values arr3 val@@0
+get_i_arr_values -s arr3 val@@0
 get_i_arr_el_cnt arr3 val@1@0
 "
 
 
-# test for get_i_arr_values with 1-element array
+# test for get_i_arr_values -s with 1-element array
 test_25="
 [test_init]
 set_i_arr_el arr1 0 a@0
@@ -648,9 +648,9 @@ set_i_arr_el arr2 1 b@0
 set_i_arr_el arr3 2 c@0
 [/test_init]
 
-get_i_arr_values arr1 val@a@0
-get_i_arr_values arr2 val@b@0
-get_i_arr_values arr3 val@c@0
+get_i_arr_values -s arr1 val@a@0
+get_i_arr_values -s arr2 val@b@0
+get_i_arr_values -s arr3 val@c@0
 
 get_i_arr_el_cnt arr1 val@1@0
 get_i_arr_el_cnt arr2 val@1@0
@@ -658,7 +658,7 @@ get_i_arr_el_cnt arr3 val@1@0
 "
 
 
-# test for get_i_arr_values with 2-element array
+# test for get_i_arr_values -s with 2-element array
 test_26="
 [test_init]
 set_i_arr_el arr1 1 a@0
@@ -669,9 +669,9 @@ set_i_arr_el arr3 0 c@0
 set_i_arr_el arr3 2 a@0
 [/test_init]
 
-get_i_arr_values arr1 val@b a@0
-get_i_arr_values arr2 val@a b@0
-get_i_arr_values arr3 val@c a@0
+get_i_arr_values -s arr1 val@b a@0
+get_i_arr_values -s arr2 val@a b@0
+get_i_arr_values -s arr3 val@c a@0
 
 get_i_arr_el_cnt arr1 val@2@0
 get_i_arr_el_cnt arr2 val@2@0
@@ -679,7 +679,7 @@ get_i_arr_el_cnt arr3 val@2@0
 "
 
 
-# test for get_i_arr_values with 4-element array
+# test for get_i_arr_values -s with 4-element array
 test_27="
 [test_init]
 set_i_arr_el arr 1000 aaa@0
@@ -689,7 +689,7 @@ set_i_arr_el arr 1 ddd@0
 [/test_init]
 
 get_i_arr_el_cnt arr val@4@0
-get_i_arr_values arr val@ddd bbb aaa ccc@0
+get_i_arr_values -s arr val@ddd bbb aaa ccc@0
 "
 
 
@@ -752,7 +752,7 @@ set_i_arr_el arr17 0 \" ;\\\\\\\"echo bruh\"@0
 get_i_arr_val arr 0 val@@0
 get_i_arr_val arr 11 val@@0
 get_i_arr_val arr 30 val@@0
-get_i_arr_values arr val@@0
+get_i_arr_values -s arr val@@0
 get_i_arr_el_cnt arr val@0@0
 
 get_i_arr_val arr1 0 val@'a bcd/efg / # ^ & ( == ) [] ' ' . = < > b * 123 .* .? ## =@0

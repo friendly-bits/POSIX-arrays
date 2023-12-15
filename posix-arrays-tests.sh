@@ -118,7 +118,7 @@ run_test() {
 
 			# gather array names from the test to reset the variables in the end
 			arr_name="$(fast_head "$test_command" 1)"; arr_name="${arr_name#* }"; arr_name="${arr_name%% *}"
-			case "$arr_name" in *_arr_* ) ;; *) arr_names="${arr_name}${newline}${arr_names}"; esac
+			case "$arr_name" in *_arr_*|-s ) ;; *) arr_names="${arr_name}${newline}${arr_names}"; esac
 
 			if [ -z "$print_stderr" ]; then eval "$test_command" 2>/dev/null; rv=$?
 			else eval "$test_command"; rv=$?
@@ -164,7 +164,6 @@ run_test() {
 			# shellcheck disable=SC2086
 			unset_${arr_type}_arr "$arr_name"
 		done
-
 		unset test_command other_stuff expected_val expected_rv val arr_names
 
 		# load the next test unit

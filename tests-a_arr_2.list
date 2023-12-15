@@ -23,8 +23,8 @@ get_a_arr_val arr 1 2 val@@1
 get_a_arr_val arr a val@@0
 get_a_arr_val arr 1 a val@@1
 get_a_arr_val arr a 1 val@@1
-get_a_arr_values arr@@1
-get_a_arr_values arr val@@0
+get_a_arr_values -s arr@@1
+get_a_arr_values -s arr val@@0
 
 get_a_arr_el_cnt arr val@0@0
 "
@@ -42,12 +42,16 @@ get_a_arr_val arr 0 val@@0
 get_a_arr_val arr 1 val@@0
 get_a_arr_values arr val@@0
 get_a_arr_keys arr val@@0
+get_a_arr_values -s arr val@@0
+get_a_arr_keys -s arr val@@0
 get_a_arr_el_cnt arr val@0@0
 
 get_a_arr_val arr1 0 val@@0
 get_a_arr_val arr1 test val@abc@0
 get_a_arr_values arr1 val@abc@0
 get_a_arr_keys arr1 val@test@0
+get_a_arr_values -s arr1 val@abc@0
+get_a_arr_keys -s arr1 val@test@0
 get_a_arr_el_cnt arr1 val@1@0
 "
 
@@ -64,6 +68,8 @@ get_a_arr_val arr 2 val@@0
 get_a_arr_val arr a val@@0
 get_a_arr_values arr val@abc 123@0
 get_a_arr_keys arr val@0 1@0
+get_a_arr_values -s arr val@abc 123@0
+get_a_arr_keys -s arr val@0 1@0
 
 get_a_arr_el_cnt arr val@2@0
 "
@@ -81,6 +87,10 @@ get_a_arr_val arr t_est val@a@0
 get_a_arr_val arr t val@@0
 get_a_arr_val arr T val@@0
 get_a_arr_val arr a val@@0
+get_a_arr_values arr val@abc 123 456 789 a@0
+get_a_arr_keys arr val@Test test _test test_ t_est@0
+get_a_arr_values -s arr val@abc 456 a 123 789@0
+get_a_arr_keys -s arr val@Test _test t_est test test_@0
 get_a_arr_values arr val@abc 456 a 123 789@0
 get_a_arr_keys arr val@Test _test t_est test test_@0
 
@@ -102,6 +112,8 @@ get_a_arr_val arr test4 val@@0
 get_a_arr_val arr a val@@0
 get_a_arr_values arr val@abc 123 a bcd 123@0
 get_a_arr_keys arr val@test1 test2 test3@0
+get_a_arr_values -s arr val@abc 123 a bcd 123@0
+get_a_arr_keys -s arr val@test1 test2 test3@0
 get_a_arr_el_cnt arr val@3@0
 
 get_a_arr_val arr2 val@@1
@@ -113,6 +125,8 @@ get_a_arr_val arr2 test5 val@@0
 get_a_arr_val arr2 test6 val@@0
 get_a_arr_values arr2 val@def@0
 get_a_arr_keys arr2 val@test7@0
+get_a_arr_values -s arr2 val@def@0
+get_a_arr_keys -s arr2 val@test7@0
 
 get_a_arr_el_cnt arr2 val@1@0
 "
@@ -121,6 +135,7 @@ get_a_arr_el_cnt arr2 val@1@0
 test_6="
 [test_init]
 declare_a_arr arr _=abc __=123 ___=\"a bcd 123\" ____=\"=\"@0
+declare_a_arr arr2 ____=\"=\" _=abc __=123 ___=\"a bcd 123\" @0
 [/test_init]
 
 get_a_arr_val arr _ val@abc@0
@@ -130,14 +145,27 @@ get_a_arr_val arr ____ val@=@0
 get_a_arr_val arr _____ val@@0
 get_a_arr_values arr val@abc 123 a bcd 123 =@0
 get_a_arr_keys arr val@_ __ ___ ____@0
-
+get_a_arr_values -s arr val@abc 123 a bcd 123 =@0
+get_a_arr_keys -s arr val@_ __ ___ ____@0
 get_a_arr_el_cnt arr val@4@0
+
+get_a_arr_el_cnt arr2 val@4@0
+get_a_arr_values arr2 val@= abc 123 a bcd 123@0
+get_a_arr_keys arr2 val@____ _ __ ___@0
+get_a_arr_val arr2 ___ val@a bcd 123@0
+get_a_arr_val arr2 ____ val@=@0
+get_a_arr_val arr2 _ val@abc@0
+get_a_arr_val arr2 __ val@123@0
+get_a_arr_val arr2 _____ val@@0
+get_a_arr_values -s arr2 val@abc 123 a bcd 123 =@0
+get_a_arr_keys -s arr2 val@_ __ ___ ____@0
 "
 
 
 test_7="
 [test_init]
-declare_a_arr arr 0=abc= 1=123=1 2==a@0
+declare_a_arr arr 1=123=1 2==a 0=abc=@0
+declare_a_arr arr2 2==a 1=123=1 0=abc=@0
 [/test_init]
 
 get_a_arr_val arr 0 val@abc=@0
@@ -146,15 +174,26 @@ get_a_arr_val arr 2 val@=a@0
 get_a_arr_val arr 3 val@@0
 get_a_arr_val arr 123 val@@0
 get_a_arr_val arr abc val@@0
-get_a_arr_values arr val@abc= 123=1 =a@0
-
+get_a_arr_values arr val@123=1 =a abc=@0
+get_a_arr_values -s arr val@abc= 123=1 =a@0
 get_a_arr_el_cnt arr val@3@0
+
+get_a_arr_val arr2 0 val@abc=@0
+get_a_arr_val arr2 1 val@123=1@0
+get_a_arr_val arr2 2 val@=a@0
+get_a_arr_val arr2 3 val@@0
+get_a_arr_val arr2 123 val@@0
+get_a_arr_val arr2 abc val@@0
+get_a_arr_values arr2 val@=a 123=1 abc=@0
+get_a_arr_keys arr2 val@2 1 0@0
+get_a_arr_keys -s arr2 val@0 1 2@0
+get_a_arr_el_cnt arr2 val@3@0
 "
 
 
 test_8="
 [test_init]
-declare_a_arr arr 0=abc#= 1=\"#123=1\" 2=\"=a#\" 3=\"#\" 4=\"###\"@0
+declare_a_arr arr 0=abc#= 1=\"#123=1\" 3=\"#\" 2=\"=a#\" 4=\"###\"@0
 [/test_init]
 
 get_a_arr_val arr 0 val@abc#=@0
@@ -167,9 +206,11 @@ get_a_arr_val arr #123 val@@1
 get_a_arr_val arr a# val@@1
 get_a_arr_val arr =a# val@@1
 get_a_arr_val arr # val@@1
-get_a_arr_values arr val@abc#= #123=1 =a# # ###@0
-get_a_arr_keys arr val@0 1 2 3 4@0
 get_a_arr_el_cnt arr val@5@0
+get_a_arr_values arr val@abc#= #123=1 # =a# ###@0
+get_a_arr_keys arr val@0 1 3 2 4@0
+get_a_arr_values -s arr val@abc#= #123=1 =a# # ###@0
+get_a_arr_keys -s arr val@0 1 2 3 4@0
 "
 
 
@@ -177,9 +218,19 @@ test_9="
 [test_init]
 declare_a_arr arr 0=abc 1=abcd 2=\"abc def\"@0
 unset_a_arr arr@0
+declare_a_arr arr2 1=abcd 2=\"abc def\" 0=abc@0
+unset_a_arr_el arr2 2@0
 [/test_init]
 
 get_a_arr_values arr val@@0
 get_a_arr_keys arr val@@0
+get_a_arr_values -s arr val@@0
+get_a_arr_keys -s arr val@@0
 get_a_arr_el_cnt arr val@0@0
+
+get_a_arr_values arr2 val@abcd abc@0
+get_a_arr_keys arr2 val@1 0@0
+get_a_arr_values -s arr2 val@abc abcd@0
+get_a_arr_keys -s arr2 val@0 1@0
+get_a_arr_el_cnt arr2 val@2@0
 "
