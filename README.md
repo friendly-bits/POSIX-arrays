@@ -84,7 +84,7 @@ $ val3 123 etc
 `get_a_arr_el_cnt <array_name> <var>` - Gets elements count of an associative array and assigns the result to variable `<var>`.
 
 #### Sorting an array
-`sort_a_arr <array_name>` - Sorts keys stored in the array. Sorting is a relatively slow operation. Functions keep track of sorted/unsorted state of the array and will only perform sorting if current state is unsorted. For associative arrays, optimizations are implemented which allow the array to keep the sorted state in some (but not all) cases when setting elements. Specifically, when changing a value of a previously set element keeps the sorted state of the array if it was sorted before. Setting a new element removes the flag which marks the array as sorted. Unsetting elements doesn't affect the sorted/unsorted state of the array.
+`sort_a_arr <array_name>` - Sorts keys stored in the array. Sorting is a relatively slow operation. Functions keep track of sorted/unsorted state of the array and will only perform sorting if current state is unsorted. For associative arrays, optimizations are implemented which allow the array to keep the sorted state in some (but not all) cases when setting elements. Specifically, when changing a value of a previously set element, the sorted state of the array is kept if it was sorted before. Setting a new element removes the flag which marks the array as sorted. Unsetting elements doesn't affect the sorted/unsorted state of the array.
 
 #### Unsetting an array
 
