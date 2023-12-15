@@ -38,7 +38,7 @@ Alternatively, copy functions which you need (and their dependencies) to your ow
 `get_i_arr_last_val <array_name> <var>` - Gets the value assigned to highest index in the array and assigns it to variable `<var>`. Returns an error if the array is empty or doesn't exist.
 
 #### Sorting an array
-`sort_i_arr <array_name>` - Sorts indices stored in the array. Sorting is a relatively slow operation. Functions keep track of sorted/unsorted state of the array and will only perform sorting if current state is unsorted. For indexed arrays, optimizations are implemented which allow the array to keep the sorted state in most (but not all) cases when setting elements. Unsetting elements doesn't affect the sorted/unsorted state of the array.
+`sort_i_arr <array_name>` - Sorts indices stored in the array. Sorting is a relatively slow operation. Functions keep track of sorted/unsorted state of the array via a flag and will only perform sorting if current state is unsorted. For indexed arrays, optimizations are implemented which allow the array to keep the sorted state in most (but not all) cases when setting elements. Specifically, the 'sorted' flag will be removed if setting a previously unset element with a lower index than the current max index of the array. Unsetting elements doesn't affect the sorted/unsorted state of the array.
 
 #### Unsetting an array
 
@@ -84,7 +84,7 @@ $ val3 123 etc
 `get_a_arr_el_cnt <array_name> <var>` - Gets elements count of an associative array and assigns the result to variable `<var>`.
 
 #### Sorting an array
-`sort_a_arr <array_name>` - Sorts keys stored in the array. Sorting is a relatively slow operation. Functions keep track of sorted/unsorted state of the array and will only perform sorting if current state is unsorted. For associative arrays, optimizations are implemented which allow the array to keep the sorted state in some (but not all) cases when setting elements. Specifically, when changing a value of a previously set element, the sorted state of the array is kept if it was sorted before. Setting a new element removes the flag which marks the array as sorted. Unsetting elements doesn't affect the sorted/unsorted state of the array.
+`sort_a_arr <array_name>` - Sorts keys stored in the array. Sorting is a relatively slow operation. Functions keep track of sorted/unsorted state of the array via a flag and will only perform sorting if current state is unsorted. For associative arrays, an optimization is implemented which allows the array to keep the sorted state in some (but not all) cases when setting elements. Specifically, when changing a value of a previously set element, the sorted state of the array is kept if it was sorted before. Setting a new element removes the flag which marks the array as sorted. Unsetting elements doesn't affect the sorted/unsorted state of the array.
 
 #### Unsetting an array
 
@@ -110,7 +110,7 @@ $ jazz, classical, rock
 </details>
 
 ## Details
-- The arrays can hold strings that have any characters in them, including whitespaces and newlines.
+- The arrays can hold strings that have any characters in them, including whitespaces, single and double quotation marks and newlines.
 - For indexed arrays, indices start at 0.
 - As is default for shells, if you request a value corresponding to an index or to a key that has not been set previously, the functions output an empty string and do not return an error.
 - Similarly, if you request a value from an array that has not been created, the functions output an empty string and do not return an error.
@@ -215,8 +215,9 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 
 ## Limitations
 - Unsetting elements is relatively slow because it requires processing all current indices/keys in the array as a string. To work around this, when possible, assign an empty string as a value to the element instead of unsetting the element. Alternatively, if you want to free up the memory used by the array, use the `unset_[x]_arr()` functions which work hundreds of times faster than unsetting individual elements.
-- By default, functions that output all indices/keys/values do not sort the output. This is different from Bash arrays behavior which sorts the output. The reason for this is that sorting is relatively slow and in most cases not required. When sorted output is required, use the functions with the `-s` option to get a sorted (by index/key) output. Once sorting occurs, the array will stay sorted until some changes have been applied to it (in some cases, the functions are able to maintain the sorted state when adding elements and in other cases not).
-- Array names and (for associative arrays) keys are limited to alphanumeric characters and underlines - `_`.
+- By default, functions that output all indices/keys/values do not sort the output. This is different from Bash arrays behavior which sorts the output. The reason for this is that sorting is relatively slow and in most cases not required. When sorted output is required, use the functions with the `-s` option to get a sorted (by index/key) output. Once sorting occurs, the array will stay sorted until some changes have been applied to it. In some cases, the functions are able to maintain the sorted state when setting elements and in other cases not, as described in the `Sorting an array` sections above. Unsetting elements doesn't affect the sorted/unsorted state of arrays.
+- Array names and (for associative arrays) keys are limited to English alphanumeric characters and underlines - `_`.
+- Functions have been tested exclusively with the `POSIX` (or `C`) locale and are likely to misbehave in some other locales. This may manifest in functions complaining about invalid array names or keys, or incorrect sorting, or even the unset functions working incorrectly. The `posix-arrays.sh` script exports the `LC_ALL=C` variable to avoid such issues. Note that sourcing this script will change the locale to C in the current shell the script is running in and its subshells (this won't stick when the script exists).
 
 ## Some more details
 - The values are stored in dynamically created variables. The name of such variable is in the format `_[x]_[arr_name]_[key/index]`, where `[x]` stands for the type of the array: `a` for associative array, `i` for indexed array.
