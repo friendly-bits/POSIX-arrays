@@ -186,7 +186,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Associative  | get values one by one                | 8ms   |
 | Associative  | get all values                       | 7ms   |
 | Associative  | get all keys                         | 1ms   |
-| Associative  | unset elements one by one            | 1ms   |
+| Associative  | unset elements one by one            | 28ms  |
 
 **2000 elements**:
 
