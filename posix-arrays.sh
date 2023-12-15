@@ -58,6 +58,7 @@ __sort_i_arr() {
 	eval "_indices=\"\$_i_${_arr_name}_indices\"
 		_sorted_flag=\"\$_i_${_arr_name}_sorted_flag\""
 
+	# if $_sorted_flag is not set, consider the array sorted
 	if [ -n "$_indices" ] && [ "$_sorted_flag" = 0 ]; then
 		_indices="$(printf '%s' "$_indices" | sort -nu)$___newline"
 		eval "_i_${_arr_name}_sorted_flag=1"
@@ -67,7 +68,7 @@ __sort_i_arr() {
 		_h_index="${_indices%"${___newline}"}"
 		_h_index="${_h_index##*"${___newline}"}"
 		eval "_i_${_arr_name}_h_index"='$_h_index'
-	elif [ -z "$_indices" ]; then
+	else
 		_h_index="-1"; unset "_i_${_arr_name}_h_index"
 	fi
 
@@ -413,8 +414,6 @@ unset_a_arr() {
 	check_strings "$_arr_name" || return 1
 
 	do_unset_a_arr "${_arr_name}"
-
-	eval "_a_${_arr_name}_sorted_flag=0"
 }
 
 # backend function
@@ -426,7 +425,7 @@ do_unset_a_arr() {
 	for ___key in $___keys; do
 		unset "_a_${1}_${___key}"
 	done
-	unset "_a_${1}___keys"
+	unset "_a_${1}___keys" "_a_${1}_sorted_flag"
 }
 
 # wrapper function for __sort_a_arr, intended as a user interface
@@ -448,6 +447,7 @@ sort_a_arr() {
 __sort_a_arr() {
 	eval "___keys=\"\$_a_${_arr_name}___keys\"
 		_sorted_flag=\"\$_a_${_arr_name}_sorted_flag\""
+	# if $_sorted_flag is not set, consider the array unsorted
 	if [ -n "$___keys" ] && [ "$_sorted_flag" != 1 ]; then
 		___keys="$(printf '%s' "$___keys" | sort -u)$___newline"
 		eval "_a_${_arr_name}_sorted_flag=1"
