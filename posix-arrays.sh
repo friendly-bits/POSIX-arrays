@@ -44,30 +44,30 @@ sort_i_arr() {
 	_arr_name="$1"
 	check_strings "$_arr_name" || return 1
 	__sort_i_arr
-	eval "_i_${_arr_name}_indices"='$_indices'
 	return 0
 }
 
 # backend function
 # sorts indices of indexed array
-# assigns the resulting indices to $_indices
 # sets the 'sorted' flag
 # finds the max index and assigns to variables '_h_index' and '_i_${arr_name}_h_index'
-# caller should update the '_i_${_arr_name}_indices' variable externally
 __sort_i_arr() {
 	eval "_indices=\"\$_i_${_arr_name}_indices\"
-		_sorted_flag=\"\$_i_${_arr_name}_sorted_flag\""
-
-	# if $_sorted_flag is not set, consider the array sorted
-	if [ -n "$_indices" ] && [ "$_sorted_flag" = 0 ]; then
-		_indices="$(printf '%s' "$_indices" | sort -nu)$___newline"
-		eval "_i_${_arr_name}_sorted_flag=1"
-	fi
+		_sorted_flag=\"\$_i_${_arr_name}_sorted_flag\"
+		_h_index=\"\${_i_${_arr_name}_h_index}\""
 
 	if [ -n "$_indices" ]; then
-		_h_index="${_indices%"${___newline}"}"
-		_h_index="${_h_index##*"${___newline}"}"
-		eval "_i_${_arr_name}_h_index"='$_h_index'
+		# if $_sorted_flag is not set, consider the array sorted
+		if [ "$_sorted_flag" = 0 ]; then
+			_indices="$(printf '%s' "$_indices" | sort -nu)$___newline"
+			eval "_i_${_arr_name}_indices=\"$_indices\"
+				_i_${_arr_name}_sorted_flag=1"
+		fi
+		if [ -z "$_h_index" ]; then
+			_h_index="${_indices%"${___newline}"}"
+			_h_index="${_h_index##*"${___newline}"}"
+			eval "_i_${_arr_name}_h_index"='$_h_index'
+		fi
 	else
 		_h_index="-1"; unset "_i_${_arr_name}_h_index"
 	fi
@@ -183,10 +183,8 @@ get_i_arr_values() {
 	if [ -n "$_do_sort" ]; then
 		__sort_i_arr
 		unset _do_sort
-		eval "_i_${_arr_name}_indices"='$_indices'
-	else
-		eval "_indices=\"\$_i_${_arr_name}_indices\""
 	fi
+	eval "_indices=\"\$_i_${_arr_name}_indices\""
 
 	___values="$(
 	for _index in $_indices; do
@@ -214,10 +212,8 @@ get_i_arr_indices() {
 	if [ -n "$_do_sort" ]; then
 		__sort_i_arr
 		unset _do_sort
-		eval "_i_${_arr_name}_indices"='$_indices'
-	else
-		eval "_indices=\"\$_i_${_arr_name}_indices\""
 	fi
+	eval "_indices=\"\$_i_${_arr_name}_indices\""
 
 	# shellcheck disable=SC2086
 	_indices="$(printf '%s ' $_indices)" # no quotes on purpose
@@ -237,17 +233,11 @@ add_i_arr_el() {
 	check_strings "$_arr_name" || return 1
 
 	eval "_h_index=\"\$_i_${_arr_name}_h_index\""
-	if [ -z "$_h_index" ]; then
-		# populates the $_indices and $_h_index variables and sets the 'sorted' flag
-		__sort_i_arr
-		_index=$((_h_index + 1))
-		eval "_i_${_arr_name}_indices"='${_indices}${_index}${___newline}'
-	else
-		_index=$((_h_index + 1))
-		eval "_i_${_arr_name}_indices=\"\${_i_${_arr_name}_indices}${_index}${___newline}\""
-	fi
+	[ -z "$_h_index" ] && __sort_i_arr
 
-	eval "_i_${_arr_name}_h_index"='$_index'"
+	_index=$((_h_index + 1))
+	eval "_i_${_arr_name}_indices=\"\${_i_${_arr_name}_indices}${_index}${___newline}\"
+		_i_${_arr_name}_h_index"='$_index'"
 		_i_${_arr_name}_${_index}"='$_el_set_flag$___new_val'
 	return 0
 }
@@ -301,18 +291,14 @@ get_i_arr_max_index() {
 	[ $# != 2 ] && { wrongargs "$@"; return 1; }
 	check_strings "$_arr_name" "$_out_var" || return 1
 
-	eval "_h_index=\"\$_i_${_arr_name}_h_index\""
-	if [ -z "$_h_index" ]; then
-		# populates the $_indices variable and sets the 'sorted' flag
-		__sort_i_arr
-		eval "_i_${_arr_name}_indices"='${_indices}'
-		if [ -z "$_indices" ]; then
-			unset "$_out_var" "_i_${_arr_name}_indices" _indices _h_index _out_var
-			no_elements; return 1
-		fi
+	if eval "[ -n \"\$_i_${_arr_name}_indices\" ]"; then
+		eval "_h_index=\"\$_i_${_arr_name}_h_index\""
+		[ -z "$_h_index" ] && __sort_i_arr
+		eval "$_out_var"='$_h_index'
+	else
+		unset "$_out_var" "_i_${_arr_name}_indices" _h_index _out_var
+		no_elements; return 1
 	fi
-
-	eval "_i_${_arr_name}_h_index"='$_h_index' "$_out_var"='$_h_index'
 
 	return 0
 }
@@ -326,19 +312,14 @@ get_i_arr_last_val() {
 	[ $# != 2 ] && { wrongargs "$@"; return 1; }
 	check_strings "$_arr_name" "$_out_var" || return 1
 
-	eval "_h_index=\"\$_i_${_arr_name}_h_index\""
-	if [ -z "$_h_index" ]; then
-		# populates the $_indices and $_h_index variables and sets the 'sorted' flag
-		__sort_i_arr
-		eval "_i_${_arr_name}_indices"='${_indices}'
-		if [ -z "$_indices" ]; then
-			unset "$_out_var" "_i_${_arr_name}_indices" _h_index
-			no_elements; return 1
-		fi
+	if eval "[ -n \"\$_i_${_arr_name}_indices\" ]"; then
+		eval "_h_index=\"\$_i_${_arr_name}_h_index\""
+		[ -z "$_h_index" ] && __sort_i_arr
+		eval "$_out_var=\"\${_i_${_arr_name}_${_h_index}#$_el_set_flag}\""
+	else
+		unset "$_out_var" "_i_${_arr_name}_indices"
+		no_elements; return 1
 	fi
-
-	eval "_i_${_arr_name}_h_index"='$_h_index'"
-		$_out_var=\"\${_i_${_arr_name}_${_h_index}#$_el_set_flag}\""
 
 	return 0
 }
