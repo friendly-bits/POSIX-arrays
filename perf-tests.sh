@@ -83,19 +83,21 @@ test_get() {
 test_mixed() {
 	if [ "$arr_type" = "i" ]; then
 		for j in $elements; do
-			[ $((j % 10)) = 0 ] && get_i_arr_indices test_arr testvar
-			set_i_arr_el test_arr "$((j*3))" "$test_str"
-			unset_i_arr_el test_arr "$((j+1))"
-			add_i_arr_el test_arr "$test_str"
+			[ $((j % 10)) = 0 ] && sort_i_arr test_arr
+			# set_i_arr_el test_arr "$((j))" "$test_str"
+			set_i_arr_el test_arr "$((j+1))" "$test_str"
+			unset_i_arr_el test_arr "$((j))"
+			set_i_arr_el test_arr "$((j))" "$test_str"
+			# add_i_arr_el test_arr "$test_str"
 		done
 		# set_${arr_type}_arr_val test_arr "$i" "$test_str"
 		# add_${arr_type}_arr_el test_arr "$test_str"
 	else
 		for j in $elements; do
-			[ $((j % 10)) = 0 ] && get_a_arr_keys test_arr testvar
-			set_a_arr_el test_arr "$((j*3))=$test_str"
-#			unset_a_arr_el test_arr "$((j*2 -2))"
-			set_a_arr_el test_arr "$((j*2+1))=$test_str"
+			[ $((j % 10)) = 0 ] && get_a_arr_keys -s test_arr testvar
+			set_a_arr_el test_arr "$((j))=$test_str"; #echo "setting $((j+1))"
+			set_a_arr_el test_arr "$((j*2))=$test_str"; #echo "setting $((j+1))"
+			unset_a_arr_el test_arr "$((j))"; #echo "unsetting $((j))"
 		done
 		# set_${arr_type}_arr_val test_arr "$i" "$test_str"
 		# add_${arr_type}_arr_el test_arr "$test_str"
