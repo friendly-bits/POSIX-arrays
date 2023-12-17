@@ -83,7 +83,7 @@ test_get() {
 test_mixed() {
 	if [ "$arr_type" = "i" ]; then
 		for j in $elements; do
-			[ $((j % 10)) = 0 ] && sort_i_arr test_arr
+			[ $((j % 100)) = 0 ] && sort_i_arr test_arr
 			# set_i_arr_el test_arr "$((j))" "$test_str"
 			set_i_arr_el test_arr "$((j+1))" "$test_str"
 			unset_i_arr_el test_arr "$((j))"
@@ -94,7 +94,7 @@ test_mixed() {
 		# add_${arr_type}_arr_el test_arr "$test_str"
 	else
 		for j in $elements; do
-			[ $((j % 10)) = 0 ] && get_a_arr_keys -s test_arr testvar
+			[ $((j % 100)) = 0 ] && get_a_arr_keys -s test_arr testvar
 			set_a_arr_el test_arr "$((j))=$test_str"; #echo "setting $((j+1))"
 			set_a_arr_el test_arr "$((j*2))=$test_str"; #echo "setting $((j+1))"
 			unset_a_arr_el test_arr "$((j))"; #echo "unsetting $((j))"
@@ -218,11 +218,11 @@ test_unset_all
 
 
 if [ "$arr_type" = "i" ]; then
-	unset_${arr_type}_arr_el test_arr "$((l-3))"
-		set_i_arr_el test_arr "$((l-3))" ""
+	unset_i_arr_el test_arr "$((l-3))"
+	set_i_arr_el test_arr "$((l-3))" "$test_str"
 else
-	unset_${arr_type}_arr_el test_arr "bcdefghijklmn$((l-3))"
-		set_a_arr_el test_arr "bcdefghijklmn$((l-3))="
+	unset_a_arr_el test_arr "bcdefghijklmn$((l-3))"
+	set_a_arr_el test_arr "bcdefghijklmn$((l-3))=$test_str"
 fi
 
 measure_time test_unset_all
