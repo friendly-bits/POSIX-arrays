@@ -60,6 +60,30 @@ test_unset() {
 	fi
 }
 
+test_unset_rev() {
+	if [ "$arr_type" = "i" ]; then
+		for i in $elements; do
+			unset_${arr_type}_arr_el test_arr "$((l-i+1))"
+		done
+	else
+		for i in $elements; do
+			unset_${arr_type}_arr_el test_arr "abcdefghijklmn$((l-i+1))"
+		done
+	fi
+}
+
+test_unset_rev_mid() {
+	if [ "$arr_type" = "i" ]; then
+		for i in $elements; do
+			unset_${arr_type}_arr_el test_arr "$((l-i))"
+		done
+	else
+		for i in $elements; do
+			unset_${arr_type}_arr_el test_arr "abcdefghijklmn$((l-i))"
+		done
+	fi
+}
+
 test_unset_all() {
 	unset_${arr_type}_arr test_arr
 }
@@ -208,13 +232,19 @@ measure_time test_get_arr_values
 
 measure_time test_unset
 
+test_set
+measure_time test_unset_rev
+
+test_set
+measure_time test_unset_rev_mid
+
 measure_time test_mixed
  
 test_unset_all
 
 [ "$arr_type" = i ] && {
 	measure_time test_add
-} || { echo "setting..."; test_set; }
+} || test_set
 
 
 if [ "$arr_type" = "i" ]; then
@@ -232,7 +262,7 @@ echo "Resulting raw keys:"
 if [ "$arr_type" = "i" ]; then
 	printf '%s\n' "'$_i_test_arr_indices'"
 else
-	printf '%s\n' "'$_a_test_arr___keys'"
+	printf '%s\n' "'$_a_test_arr___keys$_a_test_arr___keys_buf'"
 fi
 
 
