@@ -137,7 +137,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | -------------|--------------------------------------|-------|
 | Indexed      | set N elements one by one (cold*)    | 1ms   |
 | Indexed      | set N elements one by one (hot**)    | 1ms   |
-| Indexed      | add N elements one by one            | 2ms   |
+| Indexed      | add N elements one by one            | 1ms   |
 | Indexed      | get N values one by one              | 1ms   |
 | Indexed      | get all values                       | 2ms   |
 | Indexed      | get all indices                      | 1ms   |
@@ -146,7 +146,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Associative  | set N elements one by one (cold*)    | 1ms   |
 | Associative  | set N elements one by one (hot**)    | 1ms   |
 | Associative  | get N values one by one              | 1ms   |
-| Associative  | get all values                       | 1ms   |
+| Associative  | get all values                       | 2ms   |
 | Associative  | get all keys                         | 1ms   |
 | Associative  | unset N elements one by one          | 1ms   |
 
@@ -154,12 +154,12 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 
 | Array type   |      Test                            | Time  |
 | -------------|--------------------------------------|-------|
-| Indexed      | set N elements one by one (cold*)    | 4ms   |
+| Indexed      | set N elements one by one (cold*)    | 3ms   |
 | Indexed      | set N elements one by one (hot**)    | 2ms   |
-| Indexed      | add N elements one by one            | 2ms   |
-| Indexed      | get N values one by one              | 2ms   |
+| Indexed      | add N elements one by one            | 1ms   |
+| Indexed      | get N values one by one              | 1ms   |
 | Indexed      | get all values                       | 2ms   |
-| Indexed      | get all indices                      | 2ms   |
+| Indexed      | get all indices                      | 1ms   |
 | Indexed      | unset N elements one by one          | 4ms   |
 | -------------|--------------------------------------|-------|
 | Associative  | set N elements one by one (cold*)    | 4ms   |
@@ -173,18 +173,18 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 
 | Array type   |      Test                            | Time  |
 | -------------|--------------------------------------|-------|
-| Indexed      | set N elements one by one (cold*)    | 22ms  |
+| Indexed      | set N elements one by one (cold*)    | 20ms  |
 | Indexed      | set N elements one by one (hot**)    | 10ms  |
-| Indexed      | add N elements one by one            | 11ms  |
+| Indexed      | add N elements one by one            | 10ms  |
 | Indexed      | get N values one by one              | 6ms   |
 | Indexed      | get all values                       | 6ms   |
 | Indexed      | get all indices                      | 1ms   |
 | Indexed      | unset N elements one by one          | 23ms  |
 | -------------|--------------------------------------|-------|
-| Associative  | set N elements one by one (cold*)    | 24ms  |
-| Associative  | set N elements one by one (hot**)    | 11ms  |
+| Associative  | set N elements one by one (cold*)    | 23ms  |
+| Associative  | set N elements one by one (hot**)    | 9ms   |
 | Associative  | get N values one by one              | 7ms   |
-| Associative  | get all values                       | 6ms   |
+| Associative  | get all values                       | 7ms   |
 | Associative  | get all keys                         | 1ms   |
 | Associative  | unset N elements one by one          | 35ms  |
 
@@ -192,20 +192,20 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 
 | Array type   |      Test                            | Time  |
 | -------------|--------------------------------------|-------|
-| Indexed      | set N elements one by one (cold*)    | 40ms  |
+| Indexed      | set N elements one by one (cold*)    | 39ms  |
 | Indexed      | set N elements one by one (hot**)    | 20ms  |
-| Indexed      | add N elements one by one            | 24ms  |
-| Indexed      | get N values one by one              | 16ms  |
+| Indexed      | add N elements one by one            | 22ms  |
+| Indexed      | get N values one by one              | 14ms  |
 | Indexed      | get all values                       | 15ms  |
 | Indexed      | get all indices                      | 1ms   |
-| Indexed      | unset N elements one by one          | 48ms  |
+| Indexed      | unset N elements one by one          | 52ms  |
 | -------------|--------------------------------------|-------|
-| Associative  | set N elements one by one (cold*)    | 56ms  |
-| Associative  | set N elements one by one (hot**)    | 22ms  |
-| Associative  | get N values one by one              | 18ms  |
+| Associative  | set N elements one by one (cold*)    | 53ms  |
+| Associative  | set N elements one by one (hot**)    | 19ms  |
+| Associative  | get N values one by one              | 16ms  |
 | Associative  | get all values                       | 15ms  |
 | Associative  | get all keys                         | 2ms   |
-| Associative  | unset N elements one by one          | 101ms |
+| Associative  | unset N elements one by one          | 98ms  |
 
 \* cold - elements are set without prior initialization
 
