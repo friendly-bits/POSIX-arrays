@@ -9,6 +9,7 @@
 
 # keys/indices are stored in a variable named in the format '_[x]_[arr_name]_keys' or '_[x]_[arr_name]_indices'
 # array 'sorted' flag (1=true, 0=false) is stored in variable: $_[x]_[arr_name]_sorted_flag
+# when the 'sorted' flag variable value is an empty string, this indicates an empty/non-existing array
 # for indexed arrays, $_i_[arr_name]_h_index variable holds the highest index in the array if it's known
 
 
@@ -16,11 +17,12 @@
 # 1 - array name
 unset_i_arr() {
 	___me="unset_i_arr"
-	[ $# != 1 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 1 ) ;; * ) wrongargs "$@"; return 1; esac
 	_arr_name="$1"
 	check_strings "$_arr_name" || return 1
 
 	do_unset_i_arr "${_arr_name}"
+	unset "_i_${_arr_name}_sorted_flag"
 }
 
 # backend function
@@ -39,7 +41,7 @@ do_unset_i_arr() {
 # 1 - array name
 sort_i_arr() {
 	___me="sort_i_arr"
-	[ $# != 1 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 1 ) ;; * ) wrongargs "$@"; return 1; esac
 	_arr_name="$1"
 	check_strings "$_arr_name" || return 1
 	__sort_i_arr
@@ -51,28 +53,28 @@ sort_i_arr() {
 # sets the 'sorted' flag
 # finds the max index and assigns to variables '_h_index' and '_i_${arr_name}_h_index'
 __sort_i_arr() {
-	eval "_indices=\"\$_i_${_arr_name}_indices\"
-		_indices_buf=\"\$_i_${_arr_name}_indices_buf\"
-		_sorted_flag=\"\$_i_${_arr_name}_sorted_flag\"
-		_h_index=\"\${_i_${_arr_name}_h_index}\""
+	eval "_sorted_flag=\"\$_i_${_arr_name}_sorted_flag\"
+		_h_index=\"\${_i_${_arr_name}_h_index}\"
+		_indices=\"\$_i_${_arr_name}_indices\"
+		_indices_buf=\"\$_i_${_arr_name}_indices_buf\""
 
-	if [ -n "$_indices$_indices_buf" ]; then
-		# if $_sorted_flag is not set, consider the array sorted
-		if [ "$_sorted_flag" = 0 ]; then
-			_indices="$(printf '%s%s' "$_indices" "$_indices_buf" | sort -n)$___newline"
-			eval "_i_${_arr_name}_indices=\"$_indices\"
-				_i_${_arr_name}_indices_buf=''
-				_i_${_arr_name}_sorted_flag=1"
-		fi
-		if [ -z "$_h_index" ]; then
-			_h_index="${_indices%"${___newline}"}"
-			_h_index="${_h_index##*"${___newline}"}"
-			eval "_i_${_arr_name}_h_index"='$_h_index'
-		fi
-	else
-		_h_index="-1"; unset "_i_${_arr_name}_h_index"
-	fi
+	case "$_sorted_flag" in
+		'' ) _h_index="-1"; unset "_i_${_arr_name}_h_index" ;;
+		* )
+			case "$_sorted_flag" in
+				1 ) ;;
+				* )
+					_indices="$(printf '%s%s' "$_indices" "$_indices_buf" | sort -n)"
+					eval "_i_${_arr_name}_indices=\"$_indices\"
+						_i_${_arr_name}_indices_buf=''
+						_i_${_arr_name}_sorted_flag=1"
+			esac
 
+			case "$_h_index" in '' )
+				_h_index="${_indices##*"${___newline}"}"
+				eval "_i_${_arr_name}_h_index"='$_h_index'
+			esac
+	esac
 }
 
 # declare an indexed array while populating first elements
@@ -81,7 +83,7 @@ __sort_i_arr() {
 # all other args - new array values
 declare_i_arr() {
 	___me="declare_i_arr"
-	[ -z "$*" ] && { wrongargs "$@"; return 1; }
+	case "$*" in '' ) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; shift
 	check_strings "$_arr_name" || return 1
 
@@ -90,17 +92,18 @@ declare_i_arr() {
 	_index=0; _indices=''
 	for ___val in "$@"; do
 		eval "_i_${_arr_name}_${_index}"='$_el_set_flag$___val'
-		_indices="$_indices$_index$___newline"
+		_indices="$_indices$___newline$_index"
 		_index=$((_index + 1))
 	done
 	_index=$((_index - 1))
 
-	[ "$_index" = "-1" ] && _index=''
-
-	eval "
-		_i_${_arr_name}_h_index"='$_index'"
-		_i_${_arr_name}_indices"='$_indices'"
-		_i_${_arr_name}_sorted_flag=1"
+	case "$_index" in
+		"-1" ) _index='' ;;
+		* ) eval "
+				_i_${_arr_name}_h_index"='$_index'"
+				_i_${_arr_name}_indices"='$_indices'"
+				_i_${_arr_name}_sorted_flag=1"
+	esac
 	return 0
 }
 
@@ -116,23 +119,25 @@ init_i_arr() {
 	_arr_name="$1"; _el_num="$2"; _val="$3"
 	check_strings "$_arr_name" || return 1
 	_index="$_el_num"; check_index || return 1
-	_last_index=$((_el_num-1))
+	_h_index=$((_el_num-1))
 
 	do_unset_i_arr "${_arr_name}"
 
-	if [ $_last_index != "-1" ]; then
-		_index=0; _indices=''
-		while [ $_index -le "$_last_index" ]; do
-			eval "_i_${_arr_name}_${_index}"='$_el_set_flag$_val'
-			_indices="$_indices$_index$___newline"
-			_index=$((_index + 1))
-		done
-		_index=$((_index - 1))
-		eval "
-			_i_${_arr_name}_h_index"='$_index'"
-			_i_${_arr_name}_indices"='$_indices'"
-			_i_${_arr_name}_sorted_flag=1"
-	fi
+	case "$_h_index" in
+		"-1" ) ;;
+		* )
+			_index=0; _indices=''
+			while [ $_index -le "$_h_index" ]; do
+				eval "_i_${_arr_name}_${_index}"='$_el_set_flag$_val'
+				_indices="$_indices$___newline$_index"
+				_index=$((_index + 1))
+			done
+			_index=$((_index - 1))
+			eval "
+				_i_${_arr_name}_h_index"='$_index'"
+				_i_${_arr_name}_indices"='$_indices'"
+				_i_${_arr_name}_sorted_flag=1"
+	esac
 
 	return 0
 }
@@ -143,7 +148,7 @@ init_i_arr() {
 # 2 - newline-separated string
 read_i_arr() {
 	___me="read_i_arr"
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 2 ) ;; * ) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; ___lines="$2"
 	check_strings "$_arr_name" || return 1
 
@@ -154,19 +159,19 @@ read_i_arr() {
 	IFS="$___newline"
 	for ___line in $___lines; do
 		eval "_i_${_arr_name}_${_index}"='$_el_set_flag$___line'
-		_indices="$_indices$_index$___newline"
+		_indices="$_indices$___newline$_index"
 		_index=$((_index + 1))
 	done
 	IFS="$IFS_OLD"
 
 	_index=$((_index - 1))
-	[ "$_index" = "-1" ] && _index=''
-
-	eval "
-		_i_${_arr_name}_h_index"='$_index'"
-		_i_${_arr_name}_indices"='$_indices'"
-		_i_${_arr_name}_sorted_flag=1"
-
+	case "$_index" in
+		"-1" ) _index='' ;;
+		* ) eval "
+				_i_${_arr_name}_h_index"='$_index'"
+				_i_${_arr_name}_indices"='$_indices'"
+				_i_${_arr_name}_sorted_flag=1"
+	esac
 	return 0
 }
 
@@ -178,14 +183,14 @@ read_i_arr() {
 get_i_arr_values() {
 	___me="get_i_arr_values"
 	[ "$1" = "-s" ] && { _do_sort=1; shift; }
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 2 ) ;; * ) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; _out_var="$2"; ___values=''
 	check_strings "$_arr_name" "$_out_var" || return 1
 
-	if [ -n "$_do_sort" ]; then
-		__sort_i_arr
-		unset _do_sort
-	fi
+	case "$_do_sort" in '' );;
+		* ) __sort_i_arr
+			unset _do_sort
+	esac
 	eval "_indices=\"\${_i_${_arr_name}_indices}\${_i_${_arr_name}_indices_buf}\""
 
 	___values="$(
@@ -208,14 +213,14 @@ get_i_arr_values() {
 get_i_arr_indices() {
 	___me="get_i_arr_indices"
 	[ "$1" = "-s" ] && { _do_sort=1; shift; }
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 2 ) ;; * ) wrongargs "$@"; return 1; esac
 	_arr_name="$1" _out_var="$2"
 	check_strings "$_arr_name" "$_out_var" || return 1
 
-	if [ -n "$_do_sort" ]; then
-		__sort_i_arr
-		unset _do_sort
-	fi
+	case "$_do_sort" in '' );;
+		* ) __sort_i_arr
+			unset _do_sort
+	esac
 	eval "_indices=\"\${_i_${_arr_name}_indices}\${_i_${_arr_name}_indices_buf}\""
 
 	# shellcheck disable=SC2086
@@ -232,16 +237,18 @@ get_i_arr_indices() {
 add_i_arr_el() {
 	___me="add_i_arr_el"
 	_arr_name="$1"; ___new_val="$2"
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 2 ) ;; * ) wrongargs "$@"; return 1; esac
 	check_strings "$_arr_name" || return 1
 
 	eval "_h_index=\"\$_i_${_arr_name}_h_index\""
-	[ -z "$_h_index" ] && __sort_i_arr
+	case "$_h_index" in '' ) __sort_i_arr; esac
+	case "$_h_index" in "-1" ) eval "_i_${_arr_name}_sorted_flag=1"; esac
 
 	_index=$((_h_index + 1))
-	eval "_i_${_arr_name}_indices=\"\${_i_${_arr_name}_indices}${_index}${___newline}\"
+	eval "_i_${_arr_name}_indices=\"\${_i_${_arr_name}_indices}${___newline}${_index}\"
 		_i_${_arr_name}_h_index"='$_index'"
 		_i_${_arr_name}_${_index}"='$_el_set_flag$___new_val'
+
 	return 0
 }
 
@@ -249,46 +256,46 @@ add_i_arr_el() {
 # 1 - array name
 # 2 - index
 unset_i_arr_el() {
-	_remove_first_index() {
-		eval "_i_${_arr_name}${1}=\"\${${1}#$_index$___newline}\""
-	}
-	_remove_mid_last_index() {
-		eval "_i_${_arr_name}${1}=\"\${${1}%$___newline$_index$___newline*}${___newline}\${${1}#*$___newline$_index$___newline}\""
-	}
+	_rm_1st_index() { eval "_i_${_arr_name}${1}=\"\${${1}#$___newline$_index}\""; }
+	_rm_last_index() { eval "_i_${_arr_name}${1}=\"\${${1}%$___newline$_index}\""; }
+	_rm_mid_index() { eval "_i_${_arr_name}${1}=\"\${${1}%$___newline$_index$___newline*}$___newline\${${1}##*$___newline$_index$___newline}\""; }
 
 	___me="unset_i_arr_el"
 	_arr_name="$1"; _index="$2"
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 2 ) ;; * ) wrongargs "$@"; return 1; esac
 	check_strings "$_arr_name" || return 1
 	check_index || return 1
 
-	eval "___old_val=\"\$_i_${_arr_name}_${_index}\"
-		_h_index=\"\$_i_${_arr_name}_h_index\"
-		_sorted_flag=\"\$_i_${_arr_name}_sorted_flag\""
-	if [ -n "$___old_val" ]; then
+	eval "___old_val=\"\$_i_${_arr_name}_${_index}\""
+	case "$___old_val" in '' ) ;; * )
 		unset "_i_${_arr_name}_${_index}"
 
+		_no_ind_buf=''; IFS_OLD="$IFS"; IFS="$___newline"
 		eval "_indices=\"\$_i_${_arr_name}_indices\"; _indices_buf=\"\$_i_${_arr_name}_indices_buf\""
-		case "$_indices_buf" in
-			"${_index}${___newline}"* ) _remove_first_index "_indices_buf" ;;
-			*"${___newline}${_index}${___newline}"* ) _remove_mid_last_index "_indices_buf"
+		case "${_indices_buf#$___newline}" in
+			'' ) _no_ind_buf=1 ;;
+			"$_index" ) _rm_1st_index "_indices_buf"; _no_ind_buf=1 ;;
+			"$_index$___newline"* ) _rm_1st_index "_indices_buf" ;;
+			*"$___newline$_index" ) _rm_last_index "_indices_buf" ;;
+			*"${___newline}$_index$___newline"* ) _rm_mid_index "_indices_buf"
 		esac
-		case "$_indices" in
-			"${_index}${___newline}"* ) _remove_first_index "_indices" ;;
-			*"${___newline}${_index}${___newline}"* ) _remove_mid_last_index "_indices"
+		case "${_indices#$___newline}" in
+			'' ) [ -n "$_no_ind_buf" ] && { unset "_i_${_arr_name}_h_index" "_i_${_arr_name}_sorted_flag"; IFS="$IFS_OLD"; return 0; } ;;
+			"$_index" ) _rm_1st_index "_indices"
+				[ -n "$_no_ind_buf" ] && { unset "_i_${_arr_name}_h_index" "_i_${_arr_name}_sorted_flag"; IFS="$IFS_OLD"; return 0; } ;;
+			"$_index$___newline"* ) _rm_1st_index "_indices" ;;
+			*"$___newline$_index" ) _rm_last_index "_indices" ;;
+			*"${___newline}$_index$___newline"* ) _rm_mid_index "_indices"
 		esac
+		IFS="$IFS_OLD"
 
+		eval "_h_index=\"\$_i_${_arr_name}_h_index\"; _sorted_flag=\"\$_i_${_arr_name}_sorted_flag\""
 		if [ "$_index" = "$_h_index" ] && [ "$_sorted_flag" = 1 ]; then
-			if eval "[ -n \"\$_i_${_arr_name}_indices\" ]"; then
-				eval "_i_${_arr_name}_h_index=\"\${_i_${_arr_name}_indices%${___newline}}\"
-					_i_${_arr_name}_h_index=\"\${_i_${_arr_name}_h_index##*${___newline}}\""
-			else
-				unset "_i_${_arr_name}_h_index"
-			fi
+			eval "_i_${_arr_name}_h_index=\"\${_i_${_arr_name}_indices##*${___newline}}\""
 		elif [ "$_index" = "$_h_index" ]; then
 			unset "_i_${_arr_name}_h_index"
 		fi
-	fi
+	esac
 
 	return 0
 }
@@ -299,7 +306,7 @@ unset_i_arr_el() {
 get_i_arr_max_index() {
 	___me="get_i_arr_max_index"
 	_arr_name="$1"; _out_var="$2"
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 2 ) ;; * ) wrongargs "$@"; return 1; esac
 	check_strings "$_arr_name" "$_out_var" || return 1
 
 	if eval "[ -n \"\$_i_${_arr_name}_indices\${_i_${_arr_name}_indices_buf}\" ]"; then
@@ -320,7 +327,7 @@ get_i_arr_max_index() {
 get_i_arr_last_val() {
 	___me="get_i_arr_last_val"
 	_arr_name="$1"; _out_var="$2"
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 2 ) ;; * ) wrongargs "$@"; return 1; esac
 	check_strings "$_arr_name" "$_out_var" || return 1
 
 	if eval "[ -n \"\$_i_${_arr_name}_indices\${_i_${_arr_name}_indices_buf}\" ]"; then
@@ -341,7 +348,7 @@ get_i_arr_last_val() {
 get_i_arr_el_cnt() {
 	___me="get_i_arr_el_cnt"
 	_arr_name="$1"; _out_var="$2"
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 2 ) ;; * ) wrongargs "$@"; return 1; esac
 	check_strings "$_arr_name" "$_out_var" || return 1
 
 	eval "_indices=\"\$_i_${_arr_name}_indices\${_i_${_arr_name}_indices_buf}\""
@@ -367,25 +374,25 @@ set_i_arr_el() {
 
 	eval "___old_val=\"\$_i_${_arr_name}_${_index}\"
 		_h_index=\"\$_i_${_arr_name}_h_index\"
+		_sorted_flag=\"\$_i_${_arr_name}_sorted_flag\"
 		_i_${_arr_name}_${_index}"='$_el_set_flag$___new_val'
-
-	if [ -z "$___old_val" ]; then
-			if [ -n "$_h_index" ] && [ "$_index" -gt  "$_h_index" ]; then
-				eval "_i_${_arr_name}_h_index=$_index"
-				if eval "[ \"\$_i_${_arr_name}_sorted_flag\" != 0 ]"; then
-					eval "_i_${_arr_name}_indices=\"\${_i_${_arr_name}_indices}${_index}${___newline}\""
-				else
-					eval "_i_${_arr_name}_indices_buf=\"\${_i_${_arr_name}_indices_buf}${_index}${___newline}\""
-				fi
-			elif eval "[ -z \"\$_i_${_arr_name}_sorted_flag\" ]"; then
-				eval "_i_${_arr_name}_sorted_flag=1
-					_i_${_arr_name}_h_index=\"$_index\"
-					_i_${_arr_name}_indices=\"${_index}${___newline}\""
-			else
-				eval "_i_${_arr_name}_sorted_flag=0
-					_i_${_arr_name}_indices_buf=\"\${_i_${_arr_name}_indices_buf}${_index}${___newline}\""
-			fi
-	fi
+	case "$___old_val" in '' )
+		___entry="$___newline$_index"
+		if [ -n "$_h_index" ] && [ "$_index" -gt  "$_h_index" ]; then
+			eval "_i_${_arr_name}_h_index=$_index"
+			case "$_sorted_flag" in
+				1 ) eval "_i_${_arr_name}_indices=\"\${_i_${_arr_name}_indices}$___entry\"" ;;
+				* ) eval "_i_${_arr_name}_indices_buf=\"\${_i_${_arr_name}_indices_buf}$___entry\""
+			esac
+		elif [ -z "$_sorted_flag" ]; then
+			eval "_i_${_arr_name}_sorted_flag=1
+				_i_${_arr_name}_h_index=\"$_index\"
+				_i_${_arr_name}_indices=\"$___entry\""
+		else
+			eval "_i_${_arr_name}_sorted_flag=0
+				_i_${_arr_name}_indices_buf=\"\${_i_${_arr_name}_indices_buf}$___entry\""
+		fi
+	esac
 
 	return 0
 }
@@ -397,7 +404,7 @@ set_i_arr_el() {
 # 3 - global variable name for output
 get_i_arr_val() {
 	___me="get_i_arr_val"
-	[ $# != 3 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 3 ) ;; * ) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; _index="$2"; _out_var="$3"
 	check_strings "$_arr_name" "$_out_var" || return 1
 	check_index || return 1
@@ -410,30 +417,31 @@ get_i_arr_val() {
 # 1 - array name
 unset_a_arr() {
 	___me="get_a_arr_val"
-	[ $# != 1 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 1 ) ;; * ) wrongargs "$@"; return 1; esac
 	_arr_name="$1"
 	check_strings "$_arr_name" || return 1
 
-	do_unset_a_arr "${_arr_name}"
+	_do_unset_a_arr "${_arr_name}"
+	unset "_a_${_arr_name}_sorted_flag"
 }
 
 # backend function
 # unsets all variables of an associative array
 # 1 - array name
-do_unset_a_arr() {
+_do_unset_a_arr() {
 	eval "___keys=\"\$_a_${1}___keys\$_a_${1}___keys_buf\""
 
 	for ___key in $___keys; do
 		unset "_a_${1}_${___key}"
 	done
-	unset "_a_${1}___keys" "_a_${1}___keys_buf" "_a_${1}_sorted_flag"
+	unset "_a_${1}___keys" "_a_${1}___keys_buf"
 }
 
 # wrapper function for __sort_a_arr, intended as a user interface
 # 1 - array name
 sort_a_arr() {
 	___me="sort_a_arr"
-	[ $# != 1 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 1 ) ;; * ) wrongargs "$@"; return 1; esac
 	_arr_name="$1"
 	check_strings "$_arr_name" || return 1
 	__sort_a_arr
@@ -446,16 +454,15 @@ sort_a_arr() {
 # updates the '$_a_${_arr_name}____keys' variable
 # sets the 'sorted' flag
 __sort_a_arr() {
-	eval "___keys=\"\$_a_${_arr_name}___keys\"
-		___keys_buf=\"\$_a_${_arr_name}___keys_buf\"
-		_sorted_flag=\"\$_a_${_arr_name}_sorted_flag\""
-
-	# if $_sorted_flag is not set, consider the array unsorted
-	if [ -n "$___keys$___keys_buf" ] && [ "$_sorted_flag" != 1 ]; then
-			___keys="$(printf '%s%s' "$___keys" "$___keys_buf" | sort -u)$___newline"
-			eval "_a_${_arr_name}___keys=\"$___keys\"
-				_a_${_arr_name}___keys_buf=''
-				_a_${_arr_name}_sorted_flag=1"
+	if eval "[ \"\$_a_${_arr_name}_sorted_flag\" != 1 ]"; then
+		eval "___keys=\"\$_a_${_arr_name}___keys\"
+			___keys_buf=\"\$_a_${_arr_name}___keys_buf\""
+		___keys="$(printf '%s%s' "$___keys" "$___keys_buf" | sort -u)"
+		eval "_a_${_arr_name}___keys=\"$___keys\"
+			_a_${_arr_name}___keys_buf=''
+			_a_${_arr_name}_sorted_flag=1"
+	else
+		eval "___keys=\"\$_a_${_arr_name}___keys\""
 	fi
 }
 
@@ -465,25 +472,26 @@ __sort_a_arr() {
 # all other args - 'key=value' pairs
 declare_a_arr() {
 	___me="declare_a_arr"
-	[ -z "$*" ] && { wrongargs "$@"; return 1; }
+	case "$*" in '' ) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; shift
 	check_strings "$_arr_name" || return 1
 
-	do_unset_a_arr "${_arr_name}"
+	_do_unset_a_arr "${_arr_name}"
 
 	___keys=''
-	if [ -n "$*" ]; then
+	case "$*" in '' ) ;; * )
 		for ___pair in "$@"; do
 			check_pair || return 1
 			___key="${___pair%%=*}"
 			___val="$_el_set_flag${___pair#*=}"
-			check_strings "$___key" || return 1
+			check_strings "$___key" || return 1 # todo: revert assignments
 			eval "_a_${_arr_name}_${___key}"='$___val'
-			___keys="$___keys$___key$___newline"
+			___keys="$___keys$___newline$___key"
 		done
-	fi
+	esac
 
-	eval "_a_${_arr_name}___keys"='$___keys'
+	eval "_a_${_arr_name}___keys=\"$___keys\""
+
 	return 0
 }
 
@@ -494,22 +502,26 @@ declare_a_arr() {
 get_a_arr_values() {
 	___me="get_a_arr_values"
 	[ "$1" = "-s" ] && { _do_sort=1; shift; }
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
-	_arr_name="$1"; _out_var="$2"
+	case "$#" in 2 ) ;; * ) wrongargs "$@"; return 1; esac
+	_arr_name="$1"; _out_var="$2"; ___keys=''
 	check_strings "$_arr_name" "$_out_var" || return 1
-	if [ -n "$_do_sort" ]; then
-		__sort_a_arr
-		unset _do_sort
-	else
-		eval "___keys=\"\$_a_${_arr_name}___keys\$_a_${_arr_name}___keys_buf\""
-	fi
 
-	___values="$(
-		for ___key in $___keys; do
-			eval "___val=\"\${_a_${_arr_name}_${___key}#$_el_set_flag}\""
-			[ -n "$___val" ] && printf '%s ' "$___val"
-		done
-	)"
+	case "$_do_sort" in
+		'' ) eval "___keys=\"\$_a_${_arr_name}___keys\$_a_${_arr_name}___keys_buf\"" ;;
+		* )
+			__sort_a_arr
+			unset _do_sort
+	esac
+
+	___values=''
+	case "$___keys" in '' ) ;; * )
+		___values="$(
+			for ___key in $___keys; do
+				eval "___val=\"\${_a_${_arr_name}_${___key}#$_el_set_flag}\""
+				[ -n "$___val" ] && printf '%s ' "$___val"
+			done
+		)"
+	esac
 
 	eval "$_out_var"='${___values% }'
 	return 0
@@ -522,18 +534,18 @@ get_a_arr_values() {
 get_a_arr_keys() {
 	___me="get_a_arr_keys"
 	[ "$1" = "-s" ] && { _do_sort=1; shift; }
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
-	_arr_name="$1"; _out_var="$2"
+	case "$#" in 2 ) ;; * ) wrongargs "$@"; return 1; esac
+	_arr_name="$1"; _out_var="$2"; ___keys=''
 	check_strings "$_arr_name" "$_out_var" || return 1
 
-	if [ -n "$_do_sort" ]; then
-		__sort_a_arr
-		unset _do_sort
-		# shellcheck disable=SC2086
-		___keys="$(printf '%s ' $___keys)" # no extra quotes on purpose
-	else
-		eval "___keys=\"\$(printf '%s ' \$_a_${_arr_name}___keys\$_a_${_arr_name}___keys_buf)\""
-	fi
+	case "$_do_sort" in
+		'' ) eval "___keys=\"\$(printf '%s ' \$_a_${_arr_name}___keys\$_a_${_arr_name}___keys_buf)\"" ;;
+		* )
+			__sort_a_arr
+			unset _do_sort
+			# shellcheck disable=SC2086
+			___keys="$(printf '%s ' $___keys)" # no extra quotes on purpose
+	esac
 	# shellcheck disable=SC2086
 	eval "$_out_var"='${___keys% }'
 
@@ -546,7 +558,7 @@ get_a_arr_keys() {
 get_a_arr_el_cnt() {
 	___me="get_a_arr_el_cnt"
 	_arr_name="$1"; _out_var="$2"
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 2 ) ;; * ) wrongargs "$@"; return 1; esac
 	check_strings "$_arr_name" "$_out_var" || return 1
 
 	eval "___keys=\"\$_a_${_arr_name}___keys\$_a_${_arr_name}___keys_buf\""
@@ -566,7 +578,7 @@ get_a_arr_el_cnt() {
 set_a_arr_el() {
 	___me="set_a_arr_el"
 	_arr_name="$1"; ___pair="$2"
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 2 ) ;; * ) wrongargs "$@"; return 1; esac
 	check_pair || return 1
 	___key="${___pair%%=*}"
 	___new_val="${___pair#*=}"
@@ -575,15 +587,15 @@ set_a_arr_el() {
 	eval "___old_val=\"\$_a_${_arr_name}_${___key}\"
 		_a_${_arr_name}_${___key}"='${_el_set_flag}${___new_val}'
 
-	if [ -z "$___old_val" ]; then
+	case "$___old_val" in '' )
 		if eval "[ -n \"\$_a_${_arr_name}_sorted_flag\" ]"; then
 			eval "_a_${_arr_name}_sorted_flag=0
-				_a_${_arr_name}___keys_buf=\"\${_a_${_arr_name}___keys_buf}${___key}${___newline}\""
+				_a_${_arr_name}___keys_buf=\"\${_a_${_arr_name}___keys_buf}${___newline}${___key}\""
 		else
 			eval "_a_${_arr_name}_sorted_flag=1
-				_a_${_arr_name}___keys=\"${___key}${___newline}\""
+				_a_${_arr_name}___keys=\"${___newline}${___key}\""
 		fi
-	fi
+	esac
 
 	return 0
 }
@@ -592,33 +604,35 @@ set_a_arr_el() {
 # 1 - array name
 # 2 - key
 unset_a_arr_el() {
-	_remove_first_key() {
-		eval "_a_${_arr_name}${1}=\"\${${1}#$___key$___newline}\""
-	}
-	_remove_mid_last_key() {
-		eval "_a_${_arr_name}${1}=\"\${${1}%$___newline$___key$___newline*}${___newline}\${${1}#*$___newline$___key$___newline}\""
-	}
+	_rm_1st_key() { eval "_a_${_arr_name}${1}=\"\${${1}#$___newline$___key}\""; }
+	_rm_last_key() { eval "_a_${_arr_name}${1}=\"\${${1}%$___newline$___key}\""; }
+	_rm_mid_key() { eval "_a_${_arr_name}${1}=\"\${${1}%$___newline$___key$___newline*}$___newline\${${1}##*$___newline$___key$___newline}\""; }
 
 	___me="unset_a_arr_el"
 	_arr_name="$1"; ___key="$2"
-	[ $# != 2 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 2 ) ;; * ) wrongargs "$@"; return 1; esac
 	check_strings "$_arr_name" "$___key" || return 1
 
-	eval "___old_val=\"\$_a_${_arr_name}_${___key}\"
-		_sorted_flag=\"\$_a_${_arr_name}_sorted_flag\""
-	if [ -n "$___old_val" ]; then
+	eval "___old_val=\"\$_a_${_arr_name}_${___key}\""
+	case "$___old_val" in '' ) ;; * )
 		unset "_a_${_arr_name}_${___key}"
 
-			eval "___keys=\"\$_a_${_arr_name}___keys\"; ___keys_buf=\"\$_a_${_arr_name}___keys_buf\""
-			case "$___keys_buf" in
-				"${___key}${___newline}"* ) _remove_first_key "___keys_buf" ;;
-				*"${___newline}${___key}${___newline}"* ) _remove_mid_last_key "___keys_buf"
-			esac
-			case "$___keys" in
-				"${___key}${___newline}"* ) _remove_first_key "___keys" ;;
-				*"${___newline}${___key}${___newline}"* ) _remove_mid_last_key "___keys"
-			esac
-	fi
+		IFS_OLD="$IFS"; IFS="$___newline"
+		eval "___keys=\"\$_a_${_arr_name}___keys\"; ___keys_buf=\"\$_a_${_arr_name}___keys_buf\""
+		case "${___keys_buf#$___newline}" in
+			'' ) ;;
+			"$___key$___newline"* | "$___key" ) _rm_1st_key "___keys_buf" ;;
+			*"$___newline$___key" ) _rm_last_key "___keys_buf" ;;
+			*"${___newline}$___key$___newline"* ) _rm_mid_key "___keys_buf"
+		esac
+		case "${___keys#$___newline}" in
+			'' ) ;;
+			"$___key$___newline"* | "$___key" ) _rm_1st_key "___keys" ;;
+			*"$___newline$___key" ) _rm_last_key "___keys" ;;
+			*"${___newline}$___key$___newline"* ) _rm_mid_key "___keys"
+		esac
+		IFS="$IFS_OLD"
+	esac
 
 	return 0
 }
@@ -630,7 +644,7 @@ unset_a_arr_el() {
 # 3 - global variable name for output
 get_a_arr_val() {
 	___me="get_a_arr_val"
-	[ $# != 3 ] && { wrongargs "$@"; return 1; }
+	case "$#" in 3 ) ;; * ) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; ___key="$2"; _out_var="$3"
 	check_strings "$_arr_name" "$___key" "$_out_var" || return 1
 
