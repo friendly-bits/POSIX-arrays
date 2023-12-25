@@ -23,7 +23,7 @@ warmup() {
 		done
 	else
 		for i in $elements; do
-			set_a_arr_el test_arr "abcdefghijklmn$i=$test_str"
+			set_a_arr_el test_arr "${test_key_str}$i=$test_str"
 		done
 	fi
 }
@@ -43,7 +43,7 @@ test_set() {
 		done
 	else
 		for i in $elements; do
-			set_a_arr_el test_arr "abcdefghijklmn$i=$test_str"
+			set_a_arr_el test_arr "${test_key_str}$i=$test_str"
 		done
 	fi
 }
@@ -55,7 +55,19 @@ test_unset() {
 		done
 	else
 		for i in $elements; do
-			unset_${arr_type}_arr_el test_arr "abcdefghijklmn$i"
+			unset_${arr_type}_arr_el test_arr "${test_key_str}$i"
+		done
+	fi
+}
+
+test_unset_mid() {
+	if [ "$arr_type" = "i" ]; then
+		for i in $elements; do
+			unset_${arr_type}_arr_el test_arr "$((i+2))"
+		done
+	else
+		for i in $elements; do
+			unset_${arr_type}_arr_el test_arr "${test_key_str}$((i+2))"
 		done
 	fi
 }
@@ -67,7 +79,7 @@ test_unset_rev() {
 		done
 	else
 		for i in $elements; do
-			unset_${arr_type}_arr_el test_arr "abcdefghijklmn$((l-i+1))"
+			unset_${arr_type}_arr_el test_arr "${test_key_str}$((l-i+1))"
 		done
 	fi
 }
@@ -79,7 +91,7 @@ test_unset_rev_mid() {
 		done
 	else
 		for i in $elements; do
-			unset_${arr_type}_arr_el test_arr "abcdefghijklmn$((l-i))"
+			unset_${arr_type}_arr_el test_arr "${test_key_str}$((l-i))"
 		done
 	fi
 }
@@ -97,7 +109,7 @@ test_get() {
 		done
  	else
 		for i in $elements; do
-			get_${arr_type}_arr_val test_arr "abcdefghijklmn$i" testvar
+			get_${arr_type}_arr_val test_arr "${test_key_str}$i" testvar
 			# printf '%s\n' "$testvar" >/dev/null
 			# printf '%s\n' "${test_arr[$i]}" >/dev/null
 		done
@@ -107,21 +119,22 @@ test_get() {
 test_mixed() {
 	if [ "$arr_type" = "i" ]; then
 		for j in $elements; do
-			[ $((j % 100)) = 0 ] && sort_i_arr test_arr
+			[ $((j % 10)) = 0 ] && get_i_arr_indices test_arr testvar
 			# set_i_arr_el test_arr "$((j))" "$test_str"
 			set_i_arr_el test_arr "$((j+1))" "$test_str"
-			unset_i_arr_el test_arr "$((j))"
+			# unset_i_arr_el test_arr "$((j))"
 			set_i_arr_el test_arr "$((j))" "$test_str"
+			get_i_arr_max_index test_arr testvar
 			# add_i_arr_el test_arr "$test_str"
 		done
 		# set_${arr_type}_arr_val test_arr "$i" "$test_str"
 		# add_${arr_type}_arr_el test_arr "$test_str"
 	else
 		for j in $elements; do
-			[ $((j % 100)) = 0 ] && get_a_arr_keys -s test_arr testvar
+			[ $((j % 10)) = 0 ] && get_a_arr_keys -s test_arr testvar
 			set_a_arr_el test_arr "$((j))=$test_str"; #echo "setting $((j+1))"
 			set_a_arr_el test_arr "$((j*2))=$test_str"; #echo "setting $((j+1))"
-			unset_a_arr_el test_arr "$((j))"; #echo "unsetting $((j))"
+			# unset_a_arr_el test_arr "$((j))"; #echo "unsetting $((j))"
 		done
 		# set_${arr_type}_arr_val test_arr "$i" "$test_str"
 		# add_${arr_type}_arr_el test_arr "$test_str"
@@ -166,12 +179,16 @@ get_date() {
 measure_time() {
 	exec_command="$1"; description="${1#test_}"; shift
 	__args="$*"
+	# get_${arr_type}_arr_el_cnt test_arr rescnt
 	$time_func
 	start_time="$curr_time"
 	# shellcheck disable=SC2086
 	$exec_command $__args
 	$time_func
-	echo "$description time: $(( curr_time - start_time )) ms"
+	echo "*** $description time: $(( curr_time - start_time )) ms"
+	# echo "Initial elements count: $rescnt"
+	# get_${arr_type}_arr_el_cnt test_arr rescnt
+	# echo "Resulting elements count: $rescnt"; echo
 	unset curr_time
 }
 
@@ -201,6 +218,7 @@ case $arr_type in
 esac
 
 test_str="a b; 'c%d^e#fh2uyuIJKlk/*-+UnapTg#@! %% " # string used to assign to elements
+test_key_str="abcdefghijklmn"
 
 # Warmup
 f=1 # first element
@@ -235,8 +253,13 @@ measure_time test_unset
 test_set
 measure_time test_unset_rev
 
+test_unset_all
 test_set
 measure_time test_unset_rev_mid
+
+test_unset_all
+test_set
+measure_time test_unset_mid
 
 measure_time test_mixed
  
@@ -246,14 +269,6 @@ test_unset_all
 	measure_time test_add
 } || test_set
 
-
-if [ "$arr_type" = "i" ]; then
-	unset_i_arr_el test_arr "$((l-3))"
-	set_i_arr_el test_arr "$((l-3))" "$test_str"
-else
-	unset_a_arr_el test_arr "bcdefghijklmn$((l-3))"
-	set_a_arr_el test_arr "bcdefghijklmn$((l-3))=$test_str"
-fi
 
 measure_time test_unset_all
 
