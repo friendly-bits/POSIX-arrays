@@ -148,7 +148,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Associative  | get N values one by one              | 1ms   |
 | Associative  | get all values                       | 2ms   |
 | Associative  | get all keys                         | 1ms   |
-| Associative  | unset N elements one by one          | 1ms   |
+| Associative  | unset N elements one by one          | 2ms   |
 
 **N=100**:
 
@@ -162,7 +162,7 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 | Indexed      | get all indices                      | 1ms   |
 | Indexed      | unset N elements one by one          | 4ms   |
 | -------------|--------------------------------------|-------|
-| Associative  | set N elements one by one (cold*)    | 4ms   |
+| Associative  | set N elements one by one (cold*)    | 3ms   |
 | Associative  | set N elements one by one (hot**)    | 2ms   |
 | Associative  | get N values one by one              | 2ms   |
 | Associative  | get all values                       | 2ms   |
@@ -173,18 +173,18 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 
 | Array type   |      Test                            | Time  |
 | -------------|--------------------------------------|-------|
-| Indexed      | set N elements one by one (cold*)    | 20ms  |
-| Indexed      | set N elements one by one (hot**)    | 10ms  |
-| Indexed      | add N elements one by one            | 10ms  |
-| Indexed      | get N values one by one              | 6ms   |
+| Indexed      | set N elements one by one (cold*)    | 18ms  |
+| Indexed      | set N elements one by one (hot**)    | 6ms   |
+| Indexed      | add N elements one by one            | 12ms  |
+| Indexed      | get N values one by one              | 5ms   |
 | Indexed      | get all values                       | 6ms   |
 | Indexed      | get all indices                      | 1ms   |
-| Indexed      | unset N elements one by one          | 23ms  |
+| Indexed      | unset N elements one by one          | 22ms  |
 | -------------|--------------------------------------|-------|
-| Associative  | set N elements one by one (cold*)    | 23ms  |
-| Associative  | set N elements one by one (hot**)    | 9ms   |
+| Associative  | set N elements one by one (cold*)    | 22ms  |
+| Associative  | set N elements one by one (hot**)    | 10ms  |
 | Associative  | get N values one by one              | 7ms   |
-| Associative  | get all values                       | 7ms   |
+| Associative  | get all values                       | 5ms   |
 | Associative  | get all keys                         | 1ms   |
 | Associative  | unset N elements one by one          | 35ms  |
 
@@ -192,20 +192,20 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 
 | Array type   |      Test                            | Time  |
 | -------------|--------------------------------------|-------|
-| Indexed      | set N elements one by one (cold*)    | 39ms  |
-| Indexed      | set N elements one by one (hot**)    | 20ms  |
-| Indexed      | add N elements one by one            | 22ms  |
+| Indexed      | set N elements one by one (cold*)    | 34ms  |
+| Indexed      | set N elements one by one (hot**)    | 15ms  |
+| Indexed      | add N elements one by one            | 25ms  |
 | Indexed      | get N values one by one              | 14ms  |
 | Indexed      | get all values                       | 15ms  |
 | Indexed      | get all indices                      | 1ms   |
-| Indexed      | unset N elements one by one          | 52ms  |
+| Indexed      | unset N elements one by one          | 45ms  |
 | -------------|--------------------------------------|-------|
-| Associative  | set N elements one by one (cold*)    | 53ms  |
-| Associative  | set N elements one by one (hot**)    | 19ms  |
+| Associative  | set N elements one by one (cold*)    | 52ms  |
+| Associative  | set N elements one by one (hot**)    | 21ms  |
 | Associative  | get N values one by one              | 16ms  |
-| Associative  | get all values                       | 15ms  |
+| Associative  | get all values                       | 14ms  |
 | Associative  | get all keys                         | 2ms   |
-| Associative  | unset N elements one by one          | 98ms  |
+| Associative  | unset N elements one by one          | 104ms |
 
 \* cold - elements are set without prior initialization
 
@@ -215,10 +215,9 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 
 ## Limitations
 - Unsetting individual elements is relatively slow because it requires to process all current indices/keys in the array as a string. To work around this, when possible, assign an empty string as a value to the element instead of unsetting the element. Alternatively, if you want to free up the memory used by the array, use the `unset_[x]_arr()` functions which work hundreds of times faster than unsetting individual elements. Optimizations have been implemented which cover unsetting elements sequentially from the 1st one upwards or from the last one downwards (in the order in which the elements are stored), so under these conditions unsetting elements does not incur a large performance hit.
-- By default, functions that output all indices/keys/values do not sort the output. This is different from Bash arrays behavior which sorts the output. The reason for this is that sorting is relatively slow and in most cases not required. When sorted output is required, use the functions with the `-s` option to get a sorted (by index/key) output. Once sorting occurs, the array will stay sorted until new elements are set. In some cases, the functions are able to maintain the sorted state when setting elements and in other cases not, as described in the `Sorting an array` sections above. Unsetting elements doesn't affect the sorted/unsorted state of arrays. An optimization has been implemented which buffers unsorted keys/indices. This minimizes performance hit for workloads which require sorting.
-- For indexed arrays, the `get_i_arr_max_index()` and `get_i_arr_last_value()` functions require the array to be sorted and hence when called, sorting of the array will occur. Which, as mentioned above, is relatively slow.
+- By default, functions that output all indices/keys/values do not sort the output. This is different from Bash arrays behavior which sorts the output. The reason for this is that sorting is relatively slow and in most cases not required. When sorted output is required, use the functions with the `-s` option to get a sorted (by index/key) output. Once sorting occurs, the array will stay sorted until new elements are set. In some cases, the functions are able to maintain the sorted state when setting elements and in other cases not, as described in the `Sorting an array` sections above. Unsetting elements doesn't affect the sorted/unsorted state of arrays.
 - Array names and (for associative arrays) keys are limited to English alphanumeric characters and underlines - `_`.
-- Functions have been tested exclusively with the `POSIX` (or `C`) locale and are likely to misbehave in some other locales. This may manifest in functions complaining about invalid array names or keys, or incorrect sorting, or even the unset functions working incorrectly. To avoid such issues, the `posix-arrays.sh` script exports the `LC_ALL` variable. Note that sourcing this script will change the locale to C in the current shell the script is running in and its subshells (this won't stick when the script exits).
+- Functions have been tested exclusively with the `POSIX` (or `C`) locale and are likely to misbehave in some other locales. To avoid such issues, the `posix-arrays.sh` script exports the `LC_ALL` variable. If you want to use individual functions from this script, make sure to set that variable in your script to 'C': `LC_ALL=C`.
 
 ## Some more details
 - The values are stored in dynamically created variables. The name of such variable is in the format `_[x]_[arr_name]_[key/index]`, where `[x]` stands for the type of the array: `a` for associative array, `i` for indexed array.
