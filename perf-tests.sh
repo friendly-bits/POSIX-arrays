@@ -217,7 +217,7 @@ case $arr_type in
 	a) type="associative"
 esac
 
-test_str="a b; 'c%d^e#fh2uyuIJKlk/*-+UnapTg#@! %% " # string used to assign to elements
+test_str="a b; 'c%d^e#fh2uIJKlk/*-+ \"UnapTg#@! % " # string used to assign to elements
 test_key_str="abcdefghijklmn"
 
 # Warmup

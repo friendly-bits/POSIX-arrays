@@ -16,15 +16,14 @@ script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 #### Functions
 
 # outputs first N lines from input
-# fast but may work incorrectly if too many lines provided as input
+# faster than head for a small (< 100) number of lines
 fast_head() {
 	in_lines="$1"; lines_num="$2"
 	IFS_OLD="$IFS"; IFS="$newline"; set -f
-	# shellcheck disable=SC2086
-	set -- $in_lines
 	i=1
-	while [ "$i" -le "$lines_num" ] && [ "$i" -le $# ]; do
-		eval "printf '%s\n' \"\$$i\""
+	for in_line in $in_lines; do
+		case $(( lines_num < i )) in 1) break; esac
+		printf '%s\n' "$in_line"
 		i=$((i+1))
 	done
 	IFS="$IFS_OLD"; set +f
@@ -36,18 +35,14 @@ fast_head() {
 # similar to 'tail -n+[N]' command, only fast
 # may work incorrectly if too many lines provided as input
 from_line() {
-	in_lines="$1"; line_ind="$(($2-1))"
+	in_lines="$1"; line_ind=$(($2-1))
 	IFS_OLD="$IFS"; IFS="$newline"; set -f
 	# shellcheck disable=SC2086
-	declare_i_arr temp_arr $in_lines
-	get_i_arr_max_index temp_arr maxindex
-	while [ "$line_ind" -le "$maxindex" ]; do
-		get_i_arr_val temp_arr "$line_ind" out_line
-		printf '%s\n' "$out_line"
-		line_ind=$((line_ind+1))
-	done
+	set -- $in_lines
+	shift $line_ind
+	# shellcheck disable=SC2048,SC2086
+	printf '%s\n' $*
 	IFS="$IFS_OLD"; set +f
-	unset in_lines line_ind
 }
 
 
@@ -72,9 +67,12 @@ run_test() {
 
 	# load the first test unit
 	eval "test_unit=\"\$test_$k\""
-	[ -z "$test_unit" ] && { echo "$me: Error: failed to load the test unit for 'test_$k'." >&2; exit 1; }
+	case "$test_unit" in '') echo "$me: Error: failed to load the test unit for 'test_$k'." >&2; exit 1; esac
 
-	while [ -n "$test_unit" ] && [ "$k" -le "$last_test_num" ]; do
+	while true; do
+		case "$test_unit" in '') break; esac
+		case $((last_test_num - k)) in -*) break; esac
+
 		# gather test variables names to unset them later
 		test_var_names="test_$k $test_var_names"
 
@@ -98,7 +96,9 @@ run_test() {
 		main_test_unit="$(from_line "$test_unit" $((init_lines_cnt+3)))"
 
 		# execute 'declare' and 'set' commands
-		while [ -n "$init_test_unit" ]; do
+		while true; do
+			case "$init_test_unit" in '') break; esac
+
 			# get line/s for the next command
 			init_line="$(printf '%s\n' "$init_test_unit" | \
 				sed -n -e /"_${arr_type}_arr"/\{:1 -e p\;n\;/"_${arr_type}_arr"/q\;b1 -e \})"
@@ -107,23 +107,28 @@ run_test() {
 			# extract test unit specifics
 			test_command="${init_line%@*}"
 			expected_rv="${init_line#*@}"
-			echo "**init test_command: '$test_command'"
+			echo "**init command: '$test_command'"
 
 			# gather array names from the test to reset the variables in the end
 			arr_name="$(fast_head "$test_command" 1)"; arr_name="${arr_name#* }"; arr_name="${arr_name%% *}"
 			case "$arr_name" in *_arr_*|-s ) ;; *) arr_names="${arr_name}${newline}${arr_names}"; esac
 
-			if [ -z "$print_stderr" ]; then eval "$test_command" 2>/dev/null; rv=$?
-			else eval "$test_command"; rv=$?
-			fi
-			
-			[ "$rv" != "$expected_rv" ] && {
+			case "$print_stderr" in
+				'' ) eval "$test_command" 2>/dev/null; rv=$? ;;
+				* )  eval "$test_command"; rv=$?
+			esac
+
+			case "$rv" in "$expected_rv" ) ;; * )
 				printf '\n%s\n' "Error: test '$test_id', init line: '$init_line', expected rv: '$expected_rv', got rv: '$rv'" >&2
-				err_num=$((err_num+1)); }
+				err_num=$((err_num+1))
+			esac
+
+			tests_done=$((tests_done+1))
 		done
 
 		# execute the 'get' commands
-		while [ -n "$main_test_unit" ]; do
+		while true; do
+			case "$main_test_unit" in '') break; esac
 			# get line/s for the next command
 			line="$(printf '%s\n' "$main_test_unit" | \
 				sed -n -e /"_${arr_type}_arr"/\{:1 -e p\;n\;/"_${arr_type}_arr"/q\;b1 -e \})"
@@ -136,18 +141,22 @@ run_test() {
 			expected_rv="${other_stuff#*@}"
 
 			val=''
-			# shellcheck disable=SC2086
-			if [ -z "$print_stderr" ]; then eval "$test_command" 2>/dev/null; rv=$?
-			else eval "$test_command"; rv=$?
-			fi
+			case "$print_stderr" in
+				'' ) eval "$test_command" 2>/dev/null; rv=$? ;;
+				* )  eval "$test_command"; rv=$?
+			esac
 
-			[ "$val" != "$expected_val" ] && {
+			case "$val" in "$expected_val" ) ;; * )
 				printf '\n%s\n' "Error: test '$test_id', test line: '$line', expected val: '$expected_val', got val: '$val'" >&2
-				err_num=$((err_num+1)); }
-			[ "$rv" != "$expected_rv" ] && {
+				err_num=$((err_num+1))
+			esac
+			case "$rv" in "$expected_rv" ) ;; * )
 				printf '\n%s\n' "Error: test '$test_id', test line: '$line', expected rv: '$expected_rv', got rv: '$rv'" >&2
-				err_num=$((err_num+1)); }
+				err_num=$((err_num+1))
+			esac
+
 			printf '%s' "."
+			tests_done=$((tests_done+1))
 		done
 		printf '\n'
 
@@ -210,11 +219,12 @@ run_test_a_arr_2() {
 
 newline="
 "
+trim_IFS="$(printf ' \t')"
 
 # To print errors returned by the functions under test, uncomment the following line
 # Some of the test units intentionally induce errors, so expect an error spam in the console
 
-print_stderr=true
+#print_stderr=true
 
 err_num=0
 
@@ -227,4 +237,5 @@ run_test_i_arr_3
 run_test_a_arr_1
 run_test_a_arr_2
 
-printf '\n%s\n' "Total errors: $err_num."
+printf '\n%s\n' "Tests done: $tests_done."
+printf '%s\n' "Total errors: $err_num."
