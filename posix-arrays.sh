@@ -53,6 +53,7 @@ __sort_i_arr() {
 	eval "_sorted_flag=\"\$_i_${_arr_name}_sorted_flag\"
 		_h_index=\"\${_i_${_arr_name}_h_index}\""
 
+	# shellcheck disable=SC2154
 	case "$_sorted_flag" in
 	1) eval "_indices=\"\$_i_${_arr_name}_indices\"" ;;
 	'' ) _h_index="-1" ;;
@@ -254,11 +255,11 @@ unset_i_arr_el() {
 	_rm_last_index() { eval "_i_${_arr_name}${1}=\"\${${1}%$___newline$_index}\""; }
 	_rm_mid_index() {
 		eval "___last_ind=\"\${${1}##*$___newline}\"
-				___first_ind=\"\${${1}%%$___newline*}\""
+				___first_ind=\"\${${1}#$___newline}\""
 		# shellcheck disable=SC2154
-		case $((___last_ind + ${___first_ind#"$___newline"} - 2*_index)) in
-			-* ) eval "_i_${_arr_name}${1}=\"\${${1}%$___newline$_index$___newline*}$___newline\${${1}##*$___newline$_index$___newline}\"" ;;
-			* ) eval "_i_${_arr_name}${1}=\"\${${1}%%$___newline$_index$___newline*}$___newline\${${1}#*$___newline$_index$___newline}\""
+		case $((___last_ind + ${___first_ind%%"$___newline"*} < 2*_index)) in
+			1 ) eval "_i_${_arr_name}${1}=\"\${${1}%$___newline$_index$___newline*}$___newline\${${1}##*$___newline$_index$___newline}\"" ;;
+			0 ) eval "_i_${_arr_name}${1}=\"\${${1}%%$___newline$_index$___newline*}$___newline\${${1}#*$___newline$_index$___newline}\""
 		esac
 	}
 
@@ -271,6 +272,7 @@ unset_i_arr_el() {
 	eval "_sorted_flag=\"\$_i_${_arr_name}_sorted_flag\"
 		_h_index=\"\$_i_${_arr_name}_h_index\"
 		___old_val=\"\$_i_${_arr_name}_${_index}\""
+	# shellcheck disable=SC2154
 	case "$___old_val" in '' ) ;; * )
 		unset "_i_${_arr_name}_${_index}"
 		case "$_sorted_flag" in
@@ -289,7 +291,7 @@ unset_i_arr_el() {
 			;;
 			'') return 0
 		esac
-		case "${_indices#$___newline}" in
+		case "${_indices#"$___newline"}" in
 			"$_index" ) _rm_1st_index "_indices"
 				case "$_no_buf_ind" in '');; *) unset "_i_${_arr_name}_h_index" "_i_${_arr_name}_sorted_flag"; return 0; esac ;;
 			"$_index$___newline"* ) _rm_1st_index "_indices" ;;
@@ -471,6 +473,7 @@ sort_a_arr() {
 # sets the 'sorted' flag
 __sort_a_arr() {
 	eval "___sorted_flag=\"\$_a_${_arr_name}_sorted_flag\""
+	# shellcheck disable=SC2154
 	case "$___sorted_flag" in
 		1 ) eval "___keys=\"\$_a_${_arr_name}___keys\"" ;;
 		* )
