@@ -253,11 +253,13 @@ unset_i_arr_el() {
 	_rm_1st_index() { eval "_i_${_arr_name}${1}=\"\${${1}#$___newline$_index}\""; }
 	_rm_last_index() { eval "_i_${_arr_name}${1}=\"\${${1}%$___newline$_index}\""; }
 	_rm_mid_index() {
-		eval "_i_${_arr_name}${1}=''
-			for _ind_tmp in \$${1}"';'" do
-				case \"$_index\" in \"\$_ind_tmp\" );;
-					*) _i_${_arr_name}${1}=\"\${_i_${_arr_name}${1}}$___newline\$_ind_tmp\"; esac
-			done"
+		eval "___last_ind=\"\${${1}##*$___newline}\"
+				___first_ind=\"\${${1}%%$___newline*}\""
+		# shellcheck disable=SC2154
+		case $((___last_ind + ${___first_ind#"$___newline"} - 2*_index)) in
+			-* ) eval "_i_${_arr_name}${1}=\"\${${1}%$___newline$_index$___newline*}$___newline\${${1}##*$___newline$_index$___newline}\"" ;;
+			* ) eval "_i_${_arr_name}${1}=\"\${${1}%%$___newline$_index$___newline*}$___newline\${${1}#*$___newline$_index$___newline}\""
+		esac
 	}
 
 	___me="unset_i_arr_el"
@@ -276,11 +278,12 @@ unset_i_arr_el() {
 				_no_buf_ind='1';;
 			0) 	eval "_indices=\"\$_i_${_arr_name}_indices\"; _indices_buf=\"\$_i_${_arr_name}_indices_buf\""
 				_no_buf_ind=''
-				case "${_indices_buf#$___newline}" in
-					"$_index" ) _rm_1st_index "_indices_buf"; _no_buf_ind=1 ;;
+				# shellcheck disable=SC2154
+				case "${_indices_buf#"$___newline"}" in
 					"$_index$___newline"* ) _rm_1st_index "_indices_buf" ;;
 					*"$___newline$_index" ) _rm_last_index "_indices_buf" ;;
-					*"${___newline}$_index$___newline"* ) _rm_mid_index "_indices_buf" ;;
+					*"$___newline$_index$___newline"* ) _rm_mid_index "_indices_buf" ;;
+					"$_index" ) _rm_1st_index "_indices_buf"; _no_buf_ind=1 ;;
 					'' ) _no_buf_ind=1
 				esac
 			;;
@@ -291,7 +294,7 @@ unset_i_arr_el() {
 				case "$_no_buf_ind" in '');; *) unset "_i_${_arr_name}_h_index" "_i_${_arr_name}_sorted_flag"; return 0; esac ;;
 			"$_index$___newline"* ) _rm_1st_index "_indices" ;;
 			*"$___newline$_index" ) _rm_last_index "_indices" ;;
-			*"${___newline}$_index$___newline"* ) _rm_mid_index "_indices" ;;
+			*"$___newline$_index$___newline"* ) _rm_mid_index "_indices" ;;
 			'' ) case "$_no_buf_ind" in '');; *) unset "_i_${_arr_name}_h_index" "_i_${_arr_name}_sorted_flag"; return 0; esac
 		esac
 
@@ -620,11 +623,10 @@ unset_a_arr_el() {
 	_rm_1st_key() { eval "_a_${_arr_name}${1}=\"\${${1}#$___newline$___key}\""; }
 	_rm_last_key() { eval "_a_${_arr_name}${1}=\"\${${1}%$___newline$___key}\""; }
 	_rm_mid_key() {
-		eval "_a_${_arr_name}${1}=\"\$(
+		eval "_a_${_arr_name}${1}=''
 			for ___key_tmp in \$${1}"';'" do
-				case \"$___key\" in \"\$___key_tmp\" ) ;; * ) printf '\n%s' \"\$___key_tmp\"; esac
-			done
-		)\""
+				case $___key in \"\$___key_tmp\" ) ;; * ) _a_${_arr_name}${1}=\"\${_a_${_arr_name}${1}}$___newline\$___key_tmp\"; esac
+			done"
 	}
 
 	___me="unset_a_arr_el"
@@ -641,21 +643,22 @@ unset_a_arr_el() {
 				_no_buf_keys=1 ;;
 			0) 	eval "___keys=\"\$_a_${_arr_name}___keys\"; ___keys_buf=\"\$_a_${_arr_name}___keys_buf\""
 				_no_buf_keys=''
-				case "${___keys_buf#$___newline}" in
-					*"$___newline$___key" ) _rm_last_key "___keys_buf" ;;
-					"$___key" ) _rm_1st_key "___keys_buf"; _no_buf_keys=1 ;;
-					'' ) _no_buf_keys=1 ;;
+				# shellcheck disable=SC2154
+				case "${___keys_buf#"$___newline"}" in
 					"$___key$___newline"* ) _rm_1st_key "___keys_buf" ;;
-					*"${___newline}$___key$___newline"* ) _rm_mid_key "___keys_buf"
+					*"$___newline$___key" ) _rm_last_key "___keys_buf" ;;
+					*"$___newline$___key$___newline"* ) _rm_mid_key "___keys_buf" ;;
+					"$___key" ) _rm_1st_key "___keys_buf"; _no_buf_keys=1 ;;
+					'' ) _no_buf_keys=1
 				esac
 			;;
 			'') return 0
 		esac
-		case "${___keys#$___newline}" in
-			*"$___newline$___key" ) _rm_last_key "___keys" ;;
-			"$___key$___newline"* ) _rm_1st_key "___keys" ;;
-			*"${___newline}$___key$___newline"* ) _rm_mid_key  "___keys";;
+		case "${___keys#"$___newline"}" in
 			"$___key" ) _rm_1st_key "___keys"; case "$_no_buf_keys" in '');; *) unset "_a_${_arr_name}_sorted_flag"; return 0; esac ;;
+			"$___key$___newline"* ) _rm_1st_key "___keys" ;;
+			*"$___newline$___key" ) _rm_last_key "___keys" ;;
+			*"$___newline$___key$___newline"* ) _rm_mid_key  "___keys";;
 			'' ) case "$_no_buf_keys" in '');; *) unset "_a_${_arr_name}_sorted_flag"; return 0; esac
 		esac
 	esac
