@@ -2,7 +2,7 @@
 POSIX-compliant shell functions emulating functionality of arrays. The implementation mostly follows Bash arrays behavior.
 
 ## Usage
-1) To have access to indexed and associative arrays functionality, source the script posix-arrays.sh in your script:
+1) To have access to indexed and associative arrays functionality, source the script `posix-arrays.sh` in your script:
 
     `. [path]/posix-arrays.sh`
 
