@@ -10,7 +10,7 @@ me=$(basename "$0")
 script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 # shellcheck disable=SC2015
 
-. "$script_dir/posix-arrays.sh" || { echo "$me: Error: Can't source '$script_dir/posix-arrays.sh'." >&2; exit 1; }
+. "$script_dir/../posix-arrays.sh" || { echo "$me: Error: Can't source '$script_dir/../posix-arrays.sh'." >&2; exit 1; }
 
 
 #### Functions
@@ -231,11 +231,27 @@ err_num=0
 # To only run a specific test set, comment out some of the following lines starting with run_test_
 # To limit to sepcific test units, use this format run_test_* [first_test_num_number] [last_test_num_number]
 # For example, 'run_test_a_arr 5 8' will run test units 5 through 8
-run_test_i_arr_1
-run_test_i_arr_2
-run_test_i_arr_3
-run_test_a_arr_1
-run_test_a_arr_2
+# run all tests by default
+
+if [ -z "$test_i" ] && [ -z "$test_a" ]; then
+	run_test_i_arr_1
+	run_test_i_arr_2
+	run_test_i_arr_3
+	run_test_a_arr_1
+	run_test_a_arr_2
+fi
+
+if [ -n "$test_i" ]; then
+	run_test_i_arr_1
+	run_test_i_arr_2
+	run_test_i_arr_3
+fi
+
+if [ -n "$test_a" ]; then
+	run_test_a_arr_1
+	run_test_a_arr_2
+fi
+
 
 printf '\n%s\n' "Tests done: $tests_done."
 printf '%s\n' "Total errors: $err_num."

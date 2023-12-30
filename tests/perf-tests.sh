@@ -9,9 +9,9 @@ me=$(basename "$0")
 script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 # shellcheck disable=SC2015
 
-source_file="${1:-posix-arrays.sh}"
+source_file="posix-arrays.sh"
 # shellcheck disable=SC1090
-. "$script_dir/$source_file" || { echo "$me: Error: Can't source '$script_dir/$source_file'." >&2; exit 1; }
+. "$script_dir/../$source_file" || { echo "$me: Error: Can't source '$script_dir/../$source_file'." >&2; exit 1; }
 
 
 ## Test functions
@@ -211,10 +211,12 @@ fi
 
 
 
-arr_type="i" # i for indexed array, a for associative array
+# i for indexed array, a for associative array
 case $arr_type in
 	i) type="indexed" ;;
-	a) type="associative"
+	a) type="associative" ;;
+	'') echo "Error: \$arr_type variable is not set. It has to be set to 'i' or 'a'."; exit 1 ;;
+	*) echo "Error: \$arr_type variable has a value of '$arr_type' which I don't understand. It has to be set to 'i' or 'a'."; exit 1 ;;
 esac
 
 test_str="a b; 'c%d^e#fh2uIJKlk/*-+ \"UnapTg#@! % " # string used to assign to elements
@@ -231,8 +233,8 @@ warmup
 
 # Test variables
 f=1 # first element
-l=1000 # last element
-elements=$(seq $f $l)
+l=${1:-1000} # last element
+elements=$(seq $f "$l")
 
 # Execute tests
 echo "Testing $type arrays with elements $f through $l."
