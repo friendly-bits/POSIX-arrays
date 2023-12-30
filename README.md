@@ -2,10 +2,13 @@
 POSIX-compliant shell functions emulating functionality of arrays. The implementation mostly follows Bash arrays behavior.
 
 ## Usage
-1) Source the script posix-arrays.sh in your script like so: `. [path]/posix-arrays.sh`
+1) To have access to indexed and associative arrays functionality, source the script posix-arrays.sh in your script like so: `. [path]/posix-arrays.sh`
+
+If you only need indexed arrays or associative arrays but not both, source the relevant script like so: `. [path]/posix-arrays-[a|i].sh`
+
 2) Call any function from the sourced script in your script.
 
-Alternatively, copy functions which you need (and their dependencies) to your own scripts. Note that the last few lines in posix-arrays.sh set some variables. These variables need to be set for the functions to work correctly.
+Alternatively, copy functions which you need (and their dependencies) to your own scripts. Note that the last few lines in `posix-arrays.sh` and `posix-arrays-[a|i].sh` scripts set some variables. Those variables need to be set for the functions to work correctly.
 
 ### **Indexed arrays**:
 
@@ -222,10 +225,11 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 - For example, if calling a function to create an indexed array: `set_i_arr_el test_arr 5 "test_value"`, the function will create a variable called `_i_test_arr_5` and store the value in it.
 - The raw values stored in the variables have an ASCII code `\35` prepended to the "logical" value. This serves as a flag to mark the element as set. This way, an empty string can be assigned as a value to an element. This follows the convention of Bash arrays. Functions which retrieve values from the arrays remove the ASCII prefix before assigning the result to the output variable.
 
-## Test units
-- The additional files (besides the `posix-arrays.sh` script) are used for testing the main script. The test units are not very systematic but I tried to cover all points where the functionality may be fragile. To test in your environment, download all files into the same directory and then run the `posix-arrays-tests.sh` script.
-- To run a specific test set rather than all of them, comment the irrelevant lines in the `#### Main` section starting with `run_test_`
-- To limit the test units executed, add arguments to the `run_test_` call, for example: `run_test_a_arr 5 8` will run test units from 5 through 8.
+## Test scripts
+- The files inside the "tests" folder are used for testing the main script.
+- posix-arrays-tests*.sh scripts implement functionality testing
+- perf-tests*.sh implement performance testing
+- The test units are not very systematic but I tried to cover all points where the functionality may be fragile.
 - Test units check for correct return codes, including in cases where an error is expected. So a significant portion of the tests intentionally induce errors in the functions. In order to avoid errors spam, by default STDERR output from the functions under test is silenced. If you want to see the errors anyway, uncomment the line `#print_stderr=true`.
 - You can add your own test units following the same format. The test functions automatically parse the `.list` files and execute the tests inside, as long as they comply with the format.
 
