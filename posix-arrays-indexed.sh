@@ -7,7 +7,9 @@
 # each array element is stored in a variable named in the format '_i_[arr_name]_[index]'
 
 # indices are stored in a variable named in the format '_i_[arr_name]_indices'
+# buffered indices are stored in a variable named in the format  '_i_[arr_name]_indices_b'
 # array 'sorted' flag (1=true, 0=false) is stored in variable: $_i_[arr_name]_sorted_flag
+# the 'sorted' flag is also used as an indicator of whether the array has any elements (for performance reasons)
 # the $_i_[arr_name]_h_index variable holds the highest index in the array if it's known
 
 
