@@ -7,8 +7,6 @@ export LC_ALL=C
 me=$(basename "$0")
 
 script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
-# shellcheck disable=SC2015
-
 . "$script_dir/../posix-arrays.sh" || { echo "$me: Error: Can't source '$script_dir/../posix-arrays.sh'." >&2; exit 1; }
 
 
