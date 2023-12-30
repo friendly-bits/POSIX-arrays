@@ -9,9 +9,7 @@ Alternatively, copy functions which you need (and their dependencies) to your ow
 
 ### **Indexed arrays**:
 
-#### Initializing an array and setting elements:
-
-`init_i_arr <array_name> <N> <val>` - Resets the array and assigns value `<val>` to `<N>` first elements, starting with index 0. If `<val>` is an empty string, assigns empty strings.
+#### Setting elements:
 
 `declare_i_arr <array_name> [value] [value] ... [value]` - Resets the array and assigns values to sequential elements, starting from index 0.
 
@@ -65,7 +63,7 @@ $ val3 123 etc
 
 ### **Associative arrays**:
 
-#### Declaring an array and setting elements:
+#### Setting elements:
 
 `declare_a_arr <array_name> [key=value] [key=value] ... [key=value]` - Resets the array and assigns values to keys.
 
@@ -115,7 +113,7 @@ $ jazz, classical, rock
 - As is default for shells, if you request a value corresponding to an index or to a key that has not been set previously, the functions output an empty string and do not return an error.
 - Similarly, if you request a value from an array that has not been created, the functions output an empty string and do not return an error.
 - The indexed array effectively works as a sparse array, so indices do not have to be sequential.
-- The initialize and declare functions are not necessary to create an array. It's just a way to set N elements in one command. You can create an array by calling any function that stores a value in the array.
+- The declare functions are not necessary to create an array. It's just a way to set N elements in one command. You can create an array by calling any function that stores a value in the array.
 - Assigning an empty string as a value doesn't unset the array element. This mimics the behavior of Bash arrays. To unset an element, use the `unset_[x]_arr_el()` functions.
 - Functions provide output via a variable because this way the performance is better, in some cases much better.
 
@@ -133,83 +131,83 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 
 **N=10:**
 
-| Array type   |      Test                            | Time  |
-| -------------|--------------------------------------|-------|
-| Indexed      | set N elements one by one (cold*)    | 1ms   |
-| Indexed      | set N elements one by one (hot**)    | 1ms   |
-| Indexed      | add N elements one by one            | 1ms   |
-| Indexed      | get N values one by one              | 1ms   |
-| Indexed      | get all values                       | 2ms   |
-| Indexed      | get all indices                      | 1ms   |
-| Indexed      | unset N elements one by one          | 1ms   |
-| -------------|--------------------------------------|-------|
-| Associative  | set N elements one by one (cold*)    | 1ms   |
-| Associative  | set N elements one by one (hot**)    | 1ms   |
-| Associative  | get N values one by one              | 1ms   |
-| Associative  | get all values                       | 2ms   |
-| Associative  | get all keys                         | 1ms   |
-| Associative  | unset N elements one by one          | 2ms   |
+| Array type   |      Test                                        | Time  |
+| -------------|--------------------------------------------------|-------|
+| Indexed      | set N elements one by one (cold*)                | 1ms   |
+| Indexed      | set N elements one by one (hot**)                | 1ms   |
+| Indexed      | add N elements one by one                        | 1ms   |
+| Indexed      | get N values one by one                          | 1ms   |
+| Indexed      | get all values                                   | 2ms   |
+| Indexed      | get all indices                                  | 1ms   |
+| Indexed      | unset N consecutive elements one by one          | 1ms   |
+| -------------|--------------------------------------------------|-------|
+| Associative  | set N elements one by one (cold*)                | 1ms   |
+| Associative  | set N elements one by one (hot**)                | 1ms   |
+| Associative  | get N values one by one                          | 1ms   |
+| Associative  | get all values                                   | 2ms   |
+| Associative  | get all keys                                     | 1ms   |
+| Associative  | unset N consecutive elements one by one          | 2ms   |
 
 **N=100**:
 
-| Array type   |      Test                            | Time  |
-| -------------|--------------------------------------|-------|
-| Indexed      | set N elements one by one (cold*)    | 3ms   |
-| Indexed      | set N elements one by one (hot**)    | 2ms   |
-| Indexed      | add N elements one by one            | 1ms   |
-| Indexed      | get N values one by one              | 1ms   |
-| Indexed      | get all values                       | 2ms   |
-| Indexed      | get all indices                      | 1ms   |
-| Indexed      | unset N elements one by one          | 4ms   |
-| -------------|--------------------------------------|-------|
-| Associative  | set N elements one by one (cold*)    | 3ms   |
-| Associative  | set N elements one by one (hot**)    | 2ms   |
-| Associative  | get N values one by one              | 2ms   |
-| Associative  | get all values                       | 2ms   |
-| Associative  | get all keys                         | 1ms   |
-| Associative  | unset N elements one by one          | 4ms   |
+| Array type   |      Test                                        | Time  |
+| -------------|--------------------------------------------------|-------|
+| Indexed      | set N elements one by one (cold*)                | 3ms   |
+| Indexed      | set N elements one by one (hot**)                | 2ms   |
+| Indexed      | add N elements one by one                        | 1ms   |
+| Indexed      | get N values one by one                          | 1ms   |
+| Indexed      | get all values                                   | 2ms   |
+| Indexed      | get all indices                                  | 1ms   |
+| Indexed      | unset N consecutive elements one by one          | 3ms   |
+| -------------|--------------------------------------------------|-------|
+| Associative  | set N elements one by one (cold*)                | 3ms   |
+| Associative  | set N elements one by one (hot**)                | 2ms   |
+| Associative  | get N values one by one                          | 2ms   |
+| Associative  | get all values                                   | 2ms   |
+| Associative  | get all keys                                     | 1ms   |
+| Associative  | unset N consecutive elements one by one          | 4ms   |
 
 **N=1000**:
 
-| Array type   |      Test                            | Time  |
-| -------------|--------------------------------------|-------|
-| Indexed      | set N elements one by one (cold*)    | 18ms  |
-| Indexed      | set N elements one by one (hot**)    | 6ms   |
-| Indexed      | add N elements one by one            | 12ms  |
-| Indexed      | get N values one by one              | 5ms   |
-| Indexed      | get all values                       | 6ms   |
-| Indexed      | get all indices                      | 1ms   |
-| Indexed      | unset N elements one by one          | 22ms  |
-| -------------|--------------------------------------|-------|
-| Associative  | set N elements one by one (cold*)    | 22ms  |
-| Associative  | set N elements one by one (hot**)    | 10ms  |
-| Associative  | get N values one by one              | 7ms   |
-| Associative  | get all values                       | 5ms   |
-| Associative  | get all keys                         | 1ms   |
-| Associative  | unset N elements one by one          | 35ms  |
+| Array type   |      Test                                        | Time  |
+| -------------|--------------------------------------------------|-------|
+| Indexed      | set N elements one by one (cold*)                | 18ms  |
+| Indexed      | set N elements one by one (hot**)                | 6ms   |
+| Indexed      | add N elements one by one                        | 12ms  |
+| Indexed      | get N values one by one                          | 5ms   |
+| Indexed      | get all values                                   | 6ms   |
+| Indexed      | get all indices                                  | 1ms   |
+| Indexed      | unset N consecutive elements one by one          | 18ms  |
+| -------------|--------------------------------------------------|-------|
+| Associative  | set N elements one by one (cold*)                | 22ms  |
+| Associative  | set N elements one by one (hot**)                | 10ms  |
+| Associative  | get N values one by one                          | 7ms   |
+| Associative  | get all values                                   | 5ms   |
+| Associative  | get all keys                                     | 1ms   |
+| Associative  | unset N consecutive elements one by one          | 34ms  |
 
 **N=2000**:
 
-| Array type   |      Test                            | Time  |
-| -------------|--------------------------------------|-------|
-| Indexed      | set N elements one by one (cold*)    | 34ms  |
-| Indexed      | set N elements one by one (hot**)    | 15ms  |
-| Indexed      | add N elements one by one            | 25ms  |
-| Indexed      | get N values one by one              | 14ms  |
-| Indexed      | get all values                       | 15ms  |
-| Indexed      | get all indices                      | 1ms   |
-| Indexed      | unset N elements one by one          | 45ms  |
-| -------------|--------------------------------------|-------|
-| Associative  | set N elements one by one (cold*)    | 52ms  |
-| Associative  | set N elements one by one (hot**)    | 21ms  |
-| Associative  | get N values one by one              | 16ms  |
-| Associative  | get all values                       | 14ms  |
-| Associative  | get all keys                         | 2ms   |
-| Associative  | unset N elements one by one          | 104ms |
+| Array type   |      Test                                        | Time  |
+| -------------|--------------------------------------------------|-------|
+| Indexed      | set N elements one by one (cold*)                | 34ms  |
+| Indexed      | set N elements one by one (hot**)                | 15ms  |
+| Indexed      | add N elements one by one                        | 25ms  |
+| Indexed      | get N values one by one                          | 14ms  |
+| Indexed      | get all values                                   | 15ms  |
+| Indexed      | get all indices                                  | 1ms   |
+| Indexed      | unset N consecutive elements one by one          | 40ms  |
+| -------------|--------------------------------------------------|-------|
+| Associative  | set N elements one by one (cold*)                | 52ms  |
+| Associative  | set N elements one by one (hot**)                | 21ms  |
+| Associative  | get N values one by one                          | 16ms  |
+| Associative  | get all values                                   | 14ms  |
+| Associative  | get all keys                                     | 2ms   |
+| Associative  | unset N consecutive elements one by one          | 104ms |
 
-\* cold - elements are set without prior initialization
+\* cold - values are set without prior elements initialization
 
-** hot - elements are set after prior initialization
+** hot - values are set after prior elements initialization
 
 </details>
 
