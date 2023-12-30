@@ -101,41 +101,6 @@ declare_i_arr() {
 	return 0
 }
 
-# initialize an indexed array while assigning the same string to N first indices (1-based)
-# the point is to speed up setting elements at a later time
-# resets all previous elements of the array if it already exists
-# 1 - array name
-# 2 - number of elements to initialize
-# 3 - string to assign (if not specified, assigns an empty string)
-init_i_arr() {
-	___me="init_i_arr"
-	case $((3 - $#)) in 0|1 ) ;; * ) wrongargs "$@"; return 1; esac
-	_arr_name="$1"; _el_num="$2"; _val="$3"
-	check_strings "$_arr_name" || return 1
-	_index="$_el_num"; check_index || return 1
-	_h_index=$((_el_num-1))
-
-	do_unset_i_arr "${_arr_name}"
-
-	case "$_h_index" in
-		"-1" ) ;;
-		* )
-			_index=0; _indices=''
-			while [ $_index -le "$_h_index" ]; do
-				eval "_i_${_arr_name}_${_index}"='$_el_set_flag$_val'
-				_indices="$_indices$___newline$_index"
-				_index=$((_index + 1))
-			done
-			_index=$((_index - 1))
-			eval "
-				_i_${_arr_name}_h_index"='$_index'"
-				_i_${_arr_name}_indices"='$_indices'"
-				_i_${_arr_name}_sorted_flag=1"
-	esac
-
-	return 0
-}
-
 # read lines from input string into an indexed array
 # unsets all previous elements of the array if it already exists
 # 1 - array name
