@@ -122,7 +122,7 @@ test_mixed() {
 			[ $((j % 10)) = 0 ] && get_i_arr_indices test_arr testvar
 			# set_i_arr_el test_arr "$((j))" "$test_str"
 			set_i_arr_el test_arr "$((j+1))" "$test_str"
-			# unset_i_arr_el test_arr "$((j))"
+			unset_i_arr_el test_arr "$((j))"
 			set_i_arr_el test_arr "$((j))" "$test_str"
 			get_i_arr_max_index test_arr testvar
 			# add_i_arr_el test_arr "$test_str"

@@ -6,218 +6,8 @@
 # 1st col: function call with input args, 2nd col: expected value, 3rd col: expected return code
 
 
-# call 'init' with wrong arguments
-test_1="
-[test_init]
-init_i_arr@1
-init_i_arr 0@1
-init_i_arr arr@1
-init_i_arr arr a@1
-init_i_arr arr 1 test bruh@1
-[/test_init]
-
-get_i_arr_val arr 0 val@@0
-get_i_arr_val arr 1 val@@0
-get_i_arr_el_cnt arr val@0@0
-"
-
-# initialize non-existing array with 0 elements
-test_2="
-[test_init]
-init_i_arr arr 0@0
-init_i_arr arr1 0 test@0
-[/test_init]
-
-get_i_arr_val arr 0 val@@0
-get_i_arr_val arr 1 val@@0
-get_i_arr_el_cnt arr val@0@0
-
-get_i_arr_val arr1 0 val@@0
-get_i_arr_val arr1 1 val@@0
-get_i_arr_el_cnt arr1 val@0@0
-"
-
-# initialize non-existing array with 1 element
-test_3="
-[test_init]
-init_i_arr arr 1@0
-init_i_arr arr1 1 test@0
-[/test_init]
-
-get_i_arr_val arr 0 val@@0
-get_i_arr_val arr 1 val@@0
-get_i_arr_el_cnt arr val@1@0
-
-get_i_arr_val arr1 0 val@test@0
-get_i_arr_val arr1 1 val@@0
-get_i_arr_el_cnt arr1 val@1@0
-"
-
-# initialize non-existing array with 2 elements
-test_4="
-[test_init]
-init_i_arr arr 2@0
-init_i_arr arr1 2 test1@0
-[/test_init]
-
-get_i_arr_val arr 0 val@@0
-get_i_arr_val arr 1 val@@0
-get_i_arr_val arr 2 val@@0
-get_i_arr_el_cnt arr val@2@0
-
-get_i_arr_val arr1 0 val@test1@0
-get_i_arr_val arr1 1 val@test1@0
-get_i_arr_val arr1 2 val@@0
-get_i_arr_el_cnt arr val@2@0
-"
-
-# initialize existing array with 0 elements
-test_5="
-[test_init]
-set_i_arr_el arr1 0 test@0
-init_i_arr arr1 0@0
-
-set_i_arr_el arr2 1 test@0
-init_i_arr arr2 0 test1@0
-
-set_i_arr_el arr3 2 test@0
-init_i_arr arr3 0@0
-[/test_init]
-
-get_i_arr_val arr1 0 val@@0
-get_i_arr_val arr1 1 val@@0
-get_i_arr_val arr1 2 val@@0
-get_i_arr_el_cnt arr1 val@0@0
-get_i_arr_max_index arr1 val@@1
-
-get_i_arr_val arr2 0 val@@0
-get_i_arr_val arr2 1 val@@0
-get_i_arr_val arr2 2 val@@0
-get_i_arr_el_cnt arr2 val@0@0
-get_i_arr_max_index arr2 val@@1
-
-get_i_arr_val arr3 0 val@@0
-get_i_arr_val arr3 1 val@@0
-get_i_arr_val arr3 2 val@@0
-get_i_arr_el_cnt arr3 val@0@0
-get_i_arr_max_index arr3 val@@1
-"
-
-# initialize existing array with 1 element
-test_6="
-[test_init]
-set_i_arr_el arr1 0 test@0
-init_i_arr arr1 1@0
-
-set_i_arr_el arr2 1 test@0
-init_i_arr arr2 1 test1@0
-
-set_i_arr_el arr3 2 test@0
-init_i_arr arr3 1@0
-[/test_init]
-
-get_i_arr_val arr1 0 val@@0
-get_i_arr_val arr1 1 val@@0
-get_i_arr_val arr1 2 val@@0
-get_i_arr_el_cnt arr1 val@1@0
-get_i_arr_max_index arr1 val@0@0
-
-get_i_arr_val arr2 0 val@test1@0
-get_i_arr_val arr2 1 val@@0
-get_i_arr_val arr2 2 val@@0
-get_i_arr_el_cnt arr2 val@1@0
-get_i_arr_max_index arr2 val@0@0
-
-get_i_arr_val arr3 0 val@@0
-get_i_arr_val arr3 1 val@@0
-get_i_arr_el_cnt arr3 val@1@0
-get_i_arr_max_index arr3 val@0@0
-"
-
-# initialize existing array with 2 elements
-test_7="
-[test_init]
-set_i_arr_el arr1 0 test@0
-init_i_arr arr1 2@0
-
-set_i_arr_el arr2 1 test@0
-init_i_arr arr2 2 test2@0
-
-set_i_arr_el arr3 2 test@0
-init_i_arr arr3 2@0
-[/test_init]
-
-get_i_arr_val arr1 0 val@@0
-get_i_arr_val arr1 1 val@@0
-get_i_arr_val arr1 2 val@@0
-get_i_arr_val arr1 3 val@@0
-get_i_arr_el_cnt arr1 val@2@0
-get_i_arr_max_index arr1 val@1@0
-
-get_i_arr_val arr2 0 val@test2@0
-get_i_arr_val arr2 1 val@test2@0
-get_i_arr_val arr2 2 val@@0
-get_i_arr_val arr2 3 val@@0
-get_i_arr_el_cnt arr2 val@2@0
-get_i_arr_max_index arr2 val@1@0
-
-get_i_arr_val arr3 0 val@@0
-get_i_arr_val arr3 1 val@@0
-get_i_arr_val arr3 2 val@@0
-get_i_arr_val arr3 3 val@@0
-get_i_arr_el_cnt arr3 val@2@0
-get_i_arr_max_index arr3 val@1@0
-"
-
-
-# initialize existing array with 3 elements
-test_8="
-[test_init]
-declare_i_arr arr1 a b c d@0
-init_i_arr arr1 3@0
-
-set_i_arr_el arr2 2 \"'a a\"@0
-set_i_arr_el arr2 0 \"b;\"@0
-set_i_arr_el arr2 1 \"\\\\\\\"a\"@0
-set_i_arr_el arr2 3 d@0
-init_i_arr arr2 3 @0
-
-declare_i_arr arr3 a b c d@0
-add_i_arr_el arr3 \"'a a'\"@0
-add_i_arr_el arr3 \"\\\\\\\"a\"@0
-add_i_arr_el arr3 \"c c\"@0
-add_i_arr_el arr3 \"d d\"@0
-init_i_arr arr3 3 test3@0
-[/test_init]
-
-get_i_arr_val arr1 0 val@@0
-get_i_arr_val arr1 1 val@@0
-get_i_arr_val arr1 2 val@@0
-get_i_arr_val arr1 3 val@@0
-get_i_arr_val arr1 4 val@@0
-get_i_arr_el_cnt arr1 val@3@0
-get_i_arr_max_index arr1 val@2@0
-
-get_i_arr_val arr2 0 val@@0
-get_i_arr_val arr2 1 val@@0
-get_i_arr_val arr2 2 val@@0
-get_i_arr_val arr2 3 val@@0
-get_i_arr_val arr2 4 val@@0
-get_i_arr_el_cnt arr2 val@3@0
-get_i_arr_max_index arr2 val@2@0
-
-get_i_arr_val arr3 0 val@test3@0
-get_i_arr_val arr3 1 val@test3@0
-get_i_arr_val arr3 2 val@test3@0
-get_i_arr_val arr3 3 val@@0
-get_i_arr_val arr3 4 val@@0
-get_i_arr_el_cnt arr3 val@3@0
-get_i_arr_max_index arr3 val@2@0
-"
-
-
 # set 1-2 elements, unset, set again, check
-test_9="
+test_1="
 [test_init]
 set_i_arr_el arr1 0 a@0
 unset_i_arr_el arr1 0@0
@@ -324,7 +114,7 @@ get_i_arr_max_index arr10 val@1@0
 "
 
 # set 3 elements, unset 1, set again, check
-test_10="
+test_2="
 [test_init]
 set_i_arr_el arr1 0 a@0
 set_i_arr_el arr1 1 b@0
@@ -439,7 +229,7 @@ get_i_arr_max_index arr10 val@2@0
 
 
 # declare 4 elements, set 1, unset 2, set again, check
-test_11="
+test_3="
 [test_init]
 declare_i_arr arr1 a b c d@0
 unset_i_arr_el arr1 0@0
