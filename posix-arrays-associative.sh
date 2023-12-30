@@ -4,10 +4,12 @@
 
 # emulates *associative* arrays in POSIX shell
 
-# each array element is stored in a variable named in the format '_a_[arr_name]_[key/index]'
+# each array element is stored in a variable named in the format '_a_[arr_name]_[key]'
 
 # keys are stored in a variable named in the format '_a_[arr_name]_keys'
+# buffered keys are stored in a variable named in the format  '_a_[arr_name]_keys_b'
 # array 'sorted' flag (1=true, 0=false) is stored in variable: $_a_[arr_name]_sorted_flag
+# the 'sorted' flag is also used as an indicator of whether the array has any elements (for performance reasons)
 
 
 # unsets all variables used to store an associative array
