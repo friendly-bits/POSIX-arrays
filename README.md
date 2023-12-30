@@ -38,9 +38,9 @@ Alternatively, copy functions which you need (and their dependencies) to your ow
 
 `get_i_arr_el_cnt <array_name> <var>` - Gets elements count of an indexed array and assigns the result to variable `<var>`.
 
-`get_i_arr_max_index <array_name> <var>` - Gets the currently highest index in the array and assigns it to variable `<var>`. Returns an error if the array is empty or doesn't exist.
+`get_i_arr_max_index <array_name> <var>` - Gets the currently highest index in the array and assigns it to variable `<var>`. Sorts the array if its current state is unsorted. Returns an error if the array is empty or doesn't exist.
 
-`get_i_arr_last_val <array_name> <var>` - Gets the value assigned to highest index in the array and assigns it to variable `<var>`. Returns an error if the array is empty or doesn't exist.
+`get_i_arr_last_val <array_name> <var>` - Gets the value assigned to highest index in the array and assigns it to variable `<var>`. Sorts the array if its current state is unsorted. Returns an error if the array is empty or doesn't exist.
 
 #### Sorting an array
 `sort_i_arr <array_name>` - Sorts indices stored in the array. Sorting is a relatively slow operation. Functions keep track of sorted/unsorted state of the array via a flag and will only perform sorting if current state is unsorted. For indexed arrays, optimizations are implemented which allow the array to keep the sorted state in most (but not all) cases when setting elements. Specifically, the 'sorted' flag will be removed if setting a previously unset element with a lower index than the current max index of the array. Unsetting elements doesn't affect the sorted/unsorted state of the array.
