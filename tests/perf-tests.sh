@@ -9,14 +9,13 @@ me=$(basename "$0")
 script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 # shellcheck disable=SC2015
 
-source_file="posix-arrays.sh"
-# shellcheck disable=SC1090
-. "$script_dir/../$source_file" || { echo "$me: Error: Can't source '$script_dir/../$source_file'." >&2; exit 1; }
+. "$script_dir/../posix-arrays.sh" || { echo "$me: Error: Can't source '$script_dir/../posix-arrays.sh'." >&2; exit 1; }
 
 
 ## Test functions
 
 warmup() {
+	# shellcheck disable=SC2154
 	if [ "$arr_type" = "i" ]; then
 		for i in $elements; do
 			set_i_arr_el test_arr "$i" "$test_str"

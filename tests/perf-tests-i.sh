@@ -2,4 +2,5 @@
 
 # shellcheck disable=SC2034
 export arr_type="i"
-sh perf-tests.sh "$1"
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
+sh "$script_dir/perf-tests.sh" "$1"

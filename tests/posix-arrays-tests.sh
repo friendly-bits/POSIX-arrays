@@ -10,8 +10,6 @@ me=$(basename "$0")
 script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd -P)
 # shellcheck disable=SC2015
 
-. "$script_dir/../posix-arrays.sh" || { echo "$me: Error: Can't source '$script_dir/../posix-arrays.sh'." >&2; exit 1; }
-
 
 #### Functions
 
@@ -234,6 +232,7 @@ err_num=0
 # run all tests by default
 
 if [ -z "$test_i" ] && [ -z "$test_a" ]; then
+	. "$script_dir/../posix-arrays.sh" || { echo "$me: Error: Can't source '$script_dir/../posix-arrays.sh'." >&2; exit 1; }
 	run_test_i_arr_1
 	run_test_i_arr_2
 	run_test_i_arr_3
@@ -242,12 +241,12 @@ if [ -z "$test_i" ] && [ -z "$test_a" ]; then
 fi
 
 if [ -n "$test_i" ]; then
+	. "$script_dir/../posix-arrays-indexed.sh" || { echo "$me: Error: Can't source '$script_dir/../posix-arrays-indexed.sh'." >&2; exit 1; }
 	run_test_i_arr_1
 	run_test_i_arr_2
 	run_test_i_arr_3
-fi
-
-if [ -n "$test_a" ]; then
+elif [ -n "$test_a" ]; then
+. "$script_dir/../posix-arrays-associative.sh" || { echo "$me: Error: Can't source '$script_dir/../posix-arrays-associative.sh'." >&2; exit 1; }
 	run_test_a_arr_1
 	run_test_a_arr_2
 fi
