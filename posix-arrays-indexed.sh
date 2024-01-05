@@ -147,9 +147,9 @@ get_i_arr_values() {
 	_arr_name="$1"; _out_var="$2"; ___values=''
 	check_strings "$_arr_name" "$_out_var" || return 1
 
-	case "$_do_sort" in '' );;
-		* ) __sort_i_arr
-			unset _do_sort
+	case "$_do_sort" in 1)
+		__sort_i_arr
+		unset _do_sort
 	esac
 	eval "_indices=\"\${_i_${_arr_name}_indices}\${_i_${_arr_name}_indices_b}\""
 
@@ -177,9 +177,9 @@ get_i_arr_indices() {
 	_arr_name="$1" _out_var="$2"
 	check_strings "$_arr_name" "$_out_var" || return 1
 
-	case "$_do_sort" in '' );;
-		* ) __sort_i_arr
-			unset _do_sort
+	case "$_do_sort" in 1)
+		__sort_i_arr
+		unset _do_sort
 	esac
 	eval "_indices=\"\${_i_${_arr_name}_indices}\${_i_${_arr_name}_indices_b}\""
 
@@ -236,7 +236,7 @@ unset_i_arr_el() {
 		_h_index=\"\$_i_${_arr_name}_h_index\"
 		___old_val=\"\$_i_${_arr_name}_${_index}\""
 	# shellcheck disable=SC2154
-	case "$___old_val" in '' ) ;; * )
+	case "$___old_val" in *?* )
 		unset "_i_${_arr_name}_${_index}"
 		case "$_sorted_flag" in
 			1) 	eval "_indices=\"\$_i_${_arr_name}_indices\""
@@ -363,7 +363,7 @@ set_i_arr_el() {
 				_i_${_arr_name}_indices=\"$___entry\""
 			return 0
 		esac
-		case "$_h_index" in '' ) ;; * )
+		case "$_h_index" in *?* )
 			case $((_index - _h_index)) in 0|-* ) ;; * )
 				case "$_sorted_flag" in
 					1 ) _target_list="_indices" ;;
