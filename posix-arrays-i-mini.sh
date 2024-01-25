@@ -40,12 +40,12 @@ set_i_arr_el() {
 	_check_vars "$_arr_name" || return 1
 	check_index || return 1
 
-	eval "_indices=\"\${_a_${_arr_name}_indices}\"
+	eval "_indices=\"\${_i_${_arr_name}_indices}\"
 			_i_${_arr_name}_${_index}"='${_el_set_flag}${___new_val}'
 
 	case "$_indices" in
-		*"$_nl$__index"|*"$_nl$_index$_nl"* ) ;;
-		*) eval "_a_${_arr_name}_indices=\"$__indices$_nl$_index\""
+		*"$_nl$_index"|*"$_nl$_index$_nl"* ) ;;
+		*) eval "_i_${_arr_name}_indices=\"$_indices$_nl$_index\""
 	esac
 	return 0
 }
