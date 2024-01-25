@@ -340,7 +340,7 @@ get_i_arr_el_cnt() {
 # set an element in an indexed array
 # 1 - array name
 # 2 - index
-# 3 - value (if no value, unsets the element)
+# 3 - value
 set_i_arr_el() {
 	___me="set_i_arr_el"
 	_arr_name="$1"; _index="$2"; ___new_val="$3"
