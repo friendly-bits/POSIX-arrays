@@ -13,13 +13,9 @@ The mini scripts include only these functions: `set_[a|i]_arr_el`, `get_[a|i]_ar
 
     `. [path]/posix-arrays.sh`
 
-Or
+    Or `. [path]/posix-arrays-[associative|indexed].sh`
 
-    `. [path]/posix-arrays-[associative|indexed].sh`
-
-Or
-
-    `. [path]/posix-arrays-[a|i]-mini.sh`
+    Or `. [path]/posix-arrays-[a|i]-mini.sh`
 
 
 2) Call any function from the sourced script in your script.
