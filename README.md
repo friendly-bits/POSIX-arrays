@@ -1,18 +1,30 @@
 # POSIX-arrays
 POSIX-compliant shell functions emulating functionality of arrays. The implementation mostly follows Bash arrays behavior.
 
+## Versions:
+- posix-arrays.sh: full version, provides both associative and indexed arrays functionality
+- posix-arrays-[associative|indexed].sh: full version, provides functionality for one type of arrays
+- posix-arrays-[a|i]-mini.sh: trimmed down to absolute minimum and optimized for small arrays version, provides functionality for one type of arrays
+
+The mini scripts include only these functions: `set_[a|i]_arr_el`, `get_[a|i]_arr_val`, `get_[a|i]_arr_[keys|indices]` and do not support sorted output.
+
 ## Usage
-1) To have access to indexed and associative arrays functionality, source the script `posix-arrays.sh` in your script:
+1) Source the relevant script in your script:
 
     `. [path]/posix-arrays.sh`
 
-- If you only need indexed arrays or associative arrays but not both, source the relevant script:
+Or
 
-  `. [path]/posix-arrays-[associative|indexed].sh`
+    `. [path]/posix-arrays-[associative|indexed].sh`
+
+Or
+
+    `. [path]/posix-arrays-[a|i]-mini.sh`
+
 
 2) Call any function from the sourced script in your script.
 
-Alternatively, copy functions which you need (and their dependencies) to your own scripts. Note that the last few lines in `posix-arrays.sh` and `posix-arrays-[associative|indexed].sh` scripts set some variables. Those variables need to be set for the functions to work correctly.
+Alternatively, copy functions which you need (and their dependencies) to your own scripts. Note that the last few lines in the scripts set some variables. These variables need to be set for the functions to work correctly.
 
 ### **Indexed arrays**:
 
@@ -225,9 +237,9 @@ Measured on i7-4770 with 40-character strings in each element. For associative a
 - Functions have been tested exclusively with the `POSIX` (or `C`) locale and are likely to misbehave in some other locales. To avoid such issues, the `posix-arrays.sh` and `posix-arrays-[associative|indexed]` scripts export the `LC_ALL` variable. If you want to use individual functions, make sure to set that variable in your script to 'C': `LC_ALL=C`. Or `export LC_ALL=C` if you want to use the functions in daughter scripts called from parent script.
 
 ## Some more details
-- The values are stored in dynamically created variables. The name of such variable is in the format `_[x]_[arr_name]_[key/index]`, where `[x]` stands for the type of the array: `a` for associative array, `i` for indexed array.
-- For example, if calling a function to create an indexed array: `set_i_arr_el test_arr 5 "test_value"`, the function will create a variable called `_i_test_arr_5` and store the value in it.
-- The raw values stored in the variables have an ASCII code `\35` prepended to the "logical" value. This serves as a flag to mark the element as set. This way, an empty string can be assigned as a value to an element. This follows the convention of Bash arrays. Functions which retrieve values from the arrays remove the ASCII prefix before assigning the result to the output variable.
+- The values are stored in dynamically created variables. The name of such variable is in the format `_[a|i]_[arr_name]_[key|index]`.
+- For example, if calling a function to set an element of an indexed array: `set_i_arr_el test_arr 5 "test_value"`, the function will create a variable called `_i_test_arr_5` and store the value in it.
+- The raw values stored in the variables have an ASCII code `\35` prepended to the "logical" value. This serves as a flag to mark the element as set. This way, an empty string can be assigned as a value to an element. This is in line with the behavior of Bash arrays. Functions which retrieve values from the arrays remove the ASCII prefix before assigning the result to the output variable.
 
 ## Test scripts
 - The files inside the "tests" folder are used for testing the main script.
