@@ -8,11 +8,11 @@ POSIX-compliant shell functions emulating functionality of arrays. The implement
 
 - If you only need indexed arrays or associative arrays but not both, source the relevant script:
 
-  `. [path]/posix-arrays-[a|i].sh`
+  `. [path]/posix-arrays-[associative|indexed].sh`
 
 2) Call any function from the sourced script in your script.
 
-Alternatively, copy functions which you need (and their dependencies) to your own scripts. Note that the last few lines in `posix-arrays.sh` and `posix-arrays-[a|i].sh` scripts set some variables. Those variables need to be set for the functions to work correctly.
+Alternatively, copy functions which you need (and their dependencies) to your own scripts. Note that the last few lines in `posix-arrays.sh` and `posix-arrays-[associative|indexed].sh` scripts set some variables. Those variables need to be set for the functions to work correctly.
 
 ### **Indexed arrays**:
 
