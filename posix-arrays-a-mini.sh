@@ -72,7 +72,7 @@ _check_vars() {
 			eval "_var_val=\"\$${_test_seq%%|*}\""; _var_desc="${_test_seq#*|}"
 			case "$_var_val" in *[!A-Za-z0-9_]* ) printf '%s\n' "$___me: Error: invalid $_var_desc '$_var_val'." >&2; esac
 		done
-    	return 1
+		return 1
 	esac
 }
 
