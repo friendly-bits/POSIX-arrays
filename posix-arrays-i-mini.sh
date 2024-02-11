@@ -21,7 +21,7 @@ get_i_arr_indices() {
 	_arr_name="$1" _out_var="$2"
 	_check_vars "$_arr_name" "$_out_var" || return 1
 
-	eval "_indices=\"\${_i_${_arr_name}_indices}"
+	eval "_indices=\"\${_i_${_arr_name}_indices}\""
 
 	_indices="$(printf '%s ' $_indices)" # no quotes on purpose
 
@@ -41,7 +41,7 @@ set_i_arr_el() {
 	check_index || return 1
 
 	eval "_indices=\"\${_i_${_arr_name}_indices}\"
-			_i_${_arr_name}_${_index}"='${_el_set_flag}${___new_val}'
+			_i_${_arr_name}_${_index}"='${___new_val}'
 
 	case "$_indices" in
 		*"$_nl$_index"|*"$_nl$_index$_nl"* ) ;;
@@ -60,7 +60,7 @@ get_i_arr_val() {
 	_check_vars "$_arr_name" "$_out_var" || return 1
 	check_index || return 1
 
-	eval "$_out_var=\"\${_i_${_arr_name}_${_index}#$_el_set_flag}\""
+	eval "$_out_var=\"\$_i_${_arr_name}_${_index}\""
 }
 
 
@@ -83,4 +83,3 @@ set -f
 export LC_ALL=C
 ___nl='
 '
-: "${_el_set_flag:="$(printf '\35')"}"
