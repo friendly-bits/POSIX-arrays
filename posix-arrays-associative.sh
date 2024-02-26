@@ -48,7 +48,7 @@ sort_a_arr() {
 	_arr_name="$1"
 	_check_vars "$_arr_name" || return 1
 	__sort_a_arr
-	return 0
+	:
 }
 
 # backend function
@@ -93,7 +93,7 @@ declare_a_arr() {
 
 	eval "_a_${_arr_name}___keys=\"$___keys\"; _a_${_arr_name}_sorted_flag=0"
 
-	return 0
+	:
 }
 
 # get all values from an associative array (alphabetically sorted by key)
@@ -124,7 +124,7 @@ get_a_arr_values() {
 	esac
 
 	eval "$_out_var"='${___values% }'
-	return 0
+	:
 }
 
 # get all keys from an associative array (alphabetically sorted)"
@@ -146,7 +146,7 @@ get_a_arr_keys() {
 	esac
 	eval "$_out_var"='${___keys% }'
 
-	return 0
+	:
 }
 
 # get the element count of an associative array
@@ -165,7 +165,7 @@ get_a_arr_el_cnt() {
 
 	eval "$_out_var"='$i'
 
-	return 0
+	:
 }
 
 # set an element in an associative array
@@ -195,7 +195,7 @@ set_a_arr_el() {
 		esac
 	esac
 
-	return 0
+	:
 }
 
 # unset an element in an associative array
@@ -246,7 +246,7 @@ unset_a_arr_el() {
 		esac
 	esac
 
-	return 0
+	:
 }
 
 # get a value from an emulated associative array
