@@ -27,7 +27,7 @@ get_i_arr_indices() {
 
 	eval "$_out_var"='${_indices% }'
 
-	return 0
+	:
 }
 
 # 1 - array name
@@ -47,7 +47,7 @@ set_i_arr_el() {
 		*"$_nl$_index"|*"$_nl$_index$_nl"* ) ;;
 		*) eval "_i_${_arr_name}_indices=\"$_indices$_nl$_index\""
 	esac
-	return 0
+	:
 }
 
 # 1 - array name
