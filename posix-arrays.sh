@@ -49,7 +49,7 @@ sort_i_arr() {
 	_arr_name="$1"
 	_check_vars "$_arr_name" || return 1
 	__sort_i_arr
-	return 0
+	:
 }
 
 # backend function
@@ -104,7 +104,7 @@ declare_i_arr() {
 				_i_${_arr_name}_indices"='$_indices'"
 				_i_${_arr_name}_sorted_flag=1"
 	esac
-	return 0
+	:
 }
 
 # read lines from input string into an indexed array
@@ -136,7 +136,7 @@ read_i_arr() {
 				_i_${_arr_name}_indices"='$_indices'"
 				_i_${_arr_name}_sorted_flag=1"
 	esac
-	return 0
+	:
 }
 
 # get all values from an indexed array
@@ -166,7 +166,7 @@ get_i_arr_values() {
 
 	eval "$_out_var"='${___values% }'
 
-	return 0
+	:
 }
 
 # get all indices from an indexed array
@@ -191,7 +191,7 @@ get_i_arr_indices() {
 
 	eval "$_out_var"='${_indices% }'
 
-	return 0
+	:
 }
 
 # add a new element to an indexed array and set its value
@@ -212,7 +212,7 @@ add_i_arr_el() {
 		_i_${_arr_name}_h_index"='$_index'"
 		_i_${_arr_name}_${_index}"='$_el_set_flag$___new_val'
 
-	return 0
+	:
 }
 
 # unset an element of an indexed array
@@ -272,7 +272,7 @@ unset_i_arr_el() {
 		esac
 	esac
 
-	return 0
+	:
 }
 
 # get maximum index of an indexed array
@@ -294,7 +294,7 @@ get_i_arr_max_index() {
 			esac ;;
 		*) eval "$_out_var"='$_h_index'
 	esac
-	return 0
+	:
 }
 
 # get value of the last element in an indexed array
@@ -316,7 +316,7 @@ get_i_arr_last_val() {
 			esac ;;
 		*) eval "$_out_var=\"\${_i_${_arr_name}_${_h_index}#$_el_set_flag}\""
 	esac
-	return 0
+	:
 }
 
 # get the element count of an indexed array
@@ -335,7 +335,7 @@ get_i_arr_el_cnt() {
 
 	eval "$_out_var"='$i'
 
-	return 0
+	:
 }
 
 # set an element in an indexed array
@@ -375,7 +375,7 @@ set_i_arr_el() {
 		eval "_i_${_arr_name}_sorted_flag=0
 			_i_${_arr_name}_indices_b=\"\${_i_${_arr_name}_indices_b}$___entry\""
 	esac
-	return 0
+	:
 }
 
 # get a value from an indexed array
@@ -426,7 +426,7 @@ sort_a_arr() {
 	_arr_name="$1"
 	_check_vars "$_arr_name" || return 1
 	__sort_a_arr
-	return 0
+	:
 }
 
 # backend function
@@ -471,7 +471,7 @@ declare_a_arr() {
 
 	eval "_a_${_arr_name}___keys=\"$___keys\"; _a_${_arr_name}_sorted_flag=0"
 
-	return 0
+	:
 }
 
 # get all values from an associative array (alphabetically sorted by key)
@@ -502,7 +502,7 @@ get_a_arr_values() {
 	esac
 
 	eval "$_out_var"='${___values% }'
-	return 0
+	:
 }
 
 # get all keys from an associative array (alphabetically sorted)"
@@ -524,7 +524,7 @@ get_a_arr_keys() {
 	esac
 	eval "$_out_var"='${___keys% }'
 
-	return 0
+	:
 }
 
 # get the element count of an associative array
@@ -543,7 +543,7 @@ get_a_arr_el_cnt() {
 
 	eval "$_out_var"='$i'
 
-	return 0
+	:
 }
 
 # set an element in an associative array
@@ -573,7 +573,7 @@ set_a_arr_el() {
 		esac
 	esac
 
-	return 0
+	:
 }
 
 # unset an element in an associative array
@@ -624,7 +624,7 @@ unset_a_arr_el() {
 		esac
 	esac
 
-	return 0
+	:
 }
 
 # get a value from an emulated associative array
