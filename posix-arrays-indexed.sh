@@ -1,8 +1,8 @@
 #!/bin/sh
 # shellcheck disable=SC2154,SC2086
 
-# Copyright: blunderful scripts
-# github.com/blunderful-scripts
+# Copyright: friendly bits
+# github.com/friendly-bits
 
 # posix-arrays-indexed.sh
 
