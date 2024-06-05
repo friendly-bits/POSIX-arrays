@@ -67,7 +67,9 @@ get_i_arr_val() {
 ## Backend functions
 
 _check_vars() {
-	case "$1$2" in *[!A-Za-z0-9_]* )
+	___check_vars_1=${1:-}
+	___check_vars_2=${2:-}
+	case "$___check_vars_1$___check_vars_2" in *[!A-Za-z0-9_]* )
 		for _test_seq in "_arr_name|array name" "_out_var|output variable name"; do
 			eval "_var_val=\"\$${_test_seq%%|*}\""; _var_desc="${_test_seq#*|}"
 			case "$_var_val" in *[!A-Za-z0-9_]* ) printf '%s\n' "$___me: Error: invalid $_var_desc '$_var_val'." >&2; esac
