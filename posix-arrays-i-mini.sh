@@ -81,5 +81,5 @@ wrongargs() { echo "$___me: Error: '$*': wrong number of arguments '$#'." >&2; }
 
 set -f
 export LC_ALL=C
-___nl='
+_nl='
 '
