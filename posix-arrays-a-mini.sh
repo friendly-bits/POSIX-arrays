@@ -85,5 +85,5 @@ wrongargs() {
 
 set -f
 export LC_ALL=C
-___nl='
+_nl='
 '
