@@ -19,10 +19,10 @@
 # unsets all variables used to store an associative array
 # 1 - array name
 unset_a_arr() {
-	___me="get_a_arr_val"
-	case "$#" in 1) ;; *) wrongargs "$@"; return 1; esac
+	___me="unset_a_arr"
+	case $# in 1) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1"
-	_check_vars "$_arr_name" || return 1
+	_check_vars _arr_name || return 1
 
 	_do_unset_a_arr "${_arr_name}"
 	unset "_a_${_arr_name}_sorted_flag"
@@ -32,7 +32,7 @@ unset_a_arr() {
 # unsets all variables of an associative array
 # 1 - array name
 _do_unset_a_arr() {
-	eval "___keys=\"\$_a_${1}___keys\$_a_${1}___keys_b\""
+	eval "___keys=\"\${_a_${1}___keys:-}\${_a_${1}___keys_b:-}\""
 
 	for ___key in $___keys; do
 		unset "_a_${1}_${___key}"
@@ -44,9 +44,9 @@ _do_unset_a_arr() {
 # 1 - array name
 sort_a_arr() {
 	___me="sort_a_arr"
-	case "$#" in 1) ;; *) wrongargs "$@"; return 1; esac
+	case $# in 1) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1"
-	_check_vars "$_arr_name" || return 1
+	_check_vars _arr_name || return 1
 	__sort_a_arr
 	:
 }
@@ -57,10 +57,10 @@ sort_a_arr() {
 # updates the '$_a_${_arr_name}____keys' variable
 # sets the 'sorted' flag
 __sort_a_arr() {
-	eval "___sorted_flag=\"\$_a_${_arr_name}_sorted_flag\""
+	eval "___sorted_flag=\"\${_a_${_arr_name}_sorted_flag:-}\""
 	case "$___sorted_flag" in
-		1) eval "___keys=\"\$_a_${_arr_name}___keys\"" ;;
-		*) eval "___keys=\"\$(printf %s \"\$_a_${_arr_name}___keys\$_a_${_arr_name}___keys_b\" | sort -u)\"
+		1) eval "___keys=\"\${_a_${_arr_name}___keys:-}\"" ;;
+		*) eval "___keys=\"\$(printf %s \"\${_a_${_arr_name}___keys:-}\${_a_${_arr_name}___keys_b:-}\" | sort -u)\"
 			_a_${_arr_name}___keys=\"\$___keys\"
 			_a_${_arr_name}___keys_b=''
 			_a_${_arr_name}_sorted_flag=1"
@@ -73,9 +73,9 @@ __sort_a_arr() {
 # all other args - 'key=value' pairs
 declare_a_arr() {
 	___me="declare_a_arr"
-	case "$*" in '') wrongargs "$@"; return 1; esac
+	case $# in 0) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; shift
-	_check_vars "$_arr_name" || return 1
+	_check_vars _arr_name || return 1
 
 	_do_unset_a_arr "${_arr_name}"
 
@@ -85,7 +85,7 @@ declare_a_arr() {
 			check_pair || return 1
 			___key="${___pair%%=*}"
 			___val="$_el_set_flag${___pair#*=}"
-			_check_vars "$___key" || return 1 # todo: revert assignments
+			_check_vars ___key || return 1
 			eval "_a_${_arr_name}_${___key}"='$___val'
 			___keys="$___keys$___nl$___key"
 		done
@@ -103,12 +103,12 @@ declare_a_arr() {
 get_a_arr_values() {
 	___me="get_a_arr_values"
 	[ "$1" = "-s" ] && { _do_sort=1; shift; }
-	case "$#" in 2) ;; *) wrongargs "$@"; return 1; esac
+	case $# in 2) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; _out_var="$2"; ___keys=''
-	_check_vars "$_arr_name" "$_out_var" || return 1
+	_check_vars _arr_name _out_var || return 1
 
 	case "$_do_sort" in
-		'') eval "___keys=\"\$_a_${_arr_name}___keys\$_a_${_arr_name}___keys_b\"" ;;
+		'') eval "___keys=\"\${_a_${_arr_name}___keys:-}\${_a_${_arr_name}___keys_b:-}\"" ;;
 		*) __sort_a_arr
 			unset _do_sort
 	esac
@@ -117,7 +117,8 @@ get_a_arr_values() {
 	case "$___keys" in *?* )
 		___values="$(
 			for ___key in $___keys; do
-				eval "___val=\"\${_a_${_arr_name}_${___key}#$_el_set_flag}\""
+				eval "___val=\"\${_a_${_arr_name}_${___key}:-}\""
+				___val="${___val#$_el_set_flag}"
 				case "$___val" in *?* ) printf '%s ' "$___val"; esac
 			done
 		)"
@@ -134,12 +135,12 @@ get_a_arr_values() {
 get_a_arr_keys() {
 	___me="get_a_arr_keys"
 	[ "$1" = "-s" ] && { _do_sort=1; shift; }
-	case "$#" in 2) ;; *) wrongargs "$@"; return 1; esac
+	case $# in 2) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; _out_var="$2"; ___keys=''
-	_check_vars "$_arr_name" "$_out_var" || return 1
+	_check_vars _arr_name _out_var || return 1
 
 	case "$_do_sort" in
-		'') eval "___keys=\"\$(printf '%s ' \$_a_${_arr_name}___keys\$_a_${_arr_name}___keys_b)\"" ;;
+		'') eval "___keys=\"\$(printf '%s ' \${_a_${_arr_name}___keys:-}\${_a_${_arr_name}___keys_b:-})\"" ;;
 		*) __sort_a_arr
 			unset _do_sort
 			___keys="$(printf '%s ' $___keys)" # no extra quotes on purpose
@@ -154,11 +155,11 @@ get_a_arr_keys() {
 # 2 - global variable name for output
 get_a_arr_el_cnt() {
 	___me="get_a_arr_el_cnt"
+	case $# in 2) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; _out_var="$2"
-	case "$#" in 2) ;; *) wrongargs "$@"; return 1; esac
-	_check_vars "$_arr_name" "$_out_var" || return 1
+	_check_vars _arr_name _out_var || return 1
 
-	eval "___keys=\"\$_a_${_arr_name}___keys\$_a_${_arr_name}___keys_b\""
+	eval "___keys=\"\${_a_${_arr_name}___keys:-}\${_a_${_arr_name}___keys_b:-}\""
 
 	i=0
 	for ___key in $___keys; do i=$((i+1)); done
@@ -174,15 +175,15 @@ get_a_arr_el_cnt() {
 # 2 - 'key=value' pair
 set_a_arr_el() {
 	___me="set_a_arr_el"
+	case $# in 2) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; ___pair="$2"
-	case "$#" in 2) ;; *) wrongargs "$@"; return 1; esac
 	check_pair || return 1
 	___key="${___pair%%=*}"
 	___new_val="${___pair#*=}"
-	_check_vars "$_arr_name" "$___key" || return 1
+	_check_vars _arr_name ___key || return 1
 
-	eval "___old_val=\"\$_a_${_arr_name}_${___key}\"
-			_sorted_flag=\"\$_a_${_arr_name}_sorted_flag\"
+	eval "___old_val=\"\${_a_${_arr_name}_${___key}:-}\"
+			_sorted_flag=\"\${_a_${_arr_name}_sorted_flag:-}\"
 			_a_${_arr_name}_${___key}"='${_el_set_flag}${___new_val}'
 
 	case "$___old_val" in '')
@@ -191,7 +192,7 @@ set_a_arr_el() {
 				_a_${_arr_name}___keys=\"${___nl}${___key}\""
 			;;
 			*) eval "_a_${_arr_name}_sorted_flag=0
-				_a_${_arr_name}___keys_b=\"\${_a_${_arr_name}___keys_b}${___nl}${___key}\""
+				_a_${_arr_name}___keys_b=\"\${_a_${_arr_name}___keys_b:-}${___nl}${___key}\""
 		esac
 	esac
 
@@ -213,18 +214,18 @@ unset_a_arr_el() {
 	}
 
 	___me="unset_a_arr_el"
+	case $# in 2) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; ___key="$2"
-	case "$#" in 2) ;; *) wrongargs "$@"; return 1; esac
-	_check_vars "$_arr_name" "$___key" || return 1
+	_check_vars _arr_name ___key || return 1
 
-	eval "_sorted_flag=\"\$_a_${_arr_name}_sorted_flag\"
-		___old_val=\"\$_a_${_arr_name}_${___key}\""
+	eval "_sorted_flag=\"\${_a_${_arr_name}_sorted_flag:-}\"
+		___old_val=\"\${_a_${_arr_name}_${___key}:-}\""
 	case "$___old_val" in *?* )
 		unset "_a_${_arr_name}_${___key}"
 		case "$_sorted_flag" in
-			1) 	eval "___keys=\"\$_a_${_arr_name}___keys\""
+			1) 	eval "___keys=\"\${_a_${_arr_name}___keys:-}\""
 				_no_b_keys=1 ;;
-			0) 	eval "___keys=\"\$_a_${_arr_name}___keys\"; ___keys_b=\"\$_a_${_arr_name}___keys_b\""
+			0) 	eval "___keys=\"\${_a_${_arr_name}___keys:-}\"; ___keys_b=\"\${_a_${_arr_name}___keys_b:-}\""
 				_no_b_keys=''
 				case "${___keys_b#"$___nl"}" in
 					"$___key$___nl"* ) eval "_a_${_arr_name}___keys_b=\"\${___keys_b#$___nl$___key}\"" ;;
@@ -256,11 +257,10 @@ unset_a_arr_el() {
 # 3 - global variable name for output
 get_a_arr_val() {
 	___me="get_a_arr_val"
-	case "$#" in 3) ;; *) wrongargs "$@"; return 1; esac
+	case $# in 3) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; ___key="$2"; _out_var="$3"
-	_check_vars "$_arr_name" "$___key" "$_out_var" || return 1
-
-	eval "___val=\"\$_a_${_arr_name}_${___key}\""
+	_check_vars _arr_name ___key _out_var || return 1
+	eval "___val=\"\${_a_${_arr_name}_${___key}:-}\""
 	eval "$_out_var"='${___val#"${_el_set_flag}"}'
 }
 
@@ -268,13 +268,18 @@ get_a_arr_val() {
 ## Backend functions
 
 _check_vars() {
-	case "$1$2$3" in *[!A-Za-z0-9_]* )
-		for _test_seq in "_arr_name|array name" "_out_var|output variable name" "___key|key"; do
-			eval "_var_val=\"\$${_test_seq%%|*}\""; _var_desc="${_test_seq#*|}"
-			case "$_var_val" in *[!A-Za-z0-9_]* ) printf '%s\n' "$___me: Error: invalid $_var_desc '$_var_val'." >&2; esac
-		done
-    	return 1
-	esac
+	for ___var in "$@"; do
+		eval "_var_val=\"\$$___var\""
+		case "$_var_val" in ''|*[!A-Za-z0-9_]* )
+			case "$___var" in
+				___key) _var_desc="key" ;;
+				_arr_name) _var_desc="array name" ;;
+				_out_var) _var_desc="output variable name"
+			esac
+			printf '%s\n' "$___me: Error: invalid $_var_desc '$_var_val'." >&2
+			return 1
+		esac
+	done
 }
 
 no_elements() { echo "$___me: Error: array '$_arr_name' has no elements." >&2; }
