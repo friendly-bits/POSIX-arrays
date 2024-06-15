@@ -102,7 +102,7 @@ declare_a_arr() {
 # 2 - global variable name for output
 get_a_arr_values() {
 	___me="get_a_arr_values"
-	[ "$1" = "-s" ] && { _do_sort=1; shift; }
+	case "${1:-}" in "-s") _do_sort=1; shift; esac
 	case $# in 2) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; _out_var="$2"; ___keys=''
 	_check_vars _arr_name _out_var || return 1
@@ -117,8 +117,7 @@ get_a_arr_values() {
 	case "$___keys" in *?* )
 		___values="$(
 			for ___key in $___keys; do
-				eval "___val=\"\${_a_${_arr_name}_${___key}:-}\""
-				___val="${___val#$_el_set_flag}"
+				eval "___val=\"\${_a_${_arr_name}_${___key}#$_el_set_flag}\""
 				case "$___val" in *?* ) printf '%s ' "$___val"; esac
 			done
 		)"
@@ -134,7 +133,7 @@ get_a_arr_values() {
 # 2 - global variable name for output
 get_a_arr_keys() {
 	___me="get_a_arr_keys"
-	[ "$1" = "-s" ] && { _do_sort=1; shift; }
+	case "${1:-}" in "-s") _do_sort=1; shift; esac
 	case $# in 2) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; _out_var="$2"; ___keys=''
 	_check_vars _arr_name _out_var || return 1
@@ -260,14 +259,14 @@ get_a_arr_val() {
 	case $# in 3) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; ___key="$2"; _out_var="$3"
 	_check_vars _arr_name ___key _out_var || return 1
-	eval "___val=\"\${_a_${_arr_name}_${___key}:-}\""
-	eval "$_out_var"='${___val#"${_el_set_flag}"}'
+	eval "$_out_var=\"\${_a_${_arr_name}_${___key}#$_el_set_flag}\""
 }
 
 
 ## Backend functions
 
 _check_vars() {
+	case "${nocheckvars:-}" in *?*) return 0; esac
 	for ___var in "$@"; do
 		eval "_var_val=\"\$$___var\""
 		case "$_var_val" in ''|*[!A-Za-z0-9_]* )

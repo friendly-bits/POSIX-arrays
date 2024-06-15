@@ -146,7 +146,7 @@ read_i_arr() {
 # 2 - global variable name for output
 get_i_arr_values() {
 	___me="get_i_arr_values"
-	[ "$1" = "-s" ] && { _do_sort=1; shift; }
+	case "${1:-}" in "-s") _do_sort=1; shift; esac
 	case $# in 2) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; _out_var="$2"; ___values=''
 	_check_vars _arr_name _out_var || return 1
@@ -159,9 +159,8 @@ get_i_arr_values() {
 
 	___values="$(
 		for _index in $_indices; do
-			eval "___val=\"\${_i_${_arr_name}_${_index}:-}\""
-			___val="${___val#$_el_set_flag}"
-			[ -n "$___val" ] && printf '%s ' "$___val"
+			eval "___val=\"\${_i_${_arr_name}_${_index}#$_el_set_flag}\""
+			case "$___val" in '') ;; *) printf '%s ' "$___val"; esac
 		done
 	)"
 
@@ -177,7 +176,7 @@ get_i_arr_values() {
 # 2 - global variable name for output
 get_i_arr_indices() {
 	___me="get_i_arr_indices"
-	[ "$1" = "-s" ] && { _do_sort=1; shift; }
+	case "${1:-}" in "-s") _do_sort=1; shift; esac
 	case $# in 2) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1" _out_var="$2"
 	_check_vars _arr_name _out_var || return 1
@@ -344,7 +343,7 @@ get_i_arr_el_cnt() {
 # 3 - value (if no value, unsets the element)
 set_i_arr_el() {
 	___me="set_i_arr_el"
-	case $# in 2|3 ) ;; *) wrongargs "$@"; return 1; esac
+	case $# in 2|3) ;; *) wrongargs "$@"; return 1; esac
 	_arr_name="$1"; _index="$2"; ___new_val="${3:-}"
 	_check_vars _arr_name && check_index || return 1
 
@@ -395,10 +394,12 @@ get_i_arr_val() {
 ## Backend functions
 
 _check_vars() {
+	case "${nocheckvars:-}" in *?*) return 0; esac
 	for ___var in "$@"; do
 		eval "_var_val=\"\$$___var\""
 		case "$_var_val" in ''|*[!A-Za-z0-9_]* )
 			case "$___var" in
+				___key) _var_desc="key" ;;
 				_arr_name) _var_desc="array name" ;;
 				_out_var) _var_desc="output variable name"
 			esac
