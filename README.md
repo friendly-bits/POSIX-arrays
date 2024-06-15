@@ -139,10 +139,11 @@ $ jazz, classical, rock
 - The code went through multiple rounds of optimization. Currently for most use cases, on x86 CPU the performance for small arrays (<= 200 elements) is comparable to Bash arrays. Functions perform reasonably well with arrays containing up to 2000 elements. Higher than that, the performance drops at an accelerating rate, mainly because the system takes longer to look up variables in memory.
 - Performance is affected by the length of the strings stored in the array, and for associative arrays, by the length of the strings used as keys.
 - Performance is also affected by the workload - more on that in the [Limitations](#limitations) section.
+- The `set_[x]_arr_el()` and `get_[x]_arr_val()` functions perform significantly (20%-50%) faster if disabling checks for valid arguments. Other functions get a minor speedup as well. To benefit from this speedup, consider setting the `nocheckvars` variable in production when your code is well tested. Specifically this disables checks for validity of following arguments: array name, output variable name, and (for associative arrays) key.
 
 <details> <summary> Benchmarks: </summary>
 
-Measured on i7-4770 with 40-character strings in each element. For associative arrays, measured with 16-18 character keys. N is the number of elements.
+Measured on i7-4770 with 40-character strings in each element. For associative arrays, measured with 16-18 character keys. N is the number of elements. All tests ran with the `nocheckvars` variable set.
 
 **N=10:**
 
