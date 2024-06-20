@@ -22,6 +22,8 @@ The mini scripts include only these functions: `set_[a|i]_arr_el`, `get_[a|i]_ar
 
 Alternatively, copy functions which you need (and their dependencies) to your own scripts. Note that the last few lines in the scripts set some variables. These variables need to be set for the functions to work correctly.
 
+To create an array, use any function that stores a value in the array: `declare_[x]_arr` or `set_[x]_arr_el` or `add_i_arr_el` or `read_i_arr`.
+
 ### **Indexed arrays**:
 
 #### Setting elements:
